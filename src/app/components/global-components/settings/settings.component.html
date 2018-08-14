@@ -1,0 +1,1180 @@
+<div class="middle_section">
+  <div class="container">
+    <br>
+    <!-- Container section -->
+    <div class="row">
+      <div class="col-md-2"></div>
+      <!-- Begin col-md-7 -->
+      <div class="col-md-8 sc-account-content">
+        <!-- Search Field -->
+        <div class="tabs-navigators-sc">
+          <ul class="animated_tab">
+            <li class="active"><a href="#general" data-toggle="tab">General</a></li>
+            <li><a href="#nre" data-toggle="tab">Notifications, Reminders &amp; Email Alerts</a></li>
+          </ul>
+        </div>
+        <div class="sc-container-shadow">
+
+          <!-- tabs -->
+          <div class="tab-content clearfix">
+
+            <div class="tab-pane active" id="general">
+              <!-- Section notification -->
+              <div class="section-notification">
+                <div class="notification-title sc-today">
+                  <div class="row">
+                    <div class="col-md-6">Login</div>
+                    <div class="col-md-6 text-right"></div>
+                  </div>
+                </div>
+
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-9">
+                        <h6>Connect Facebook</h6>
+                        <p>Use your Facebook for quicker login or sync your dolor sit amet, consectetur adipiscing eli</p>
+                      </div>
+                      <div class="col-md-3 text-right">
+                        <input class="toggle-checkbox fl-right" id="check-toggle" type="checkbox"
+                        [(ngModel)]="connect_facebook"
+                        (ngModelChange)="connect_to_facebook_prompt()">
+                        <label for="check-toggle"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h6>Email</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eli</p>
+                      </div>
+                      <div class="col-md-4" style="padding-top:17px;" *ngIf="isEmailEdit == false">
+                        <p>{{userEmail}}</p>
+                      </div>
+                      <div class="col-md-2 text-right" *ngIf="isEmailEdit == false">
+                        <p><a class="underline_decor" (click)="isEmailEdit=true">Change</a></p>
+                      </div>
+                      <div class="col-md-4 inputs-styled" style="padding-top:17px;" *ngIf="isEmailEdit == true">
+                        <p><input type="password" name="" placeholder="Enter your password to verify change"
+                        [(ngModel)]="confirmPassword"></p>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && confirmPassword =='' ">Password cannot be blank.</div>
+                        <p><input type="text" name="" placeholder="Enter your new email address" [(ngModel)]="email"></p>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && email =='' ">Email cannot be blank.</div>
+                        <p><input type="text" name="" placeholder="Confirm new email address" [(ngModel)]="confirmEmail"></p>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && confirmEmail =='' ">Confirm email cannot be blank.</div>
+                      </div>
+                      <div class="col-md-2 options-edit-account" *ngIf="isEmailEdit == true">
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p><a (click)="isEmailEdit=false;formValidation=false;">Cancel</a>
+                        <a class="save-btn" (click)="change_email()">SAVE</a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h6>Password</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eli</p>
+                      </div>
+                      <div class="col-md-4" style="padding-top:17px;" *ngIf="isEditPassword == false">
+                        <p>Last updated: October 11th, 2017</p>
+                      </div>
+                      <div class="col-md-2 text-right" *ngIf="isEditPassword == false">
+                        <p><a class="underline_decor" (click)="isEditPassword=true">Change</a></p>
+                      </div>
+                      <div class="col-md-4 inputs-styled" style="padding-top:5px;" *ngIf="isEditPassword == true">
+                        <p><input type="password" name="" placeholder="Enter your old password" [(ngModel)]="oldPassword"></p>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && oldPassword =='' ">Old password cannot be blank.</div>
+                        <p><input type="password" name="" placeholder="Enter new password" [(ngModel)]="newPassword"></p>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && newPassword =='' ">New password cannot be blank.</div>
+                        <p><input type="password" name="" placeholder="Confirm new password" [(ngModel)]="confirmPassword"></p>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && confirmPassword =='' ">Confirm password cannot be blank.</div>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && (confirmPassword != newPassword) ">Confirm password not match with new password.</div>
+                      </div>
+                      <div class="col-md-2 options-edit-account" *ngIf="isEditPassword == true">
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p><a (click)="isEditPassword=false; formValidation=false;">Cancel</a>
+                        <a class="save-btn" (click)="change_password()">SAVE</a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- end Section notification -->
+
+              <!-- Section notification -->
+              <div class="section-notification">
+                <div class="notification-title sc-today">
+                  <div class="row">
+                    <div class="col-md-6">Language &amp; Timezone</div>
+                    <div class="col-md-6 text-right"></div>
+                  </div>
+                </div>
+
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h6>Timezone</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eli</p>
+                      </div>
+                      <div class="col-md-4" style="padding-top:17px;" *ngIf="isEditTimezone==false">
+                        <p>{{myTimeZone}}</p>
+                      </div>
+                      <div class="col-md-2 text-right" *ngIf="isEditTimezone==false">
+                        <p><a class="underline_decor" (click)="isEditTimezone=true">Change</a></p>
+                      </div>
+                      <div class="col-md-4 inputs-styled" style="padding-top:5px;" *ngIf="isEditTimezone==true">
+                        <p>
+                          <select class="form-control" [(ngModel)]="myTimeZone">
+                            <option value="">--select timezone--</option>
+                            <option *ngFor="let timezone of timeZones" value="{{timezone.text}}">{{timezone.text}}</option>
+                          </select>
+                        </p>
+                      </div>
+                      <div class="col-md-2 options-edit-account" *ngIf="isEditTimezone==true">
+                        <p style="margin-bottom:0;">&nbsp;</p>
+                        <p>
+                          <a (click)="isEditTimezone=false">Cancel</a>
+                          <a class="save-btn" (click)="update_timezone()">SAVE</a>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h6>Language</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eli</p>
+                      </div>
+                      <div class="col-md-4" style="padding-top:17px;" *ngIf="isEditLanguage==false">
+                        <p>{{change_languages}}</p>
+                      </div>
+                      <div class="col-md-2 text-right" *ngIf="isEditLanguage==false">
+                        <p><a class="underline_decor" (click)="isEditLanguage=true">Change</a></p>
+                      </div>
+                      <div class="col-md-4 inputs-styled" style="padding-top:5px;" *ngIf="isEditLanguage==true">
+                        <p>
+                          <select class="form-control"
+                          [(ngModel)]="change_languages">
+                            <!-- <option value="Chinese">Chinese</option>
+                            <option value="Dutch">Dutch</option> -->
+                            <option value="English">English</option>
+                            <option value="Hindi">Hindi</option>
+                            <!-- <option value="French">French</option>
+                            <option value="German">German</option>
+                            <option value="Greek">Greek</option>
+                            <option value="Italian">Italian</option>
+                            <option value="Japanese">Japanese</option>
+                            <option value="Korean">Korean</option>
+                            <option value="Portuguese">Portuguese</option>
+                            <option value="Russian">Russian</option>
+                            <option value="Spanish">Spanish</option> -->
+                          </select>
+                        </p>
+                      </div>
+                      <div class="col-md-2 options-edit-account" *ngIf="isEditLanguage==true">
+                        <p style="margin-bottom:0;">&nbsp;</p>
+                        <p>
+                          <a (click)="isEditLanguage=false">Cancel</a>
+                          <a class="save-btn" (click)="change_language()">SAVE</a>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- end Section notification -->
+
+              <div class="section-notification">
+                <div class="notification-title sc-today">
+                  <div class="row">
+                    <div class="col-md-6">Accessibility</div>
+                    <div class="col-md-6 text-right"></div>
+                  </div>
+                </div>
+
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-9">
+                        <h6>Colorblind Assistance</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eli</p>
+                      </div>
+                      <div class="col-md-3 text-right">
+                        <input type="checkbox" class="toggle-checkbox fl-right" checked="" id="check-color-blind"
+                        [(ngModel)]="color_blind"
+                        (ngModelChange)="change_color_blind()">
+                        <label for="check-color-blind"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-9">
+                        <h6>Font size</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eli</p>
+                      </div>
+                      <div class="col-md-3" style="padding-top:4px;">
+                        <div class="radio-options-profile">
+                          <input type="radio" name="font-size" id="font-size-standard" value="standard" [(ngModel)]="font_size"
+                          (ngModelChange)="change_font()">
+                          <label for="font-size-standard">Standard</label>
+                          <input type="radio" name="font-size" checked="" id="font-size-large" value="large"
+                          [(ngModel)]="font_size"
+                          (ngModelChange)="change_font()">
+                          <label for="font-size-large">Large</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Section notification -->
+              <div class="section-notification">
+                <div class="notification-title sc-today">
+                  <div class="row">
+                    <div class="col-md-6">Profile Visibility</div>
+                    <div class="col-md-6 text-right"></div>
+                  </div>
+                </div>
+
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-9">
+                        <h6>Hide my Profile</h6>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eli</p>
+                      </div>
+                      <div class="col-md-3 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="check-toggle-2" type="checkbox"
+                        [(ngModel)]="isHideProfile"
+                        (ngModelChange)="hide_my_profile_confirm()"
+                        value="false">
+                        <label for="check-toggle-2"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- end Section notification -->
+
+              <div class="text-center bottom-text-account">
+                <p>&nbsp;</p>
+                <p><a data-toggle="modal" data-target="#deactivateProfileModal">Deactivate my Account</a></p>
+                <h5>Questions about your account? <a data-toggle="modal" data-target="#send-request">Send a message</a> to customer support.</h5>
+                <p>&nbsp;</p>
+              </div>
+
+            </div>
+            <div class="tab-pane" id="nre">
+
+              <!-- Content Notifications reminders email alerts -->
+              <div class="section-notification">
+                <!-- Notification title -->
+                <div class="notification-title sc-today lb-title">
+                  <div class="row">
+                    <div class="col-md-8">Notifications &amp; email alerts</div>
+                    <div class="col-md-2 text-right" style="padding-right:0;">Notifications on SC</div>
+                    <div class="col-md-2 text-right">Email alerts</div>
+                  </div>
+                </div>
+                <!-- End Notification title -->
+                <!-- Notification title -->
+                <div class="notification-title sc-today">
+                  <div class="row">
+                    <div class="col-md-6">Login</div>
+                  </div>
+                </div>
+                <!-- End Notification title -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <h6>Comments on my posts</h6>
+                        <p>Notify me when someone comments on one of my posts</p>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-posts-nsc" type="checkbox"
+                        [(ngModel)]="comments_on_my_posts_notifications"
+                        (ngModelChange)="notification_on_post()">
+                        <label for="c-posts-nsc"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-posts-ea" type="checkbox"
+                        [(ngModel)]="comments_on_my_posts_email"
+                        (ngModelChange)="email_alerts_on_post()">
+                        <label for="c-posts-ea"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <h6>Comments on forums</h6>
+                        <p>Notify me when a user has commented on a Forum post that i have commented on</p>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-forums-nsc" type="checkbox"
+                        [(ngModel)]="comments_on_forums_notifications"
+                        (ngModelChange)="notification_on_forum()">
+                        <label for="c-forums-nsc"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-forums-ea" type="checkbox"
+                        [(ngModel)]="comments_on_forums_email"
+                        (ngModelChange)="email_alerts_on_forum()">
+                        <label for="c-forums-ea"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <h6>Likes on my posts</h6>
+                        <p>Notify my when someone ‘likes’ one of my posts</p>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-likes-nsc" type="checkbox"
+                        [(ngModel)]="likes_on_my_posts_notifications"
+                        (ngModelChange)="notification_on_like()">
+                        <label for="c-likes-nsc"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-likes-ea" type="checkbox"
+                        [(ngModel)]="likes_on_my_posts_email"
+                        (ngModelChange)="email_alerts_on_like()">
+                        <label for="c-likes-ea"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <h6>Tags</h6>
+                        <p>Notify me when someone tags me in a comment or post</p>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-tags-nsc" type="checkbox"
+                        [(ngModel)]="tags_notifications"
+                        (ngModelChange)="notification_on_tags()">
+                        <label for="c-tags-nsc"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-tags-ea" type="checkbox"
+                        [(ngModel)]="tags_email"
+                        (ngModelChange)="email_alerts_on_tags()">
+                        <label for="c-tags-ea"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <h6>Birthdays of patients i follow</h6>
+                        <p>Notify me when it’s a friends birthday</p>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-birthdays-nsc" type="checkbox"
+                        [(ngModel)]="birthdays_patients_follow_notifications"
+                        (ngModelChange)="notification_on_birthday()">
+                        <label for="c-birthdays-nsc"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-birthdays-ea" type="checkbox"
+                        [(ngModel)]="birthdays_patients_follow_email"
+                        (ngModelChange)="email_alerts_on_birthday()">
+                        <label for="c-birthdays-ea"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification title -->
+                <div class="notification-title sc-today">
+                  <div class="row">
+                    <div class="col-md-6">Message</div>
+                  </div>
+                </div>
+                <!-- End Notification title -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <h6>New messages</h6>
+                        <p>Notify me when i have received a new message on the platform</p>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-nm-nsc" type="checkbox"
+                        [(ngModel)]="new_messages_notifications"
+                        (ngModelChange)="notification_on_newMessage()">
+                        <label for="c-nm-nsc"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-nm-ea" type="checkbox"
+                        [(ngModel)]="new_messages_email"
+                        (ngModelChange)="email_alerts_on_newMessage()">
+                        <label for="c-nm-ea"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <h6>SameCondition monthly newsletters</h6>
+                        <p>Notify me when SameCondition posts their monthly newsletter</p>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-mn-nsc" type="checkbox"
+                        [(ngModel)]="monthly_newsletters_notifications"
+                        (ngModelChange)="notification_on_monthly_newsletter()">
+                        <label for="c-mn-nsc"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-mn-ea" type="checkbox"
+                        [(ngModel)]="monthly_newsletters_email"
+                        (ngModelChange)="email_alerts_on_monthly_newsletter()">
+                        <label for="c-mn-ea"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <h6>Monthly newsletters related to my conditions</h6>
+                        <p>Notify me when SameConditionposts monthly newsletters related to my conditions</p>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-mnr-nsc" type="checkbox"
+                        [(ngModel)]="monthly_newsletters_my_conditions_notifications"
+                        (ngModelChange)="notification_on_mycondition_monthly_newsletter()">
+                        <label for="c-mnr-nsc"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-mnr-ea" type="checkbox"
+                        [(ngModel)]="monthly_newsletters_my_conditions_email"
+                        (ngModelChange)="email_alerts_on_mycondition_monthly_newsletter()">
+                        <label for="c-mnr-ea"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification title -->
+                <div class="notification-title sc-today">
+                  <div class="row">
+                    <div class="col-md-6">Opportunities</div>
+                  </div>
+                </div>
+                <!-- End Notification title -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <h6>SameCondition research opportunities</h6>
+                        <p>Notify me when SameCondition posts new research questionaires</p>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-scr-nsc" type="checkbox"
+                        [(ngModel)]="research_opportunities_notifications"
+                        (ngModelChange)="notification_on_research()">
+                        <label for="c-scr-nsc"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-scr-ea" type="checkbox"
+                        [(ngModel)]="research_opportunities_email"
+                        (ngModelChange)="email_alerts_on_research()">
+                        <label for="c-scr-ea"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-7">
+                        <h6>Clinical trials in my area</h6>
+                        <p style="margin-bottom:0;">Notify me when there are clinical trials related to my conditions in my area</p>
+                      </div>
+                      <div class="col-md-2 column-dsc" style="padding-left:0;padding-right:0;">
+                        <strong>All Conditions</strong>
+                      </div>
+                      <div class="col-md-1 text-right" style="padding-right:15px;">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-clt-nsc" type="checkbox" [(ngModel)]="clinical_trials_notifications"
+                        (ngModelChange)="configure_all_condition_notification()">
+                        <label for="c-clt-nsc"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-clt-ea" type="checkbox" [(ngModel)]="clinical_trials_email"
+                        (ngModelChange)="configure_all_condition_email()">
+                        <label for="c-clt-ea"></label>
+                      </div>
+                    </div>
+                    <div class="row" *ngFor="let condition of view_condition_list; let i = index;">
+                      <div class="col-md-7">
+                      </div>
+                      <div class="col-md-2 column-dsc" style="padding-left:0;padding-right:0;">
+                        <strong>{{condition.condition_name}}</strong>
+                      </div>
+                      <div class="col-md-1 text-right" style="padding-right:15px;">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-dpr-nsc_{{i}}" type="checkbox"
+                        [(ngModel)]="condition.notifications"
+                        (ngModelChange)="update_clinical_trials_conditions(condition)">
+                        <label for="c-dpr-nsc_{{i}}"></label>
+                      </div>
+                      <div class="col-md-2 text-right">
+                        <input class="toggle-checkbox fl-right" checked="" id="c-dpr-ea_{{i}}" type="checkbox"
+                        [(ngModel)]="condition.email_alerts"
+                        (ngModelChange)="update_clinical_trials_conditions(condition)">
+                        <label for="c-dpr-ea_{{i}}"></label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification title -->
+                <div class="notification-title sc-today">
+                  <div class="row">
+                    <div class="col-md-4" style="width:280px;">Reminders</div>
+                    <div class="col-md-2 text-center" style="width:135px;">Notifications on SC</div>
+                    <div class="col-md-2 text-center" style="width:95px;">Email alerts</div>
+                    <div class="col-md-4" style="width:220px;">How often i want to be reminded</div>
+                  </div>
+                </div>
+                <!-- End Notification title -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-4" style="width:280px;padding-right:0;">
+                        <h6>My feelings</h6>
+                        <p>Remind me to create new My feelings posts</p>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:135px;">
+                        <input class="toggle-checkbox" checked="" id="c-mf-nsc" type="checkbox"
+                        [(ngModel)]="my_feelings_notifications"
+                        (ngModelChange)="set_reminder_for_feelings()">
+                        <label for="c-mf-nsc" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:95px;">
+                        <input class="toggle-checkbox" checked="" id="c-mf-ea" type="checkbox"
+                        [(ngModel)]="my_feelings_email"
+                        (ngModelChange)="set_reminder_for_feelings()">
+                        <label for="c-mf-ea" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-4" style="width:210px;">
+                        <select [(ngModel)]="my_feelings_frequency" [disabled]="my_feelings_notifications == false && my_feelings_email == false"
+                        (ngModelChange)="set_reminder_for_feelings()">
+                          <option value="">Select how often</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="yearly">Yearly</option>
+                        </select>
+                      </div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && my_feelings_frequency =='' ">please select frequency.</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-4" style="width:280px;padding-right:0;">
+                        <h6>My QOL score</h6>
+                        <p>Remind me to update my QOL score</p>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:135px;">
+                        <input class="toggle-checkbox" checked="" id="c-mool-nsc" type="checkbox"
+                        [(ngModel)]="my_qol_score_notifications"
+                        (ngModelChange)="set_reminder_for_qol()">
+                        <label for="c-mool-nsc" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:95px;">
+                        <input class="toggle-checkbox" checked="" id="c-mool-ea" type="checkbox"
+                        [(ngModel)]="my_qol_score_email"
+                        (ngModelChange)="set_reminder_for_qol()">
+                        <label for="c-mool-ea" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-4" style="width:210px;">
+                       <select [(ngModel)]="my_qol_score_frequency" [disabled]="my_qol_score_notifications == false && my_qol_score_email == false"
+                        (ngModelChange)="set_reminder_for_qol()">
+                          <option value="">Select how often</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="yearly">Yearly</option>
+                        </select>
+                      </div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && my_qol_score_frequency =='' ">please select frequency.</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-4" style="width:280px;padding-right:0;">
+                        <h6>My symptoms</h6>
+                        <p>Remind me to update my symptoms</p>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:135px;">
+                        <input class="toggle-checkbox" checked="" id="c-symptoms-nsc" type="checkbox"
+                        [(ngModel)]="my_symptoms_notifications"
+                        (ngModelChange)="set_reminder_for_symptoms()">
+                        <label for="c-symptoms-nsc" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:95px;">
+                        <input class="toggle-checkbox" checked="" id="c-symptoms-ea" type="checkbox"
+                        [(ngModel)]="my_symptoms_email"
+                        (ngModelChange)="set_reminder_for_symptoms()">
+                        <label for="c-symptoms-ea" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-4" style="width:210px;">
+                         <select [(ngModel)]="my_symptoms_frequency" [disabled]="my_symptoms_notifications == false && my_symptoms_email == false"
+                        (ngModelChange)="set_reminder_for_symptoms()">
+                          <option value="">Select how often</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="yearly">Yearly</option>
+                        </select>
+                      </div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && my_symptoms_frequency =='' ">please select frequency.</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-4" style="width:280px;padding-right:0;">
+                        <h6>My treatments</h6>
+                        <p>Remind me to update my treatments</p>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:135px;">
+                        <input class="toggle-checkbox" checked="" id="c-treatments-nsc" type="checkbox"
+                        [(ngModel)]="my_treatments_notifications"
+                        (ngModelChange)="set_reminder_for_treatment()">
+                        <label for="c-treatments-nsc" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:95px;">
+                        <input class="toggle-checkbox" checked="" id="c-treatments-ea" type="checkbox"
+                        [(ngModel)]="my_treatments_email"
+                        (ngModelChange)="set_reminder_for_treatment()">
+                        <label for="c-treatments-ea" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-4" style="width:210px;">
+                        <select [(ngModel)]="my_treatments_frequency" [disabled]="my_treatments_notifications == false && my_treatments_email == false"
+                        (ngModelChange)="set_reminder_for_treatment()">
+                          <option value="">Select how often</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="yearly">Yearly</option>
+                        </select>
+                      </div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && my_treatments_frequency =='' ">please select frequency.</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-4" style="width:280px;padding-right:0;">
+                        <h6>My conditions</h6>
+                        <p>Remind me to update my conditions</p>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:135px;">
+                        <input class="toggle-checkbox" checked="" id="c-conditions-nsc" type="checkbox"
+                        [(ngModel)]="my_conditions_notifications"
+                        (ngModelChange)="set_reminder_for_condition()">
+                        <label for="c-conditions-nsc" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:95px;">
+                        <input class="toggle-checkbox" checked="" id="c-conditions-ea" type="checkbox"
+                        [(ngModel)]="my_conditions_email"
+                        (ngModelChange)="set_reminder_for_condition()">
+                        <label for="c-conditions-ea" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-4" style="width:210px;">
+                        <select [(ngModel)]="my_conditions_frequency" [disabled]="my_conditions_notifications == false && my_conditions_email == false"
+                        (ngModelChange)="set_reminder_for_condition()">
+                          <option value="">Select how often</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="yearly">Yearly</option>
+                        </select>
+                      </div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && my_conditions_frequency =='' ">please select frequency.</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-4" style="width:280px;padding-right:0;">
+                        <h6>My weight</h6>
+                        <p>Remind me to update my weight</p>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:135px;">
+                        <input class="toggle-checkbox" checked="" id="c-weight-nsc" type="checkbox"
+                        [(ngModel)]="my_weight_notifications"
+                        (ngModelChange)="set_reminder_for_weight()">
+                        <label for="c-weight-nsc" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:95px;">
+                        <input class="toggle-checkbox" checked="" id="c-weight-ea" type="checkbox"
+                        [(ngModel)]="my_weight_email"
+                        (ngModelChange)="set_reminder_for_weight()">
+                        <label for="c-weight-ea" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-4" style="width:210px;">
+                        <select [(ngModel)]="my_weight_frequency" [disabled]="my_weight_notifications == false && my_weight_email == false"
+                        (ngModelChange)="set_reminder_for_weight()">
+                          <option value="">Select how often</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="yearly">Yearly</option>
+                        </select>
+                      </div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && my_weight_frequency =='' ">please select frequency.</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-4" style="width:280px;padding-right:0;">
+                        <h6>My lab tests</h6>
+                        <p>Remind me to add new lab tests</p>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:135px;">
+                        <input class="toggle-checkbox" checked="" id="c-tests-nsc" type="checkbox"
+                        [(ngModel)]="my_labs_tests_notifications"
+                        (ngModelChange)="set_reminder_for_labtest()">
+                        <label for="c-tests-nsc" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:95px;">
+                        <input class="toggle-checkbox" checked="" id="c-tests-ea" type="checkbox"
+                        [(ngModel)]="my_labs_tests_email"
+                        (ngModelChange)="set_reminder_for_labtest()">
+                        <label for="c-tests-ea" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-4" style="width:210px;">
+                        <select [(ngModel)]="my_labs_tests_frequency" [disabled]="my_labs_tests_notifications == false && my_labs_tests_email == false"
+                        (ngModelChange)="set_reminder_for_labtest()">
+                          <option value="">Select how often</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="yearly">Yearly</option>
+                        </select>
+                      </div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && my_labs_tests_frequency =='' ">please select frequency.</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <!-- Notification row -->
+                <div class="list-notifications today-n">
+                  <div class="individual-notification">
+                    <div class="row">
+                      <div class="col-md-4" style="width:280px;padding-right:0;">
+                        <h6>Donate my data</h6>
+                        <p>Remind me to donate my data to SameCondition to<br>contribute to community health statistics</p>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:135px;">
+                        <input class="toggle-checkbox" checked="" id="c-donate-nsc" type="checkbox"
+                        [(ngModel)]="donate_my_data_notifications"
+                        (ngModelChange)="set_reminder_for_donate_my_data()">
+                        <label for="c-donate-nsc" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-2 text-right" style="width:95px;">
+                        <input class="toggle-checkbox" checked="" id="c-donate-ea" type="checkbox"
+                        [(ngModel)]="donate_my_data_email"
+                        (ngModelChange)="set_reminder_for_donate_my_data()">
+                        <label for="c-donate-ea" style="margin:0 auto;"></label>
+                      </div>
+                      <div class="col-md-4" style="width:210px;">
+                        <select [(ngModel)]="donate_my_date_frequency" [disabled]="donate_my_data_notifications == false && donate_my_data_email == false"
+                        (ngModelChange)="set_reminder_for_donate_my_data()">
+                          <option value="">Select how often</option>
+                          <option value="daily">Daily</option>
+                          <option value="weekly">Weekly</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="yearly">Yearly</option>
+                        </select>
+                      </div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && donate_my_date_frequency =='' ">please select frequency.</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Notification row -->
+                <p>&nbsp;</p>
+                <div class="text-center bottom-text-account">
+                  <p>&nbsp;</p>
+                  <p><a data-toggle="modal" data-target="#deactivateProfileModal">Deactivate my Account</a></p>
+                  <h5>Questions about your account? <a data-toggle="modal" data-target="#send-request">Send a message</a> to customer support.</h5>
+                </div>
+              </div>
+              <!-- End Content Notifications reminders email alerts -->
+
+            </div>
+
+          </div>
+          <!-- / tabs-->
+
+        </div>
+        <!-- End Search field -->
+
+      </div>
+      <!-- end col-md-7 -->
+      <div class="col-md-2"></div>
+    </div>
+    <!-- / Container section -->
+  </div>
+</div>
+
+<div class="modal fade common-modal c-modal-msg" id="hideProfileModal">
+  <div class="modal-dialog modal-sm-md" role="document">
+    <div class="modal-content normal-shadow">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"
+        (click)="isHideProfile=false" aria-label="Close"><img src="assets/modules/images/icons/icon-close@2x.png" alt=""></button>
+        <h4 class="modal-title text-center" id="hideProfileTitle">Your profile is now hidden!</h4>
+      </div>
+      <div class="modal-body">
+        <div class="width-480 text-center">
+          <p class="text-sm">Your profile, likes and comments won’t be visible to other SameCondition users and you won’t be able to ‘like’ and comment on other users profiles.</p>
+          <p class="text-sm mb-0">Please note: Any data that you have previously donated to SameCondition will still be used but your name and profile will not appear anywhere on the site.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-link btn-sm" data-dismiss="modal" (click)="isHideProfile=false">Revert back to public profile</button>
+          <button type="button" class="btn btn-secondary btn-sm btn-w-170" (click)="hide_my_profile()">SAVE</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade common-modal c-modal-msg" id="deactivateProfileModal">
+  <div class="modal-dialog modal-sm-md" role="document">
+    <div class="modal-content normal-shadow">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="assets/modules/images/icons/icon-close@2x.png" alt=""></button>
+        <h4 class="modal-title text-center" id="deactivateProfileTitle">Are you sure you want to deactiviate your account?</h4>
+      </div>
+      <div class="modal-body">
+        <div class="width-480 text-center">
+          <p class="text-sm">You will no longer have access to your health data profile or be able to view profiles of others on the site.</p>
+          <p class="text-sm">If you would still like to access your profile but remain invisible to others, you can hide your profile instead.</p>
+          <p class="text-sm mb-0">
+            <strong>Please note:</strong> Any data that you have previously donated to SameCondition will still be used but your name and profile will not appear anywhere on the site.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm btn-w-184" (click)="isHideProfile=true;hide_my_profile()">Hide my profile instead</button>
+          <button type="button" class="btn btn-secondary btn-sm btn-w-184" data-dismiss="modal" (click)="deactivate_my_account()">Yes deactivate my account</button>
+          <div class="pt-10">
+            <button class="btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="connect-facebook" class="modal fade get-started">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="edit-profile-popup">
+        <div class="row row-p-up">
+          <div class="col-md-1"></div>
+          <div class="col-md-10 text-center">
+            Connect Facebook
+          </div>
+          <div class="col-md-1 explanation-small" style="padding-right:0;">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+          </div>
+        </div>
+
+        <!-- Dosage Blue section -->
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <p>Please select how you would like to use your Facebook for this account</p>
+          </div>
+        </div>
+
+        <!-- / Dosage Blue section -->
+
+        <!-- / Dosage Content section -->
+        <div class="row">
+          <div class="col-md-12">
+
+            <div class="">
+              <p>&nbsp;</p>
+              <div class="radio-sc" style="padding-left:0;">
+                <div class="radio-opt">
+                  <input type="radio" name="profile-info" id="keep" value="keep" checked="" (ngModel)="keep_profile_info_as_it_is">
+                  <label for="keep">Keep my profile information as it is, I just want to use Facebook as a quicker login route</label>
+                </div>
+                <div class="radio-opt">
+                  <input type="radio" name="profile-info" id="update" value="update" (ngModel)="update_selected_information">
+                  <label for="update">Update selected sections to match information on my Facebook</label>
+                </div>
+                <div class="sub-options">
+                  <div class="radio-opt">
+                    <input type="checkbox" id="my-profile-photo" value="profile photo" [(ngModel)]="my_profile_photo">
+                    <label for="my-profile-photo">MY PROFILE PHOTO</label>
+                  </div>
+                  <div class="radio-opt">
+                    <input type="checkbox" id="my-name" value="name" [(ngModel)]="my_name">
+                    <label for="my-name">MY NAME</label>
+                  </div>
+                  <div class="radio-opt">
+                    <input type="checkbox" id="my-birthday" value="birthday" [(ngModel)]="my_birthday">
+                    <label for="my-birthday">MY BIRTHDAY</label>
+                  </div>
+                  <div class="radio-opt">
+                    <input type="checkbox" id="my-sex" value="sex"
+                    [(ngModel)]="my_gender">
+                    <label for="my-sex">MY SEX</label>
+                  </div>
+                  <div class="radio-opt">
+                    <input type="checkbox" id="where-located" value="located" [(ngModel)]="my_current_city">
+                    <label for="where-located">WHERE I’M LOCATED</label>
+                  </div>
+                  <div class="radio-opt">
+                    <input type="checkbox" id="email" value="email"
+                    [(ngModel)]="my_email">
+                    <label for="email">EMAIL</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- / Dosage Content section -->
+        <p>&nbsp;</p>
+        <!-- Dosage Footer popup -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="footer-dosage text-center" style="background:#ffffff;padding-bottom:30px;">
+              <a style="border:1px solid #E5E9F1;padding:8px 25px;" (click)="cancel_request()">CANCEL</a>
+              <a class="btn-b-dosage" (click)="get_access_token_facebook()">SAVE</a>
+            </div>
+          </div>
+        </div>
+        <!-- / Dosage Footer popup -->
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade common-modal c-modal-msg" id="facebookDisconnectModal1">
+  <div class="modal-dialog modal-sm-md" role="document">
+    <div class="modal-content normal-shadow">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="assets/modules/images/icons/icon-close@2x.png" alt=""></button>
+        <h4 class="modal-title text-center" id="faceDsconnectTitle1">Create new password</h4>
+      </div>
+      <div class="modal-body">
+        <div class="width-480 text-center">
+          <p class="text-sm">In order to disconnect your Facebook, you will need to create a password to use for logging into your account.</p>
+          <div class="form-dashboard width-215">
+            <div class="form-group mb-10">
+              <input type="password" placeholder="Enter new password" class="form-control" [(ngModel)]="newPassword">
+            </div>
+            <div class="form-group mb-0">
+              <input type="password" placeholder="Confirm new password" class="form-control" [(ngModel)]="confirmPassword">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary btn-sm btn-w-170" (click)="disconnect_with_facebook()">SAVE PASSWORD</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade common-modal c-modal-msg" id="facebookDisconnectModal2">
+  <div class="modal-dialog modal-sm-md" role="document">
+    <div class="modal-content normal-shadow">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="assets/modules/images/icons/icon-close@2x.png" alt=""></button>
+        <h4 class="modal-title text-center" id="facebookDisconnetTitle2">Facebook disconnected!</h4>
+      </div>
+      <div class="modal-body">
+        <div class="width-480 text-center">
+          <p class="text-sm mb-0">Your Facebook has been disconnected from your account. You can now use
+          your new password and saved email to log into your account.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-link btn-sm" (click)="get_access_token_facebook()">Reconnect Facebook</button>
+          <button type="button" class="btn btn-secondary btn-sm btn-w-170" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+ <div id="send-request" class="modal fade dark-blue-modal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body">
+        <h5 class="center">Contact SameCondition</h5>
+        <div class="row">
+          <div class="col-md-12">
+            <form>
+              <div class="row">
+                <div class="col-md-6" style="padding-right:5px;">
+                  <div class="form-group">
+                    <label for="sc_name">Your Name *</label>
+                    <input type="text" class="form-control" placeholder="First name" name="first_name" [(ngModel)]="send_message.first_name">
+                    <div class="fs-12 text_red" *ngIf="formValidation == true && send_message.first_name =='' ">First name cannot be blank.</div>
+                  </div>
+                </div>
+                <div class="col-md-6" style="padding-left:5px;">
+                  <div class="form-group">
+                    <label for="sc_lname">&nbsp;</label>
+                    <input type="text" class="form-control" placeholder="Last name" name="last_name" [(ngModel)]="send_message.last_name">
+                    <div class="fs-12 text_red" *ngIf="formValidation == true && send_message.last_name =='' ">Last name cannot be blank.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="sc_email">Your Email *</label>
+                      <input type="email" class="form-control"
+                      placeholder="Enter your email"  name="email"
+                      [(ngModel)]="send_message.email">
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && send_message.email =='' ">Email cannot be blank.</div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && send_message.email !='' ">Please provide valid email address.</div>
+                    </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="radio-opt">
+                    <label for="update">Please select a reason for your message</label>
+                  </div>
+                  <div class="sub-options">
+                  <div class="radio-opt">
+                    <input type="radio" name="grp" style="width: 13px; height: 13px;" value="I have general question for my account"
+                    [(ngModel)]="send_message.reason">
+                    <label for="my-profile-photo">I have general question for my account</label>
+                  </div>
+                  <div class="radio-opt">
+                    <input type="radio" name="grp" style="width: 13px; height: 13px;" value="I want to permanently delete my account"
+                    [(ngModel)]="send_message.reason">
+                    <label for="my-profile-photo">I want to permanently delete my account</label>
+                  </div>
+                  <div class="radio-opt">
+                    <input type="radio" name="grp" style="width: 13px; height: 13px;" value="Other reason" [(ngModel)]="send_message.reason">
+                    <label for="my-profile-photo">Other reason</label>
+                  </div>
+                </div>
+                </div>
+                <div class="fs-12 text_red" *ngIf="formValidation == true && send_message.reason =='' ">Please select any reason.</div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="sc_dsc">Please be as detailed as possible so we can best assist you *</label>
+                      <textarea placeholder="Enter your message here" name="description" minlength="200" [(ngModel)]="send_message.message"></textarea>
+                      <div class="fs-12 text_red"  *ngIf="formValidation == true && send_message.message =='' ">Message cannot be blank.</div>
+                    </div>
+                </div>
+              </div>
+              <div class="row buttons-sc-form">
+                <div class="col-md-3" style="padding-right:5px;">
+                  <button type="button" class="btn btn-default close-sc" data-dismiss="modal" (click)="formValidation=false">Cancel</button>
+                </div>
+                <div class="col-md-9" style="padding-left:5=0kiu/+;,6 765xc.x;">
+                  <button type="submit" class="btn btn-primary" (click)="send_a_message()">Submit</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End modal content -->
+  </div>
+</div>

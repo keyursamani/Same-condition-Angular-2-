@@ -1,0 +1,1125 @@
+<!-- <div class="loader" *ngIf="loader"></div> -->
+<div class="upper_section">
+  <div class="container relativePosition">
+    <div *ngIf="userProfilePhysRes.physicians_researcher;then physres else edit"></div>
+    <div #edit *ngIf="userRole=='patient'">
+      <div class="edit">
+        <button (click)="openProfileModal()"> Edit Profile </button>
+      </div>
+    </div>
+    <div #physres *ngIf="userRole=='physician' || userRole=='researcher'">
+      <div class="edit">
+        <button type="button" data-toggle="modal" data-target="#profilePhysRes" (click)="openProfilePhysResModal()"> Edit Profile </button>
+      </div>
+    </div>
+
+    <div class="removePadding" [class.col-md-7]="userRole == 'patient' || userRole == 'care_member' " [class.col-md-8]="userRole == 'physician' || userRole== 'researcher'">
+        <div class="col-md-3 removePadding text-center">
+            <div class="profile">
+              <div class="proInter" *ngIf="userRole== 'patient' || userRole== 'care_member'">
+                <img style="padding: 20px;"  *ngIf="userProfile.photo_url==''" src="assets/modules/img/Icon-(User)@3x.png">
+                <img *ngIf="userProfile.photo_url!=''"  src="{{userProfile.photo_url}}" >
+              </div>
+              <div class="proInter" *ngIf="userRole== 'researcher' || userRole== 'physician'">
+                <img style="padding: 20px;" *ngIf="userProfile.photo_url==''" src="assets/modules/img/Icon-(User)@3x.png">
+                <img *ngIf="userProfile.photo_url!=''"  src="{{userProfile.photo_url}}" >
+              </div>
+              <div class="editProfile">
+                <div (click)="profileOpenModal()" class="editInside">
+                  <img class="pointer" src="assets/modules/img/icons/editLarge.png">
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="col-md-9 removePaddLeft">
+          <div class="profile_details border" *ngIf="userRole=='patient' || userRole=='care_member'">
+            <h2> {{DummyFirstname}}<span> {{DummyLastname}}</span>, {{age}}</h2>
+            <ul>
+              <li *ngIf="DummySex" class="textCapital"> <img src="assets/modules/img/icons/userGendar.png">
+              {{DummySex}}
+
+              <!--Transgender -->
+              </li>
+              <li *ngIf="!DummySex"></li>
+              <li> <img src="assets/modules/img/icons/follower.png"> {{userProfile.follower_count}} {{userProfile.follower_count > 1 ? 'Followers' : 'Follower'}} </li>
+
+              <li *ngIf="DummyCity"> <img src="assets/modules/img/icons/mapUserLocation.png"> {{DummyCity}}, {{DummyState}} </li>
+              <li *ngIf="!DummyCity"></li>
+
+              <li> <img src="assets/modules/img/icons/following.png">  {{userProfile.following_count}} Following </li>
+              <li *ngIf="DummyCity"> <img src="assets/modules/img/icons/userLocation.png"> {{DummyCity}}, {{DummyCountry}} </li>
+              <li *ngIf="!DummyCity"></li>
+            </ul>
+          </div>
+
+          <div class="profile_details border" *ngIf="userRole== 'researcher'">
+            <h2> {{userProfilePhysRes.first_name}}<span> {{userProfilePhysRes.last_name}}</span></h2>
+            <ul>
+              <li *ngIf="userProfilePhysRes.sex" class="textCapital"> <img src="assets/modules/img/icons/userGendar.png">
+              {{userProfilePhysRes.sex}}
+              <!--Transgender -->
+              </li>
+              <li *ngIf="!userProfilePhysRes.sex"></li>
+              <li> <img src="assets/modules/img/icons/follower.png">{{userProfilePhysRes.follower_count}} {{userProfilePhysRes.follower_count > 1 ? 'Followers' : 'Follower'}}</li>
+
+              <li *ngIf="userProfilePhysRes.city"> <img src="assets/modules/img/icons/mapUserLocation.png"> {{userProfilePhysRes.city}}, {{userProfilePhysRes.state}} </li>
+              <li *ngIf="!userProfilePhysRes.city"></li>
+
+              <li> <img src="assets/modules/img/icons/following.png">  {{userProfilePhysRes.following_count}} Following </li>
+              <li *ngIf="userProfilePhysRes.city"> <img src="assets/modules/img/icons/userLocation.png"> {{userProfilePhysRes.city}}, {{userProfilePhysRes.country}} </li>
+              <li *ngIf="!userProfilePhysRes.city"></li>
+            </ul>
+          </div>
+
+          <div class="profile_details border physician_details" *ngIf="userRole== 'physician'">
+            <h2> {{userProfilePhysRes.first_name}} <span> {{userProfilePhysRes.last_name}}</span>, {{acronym}}</h2>
+
+            <ul>
+                <li><b>{{userProfilePhysRes.physicians_researcher.med_school || ''}},  {{userProfilePhysRes.physicians_researcher.year_completed}}</b>
+                </li>
+                <li><img src="assets/modules/img/icons/following.png"> {{userProfilePhysRes.following_count}} Following </li>
+                <li><b>Currently Practising:</b> {{userProfilePhysRes.physicians_researcher.degree_earned_detail.name}}</li>
+                <li><img src="assets/modules/img/icons/follower.png">  {{userProfilePhysRes.follower_count}} {{userProfilePhysRes.follower_count > 1 ? 'Followers' : 'Follower'}} </li>
+                <li><b>Practice Location:</b> {{userProfilePhysRes.physicians_researcher.location_of_clinical_facility}}</li>
+                <li></li>
+                <li><b>State of License:</b> {{userProfilePhysRes.physicians_researcher.state_license}}</li>
+                <li></li>
+                <li class="custom_margine"><b>License approval URLs:</b> <a *ngFor="let url of fieldArray;let isLast=last" href="{{url.url}}" target="_blank" class="url-link">{{url.url}}{{isLast ? '' : ', '}} </a></li>
+              </ul>
+          </div>
+        </div>
+    </div>
+    <div class="no-pad-lr" [class.col-md-5]="userRole == 'patient' || userRole == 'care_member'" [class.col-md-4]="userRole == 'physician' || userRole== 'researcher'">
+      <div class="right_condition" *ngIf="userRole== 'patient' || userRole== 'care_member'">
+        <h2> <img src="assets/modules/img/icons/clipBoard.png"> My Conditions </h2>
+        <ul >
+          <li *ngFor="let condition of userProfile.my_conditions" [routerLink] = "['/global/community-condition-detail', condition.id]" class="pointer">{{condition.name}}</li>
+        </ul>
+      </div>
+      <div class="right_condition" *ngIf="userRole == 'researcher' || userRole== 'physician'">
+        <h2> <img src="assets/modules/img/icons/clipBoard.png"> Conditions I'm interested in </h2>
+        <ul >
+          <li *ngFor="let condition of userProfilePhysRes.condition_interested_in" class="inline">{{condition.name}}<span class="delete-condition" data-id="{{condition.tagged_id}}" (click)="deleteCondition($event.target.id)">&times;</span>
+          <li class="clickable" data-toggle="modal" data-target="#add-condition" (click)="openModalCondition()"><span class="add-condition">&#x2b;</span></li>
+        </ul>
+      </div>
+      <div class="slidecontainer newBgChange" *ngIf="userRole== 'patient'">
+        <div class="slider-title">
+          Profile Completion:
+        </div>
+        <div class="slider-wrapper">
+<!--           <div class="buttonOuter" [style.margin-left.%]="userProfile.profile_completion">
+              <div class="btnWithArrow">
+                <div class="profile-tooltip"> {{userProfile.profile_completion}}% </div>
+              </div>
+          </div> -->
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="userProfile.profile_completion" aria-valuemin="0" aria-valuemax="100" [style.width]="userProfile.profile_completion + '%'">
+              <span class="profile-tooltip" [style.left]="userProfile.profile_completion + '%'">{{userProfile.profile_completion}}%</span>
+              </div>
+          </div>
+          <!-- <input disabled [(ngModel)]="userProfile.profile_completion" type="range" min="1" max="100" value="{{userProfile.profile_completion}}" class="slider"> -->
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="middle_section">
+  <div class="container">
+    <ul class="nav nav-pills" *ngIf="userRole=='patient' || userRole=='care_member'">
+      <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['timeline']"> <a data-toggle="pill">TIMELINE</a></li>
+      <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['about']"><a data-toggle="pill" >ABOUT</a></li>
+      <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['condition']"><a data-toggle="pill" >CONDITIONS</a></li>
+      <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['treatment']"><a data-toggle="pill" >TREATMENTS</a></li>
+      <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['symptoms']"><a data-toggle="pill" >SYMPTOMS</a></li>
+      <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['qolserveys']"><a data-toggle="pill" >QOL SURVEYS</a></li>
+      <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['feeling']"><a data-toggle="pill" >FEELINGS</a></li>
+      <li class="hospitalixationWidth" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['hospitilization']"><a data-toggle="pill" >HOSPITALIZATIONS</a></li>
+      <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['weight']"><a data-toggle="pill" >WEIGHT</a></li>
+      <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['labtest']"><a data-toggle="pill" >LABS & TESTS</a></li>
+      <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: false}" [routerLink]="['chart']"><a data-toggle="pill" >CHARTS</a></li>
+    </ul>
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+
+
+<div id="profileModal" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content custom-modal-content">
+          <div class="proHead">
+            <button type="button" class="close" (click)="closeProfileModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3>
+              <div class="interestIcon"> <img src="assets/modules/img/icons/editLarge1.png"> </div>
+              Edit Info
+            </h3>
+          </div>
+          <div class="proBody">
+            <section id="nameDiv" style="display: block;">
+              <div class="row detailsPro rowDark">
+                <div class="col-md-2">
+                  <h6> NAME </h6>
+                </div>
+                <div class="col-md-7 padd_remove modalCenterVert">
+                  <span class="editInfo" *ngIf="!editnameS"> {{userProfile.first_name}} {{userProfile.last_name}} </span>
+                  <input *ngIf="editnameS" type="text" class="form-control secondName" placeholder="First Name" maxlength="40" [(ngModel)]="userProfile.first_name" >
+                  <input *ngIf="editnameS" type="text" class="form-control secondName" placeholder="Last Name" maxlength="40" [(ngModel)]="userProfile.last_name" >
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && userProfile.first_name =='' ">Please enter first name.</div>
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && userProfile.last_name =='' ">Please enter last name.</div>
+                </div>
+                <div class="col-md-3 textAligned padd_remove">
+                  <button *ngIf="!editnameS" class="btn btn-default borderBtn" (click)="goNameEdit()"> EDIT </button>
+                  <button *ngIf="editnameS" class="btn btn-default paddingBtn" (click)="gonameeditcancel()"> CANCEL </button>
+                  <button *ngIf="editnameS" (click)="gonameeditupdate()"  class="btn btn-default paddingBtn"> SAVE </button>
+                </div>
+              </div>
+            </section>
+            <section id="birthDiv" style="display: block;">
+              <div class="row detailsPro rowLight">
+                <div class="col-md-2">
+                  <h6> BIRTHDAY </h6>
+                </div>
+                <div class="col-md-7 padd_remove modalCenterVert">
+                  <span class="editInfo" *ngIf="!editBirthdayS"> {{birthdayToShow}} </span>
+                  <div class="row" *ngIf="editBirthdayS">
+                    <div class="col-md-12">
+                      <calendar [dateValue]="birthDate"
+                      [isDisplayBirthdayBtn]="true"
+                      [myLeft]="280"
+                      (getDate)='read_Date($event)'></calendar>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 textAligned padd_remove">
+                  <button *ngIf="!editBirthdayS"  class="btn btn-default borderBtn" (click)="editBirthdayS=true"> EDIT </button>
+                  <button *ngIf="editBirthdayS" class="btn btn-default paddingBtn" (click)="goBirthdayEditCancel()"> CANCEL </button>
+                  <button *ngIf="editBirthdayS" class="btn btn-default paddingBtn" (click)="goBirthdayEditUpdate()"> SAVE </button>
+                </div>
+              </div>
+            </section>
+            <div class="row detailsPro rowDark">
+              <div class="col-md-2">
+                <h6> SEX </h6>
+              </div>
+              <div class="col-md-7 padd_remove modalCenterVert">
+                <span class="editInfo textCapital" *ngIf="!editsexS"> {{userProfile.sex}}  </span>
+                <!--<input *ngIf="editsexS" type="text" class="form-control" placeholder="Name" [(ngModel)]="userProfile.first_name" >-->
+                <section class="gender_section" *ngIf="editsexS" >
+                    <div class="col-md-12 nPad">
+                          <label class="square_radio">
+                              <input type="radio" class="customRadio" name="gender" value="Male"
+                              [(ngModel)]="userProfile.sex">
+                              <span class="checkbox-detail"><img class="gender_img" src="assets/modules/img/MaleIcon@3x.png">Male</span>
+                          </label>
+                          <label class="square_radio">
+                             <input type="radio" class="customRadio" name="gender" value="Female"
+                             [(ngModel)]="userProfile.sex">
+                              <span class="checkbox-detail"><img class="gender_img" src="assets/modules/img/FemaleIcon@3x.png">Female</span>
+                          </label>
+                          <label class="square_radio">
+                              <input type="radio" class="customRadio" name="gender" value="Transgender"
+                              [(ngModel)]="userProfile.sex">
+                              <span class="checkbox-detail"><img class="gender_img" src="assets/modules/img/TransgenderIcon@3x.png">Transgender</span>
+                          </label>
+                    </div>
+                </section>
+              </div>
+              <div class="col-md-3 textAligned padd_remove">
+                <button *ngIf="!editsexS" class="btn btn-default borderBtn" (click)="editsexS=true"> EDIT </button>
+                 <button *ngIf="editsexS" class="btn btn-default paddingBtn" (click)="editsexSCancel()"> CANCEL </button>
+                  <button *ngIf="editsexS" class="btn btn-default paddingBtn" (click)="editsexSCancelSave()"> SAVE </button>
+              </div>
+            </div>
+            <div class="row detailsPro rowLight">
+              <div class="col-md-2">
+                <h6> RACE </h6>
+              </div>
+              <div class="col-md-7 padd_remove modalCenterVert">
+                <span class="editInfo" *ngIf="!editRaceS"> {{userProfile.race || "NA"}}  </span>
+                 <select [(ngModel)]="userProfile.race" *ngIf="editRaceS" class="form-control addSpacing">
+                      <option value=""> Select your race (optional)</option>
+                      <option value="White"> White </option>
+                      <option value="Black or African American"> Black or African American </option>
+                      <option value="Asian Indian"> Asian Indian </option>
+                      <option value="Asian Chinese"> Asian Chinese </option>
+                      <option value="Native Hawaiian or other Pacific Islander"> Native Hawaiian or other Pacific Islander </option>
+                      <option value="American Indian or Alaskan Native"> American Indian or Alaskan Native </option>
+                      <option value="Middle East"> Middle East  </option>
+                      <option value="Mixed Race"> Mixed Race </option>
+                      <option value="Two spirit"> Two spirit </option>
+                      <option value="I prefer not to answer"> I prefer not to answer </option>
+                    </select>
+
+              </div>
+              <div class="col-md-3 textAligned padd_remove">
+                <button *ngIf="!editRaceS" class="btn btn-default borderBtn" (click)="editRaceS=true"> EDIT </button>
+                 <button *ngIf="editRaceS" class="btn btn-default paddingBtn" (click)="editRaceSCancel()"> CANCEL </button>
+                  <button *ngIf="editRaceS" class="btn btn-default paddingBtn" (click)="editRaceSSave()"> SAVE </button>
+              </div>
+            </div>
+            <div class="row detailsPro rowDark">
+              <div class="col-md-2">
+                <h6> ETHNICITY </h6>
+              </div>
+              <div class="col-md-7 padd_remove modalCenterVert">
+                <span class="editInfo" *ngIf="!editethinityS"> {{userProfile.faith || "NA"}}  </span>
+                <select [(ngModel)]="userProfile.faith" *ngIf="editethinityS" class="form-control addSpacing">
+                      <option value=""> Select your faith (optional)</option>
+                      <option value="Agnostic"> Agnostic </option>
+                      <option value="Hinduism"> Hinduism </option>
+                      <option value="Christianity"> Christianity </option>
+                      <option value="Islam"> Islam </option>
+                      <option value="Buddhism"> Buddhism </option>
+                      <option value="Judaism"> Judaism </option>
+                      <option value="Sikh"> Sikh </option>
+                      <option value="Jainism"> Jainism </option>
+                      <option value="Other"> Other </option>
+                    </select>
+              </div>
+              <div class="col-md-3 textAligned padd_remove">
+                <button *ngIf="!editethinityS" class="btn btn-default borderBtn" (click)="editethinityS=true"> EDIT </button>
+                 <button *ngIf="editethinityS" class="btn btn-default paddingBtn" (click)="editethinitySCancel()"> CANCEL </button>
+                  <button *ngIf="editethinityS" class="btn btn-default paddingBtn" (click)="editethinitySave()"> SAVE </button>
+              </div>
+            </div>
+            <div class="row detailsPro rowLight">
+              <div class="col-md-2">
+                <h6> LOCATION </h6>
+              </div>
+              <div class="col-md-7 padd_remove modalCenterVert">
+                <span class="editInfo" *ngIf="!editlocationS"> {{userProfile.location}}  </span>
+                <div *ngIf="editlocationS" class="col-md-5 padd_remove">
+                    <select [(ngModel)]="userProfile.country" class="form-control addSpacing"
+                    (ngModelChange)="getstate_by_conunty($event)">
+                      <option >Select your country</option>
+                      <option *ngFor="let country of countries" value="{{country.code}}">{{country.name}}</option>
+                    </select>
+                  </div>
+                  <div *ngIf="editlocationS" class="col-md-7 padd_remove">
+                  <select class="form-control addSpacing" [(ngModel)]="userProfile.state" (ngModelChange)="enableCity()">
+                    <option>Select your state</option>
+                    <option *ngFor = "let state of states">{{state.name}}<option>
+                  </select>
+                  </div>
+                  <div *ngIf="editlocationS" class="col-md-12 padd_remove"  style="padding-top: 10px;">
+                     <input [(ngModel)]="userProfile.city" type="text" class="form-control" placeholder="Enter your city (optional)" maxlength="50"
+                     [disabled]="disableCity">
+                  </div>
+              </div>
+              <div class="col-md-3 textAligned padd_remove">
+                <button *ngIf="!editlocationS" class="btn btn-default borderBtn" (click)="editlocationS=true"> EDIT </button>
+                 <button *ngIf="editlocationS" class="btn btn-default paddingBtn" (click)="editlocationSCancel()"> CANCEL </button>
+                  <button *ngIf="editlocationS" class="btn btn-default paddingBtn" (click)="editlocationSUpdate()"> SAVE </button>
+              </div>
+            </div>
+             <div class="row detailsPro rowDark">
+              <div class="col-md-2 nPadR">
+                <h6> BLOOD TYPE </h6>
+              </div>
+              <div class="col-md-7 padd_remove modalCenterVert">
+                <span class="editInfo" *ngIf="!editBloodType"> {{userProfile.blood_type_marker}} {{userProfile.blood_type_factor}} </span>
+
+                <section *ngIf="editBloodType">
+                  <div class="col-md-6 padd_remove">
+                    <select [(ngModel)]="userProfile.blood_type_marker" class="form-control addSpacing">
+                      <option value=''> Select your blood type </option>
+                      <option value='O'> O </option>
+                      <option value='A'> A </option>
+                      <option value='B'> B </option>
+                      <option value='AB'> AB </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 padd_remove">
+                    <select class="form-control addSpacing"
+                    [(ngModel)]="userProfile.blood_type_factor">
+                      <option> Select your marker</option>
+                      <option value="+ve"> +VE </option>
+                      <option value="-ve"> -VE </option>
+                    </select>
+                  </div>
+                </section>
+              </div>
+              <div class="col-md-3 textAligned padd_remove">
+                <button *ngIf="!editBloodType" class="btn btn-default borderBtn" (click)="editBloodType=true"> EDIT </button>
+                <button *ngIf="editBloodType" class="btn btn-default paddingBtn" (click)="editBloodTypeCancel()"> CANCEL </button>
+                <button *ngIf="editBloodType" class="btn btn-default paddingBtn" (click)="editBloodTypeCancelSave()"> SAVE </button>
+              </div>
+            </div>
+            <div class="proFoot">
+              <p><strong>You can edit your bio, story and more in your <B>About Me</B> section</strong></p>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div id="ProfileInfoModal" class="modalOverlay">
+    <div class="modalBox proSmallModal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" (click)="profileCloseModal()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3>
+                <div class="interestIcon"> <img src="assets/modules/img/icons/editLarge1.png"> </div>
+                Edit Profile Picture
+              </h3>
+            </div>
+            <div class="proBody infoPad">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="squereBox">
+                    <div class="squereInside">
+                      <img *ngIf="userProfile.photo_url!=''&& !tempEditprofile"  src="{{userProfile.photo_url}}" >
+                      <img *ngIf="tempEditprofile"  src="{{tempEditprofile}}" >
+                      <img style="width: 100px; height: 100px; margin-top: 30px;" *ngIf="userProfile.photo_url==''"  src="assets/modules/img/Icon-(User)@3x.png">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="fileSelectBtn">
+                    <span>
+                      <label class="btn btn-default selectBtn" (click)="removeProfilePicture();">
+                          <i class="fa_icon icon-upload-alt margin-correction"></i>REMOVE PHOTO
+                      </label>
+                    </span>
+                    <span id="fileselector">
+                      <label class="btn btn-default selectBtn">
+                          <input id="upload-file-selector" type="file" (change)="selectChangeImage($event);">
+                          <i class="fa_icon icon-upload-alt margin-correction"></i>CHANGE PHOTO
+                      </label>
+                    </span>
+                    <div class="fileTwoBtn">
+                      <button class="btn btn-default btn-cancel" (click)="profileCloseModal()"> CANCEL </button>
+                      <button class="btn btn-primary btn-save" (click)="updateProfilePicture()"> SAVE </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="uploadPhotoModal" class="modalOverlay1">
+  <div class="modalBox proSmallModal second-modal">
+      <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" (click)="uploadPhotoCloseModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3>
+              <div class="interestIcon"> <img src="assets/modules/img/icons/editLarge1.png"> </div>
+              Edit Profile Picture
+            </h3>
+          </div>
+          <div class="proBody infoPad">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="squereBox second-box">
+                  <div class="squereInside" style="background: #4A90E2; border-radius: 50%;">
+                    <img *ngIf="tempEditprofile!=''"  src="{{tempEditprofile}}" >
+                    <img style="width: 100px; height: 100px; margin-top: 30px;" *ngIf="tempEditprofile==''"  src="assets/modules/img/Icon-(User)@3x.png">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6"  >
+                <div class="fileSelectBtn" style="margin-left:11px;margin-right: 11px">
+                  <span id="fileselector">
+                    <label class="btn btn-default selectBtn" for="upload-file-selector">
+                        <input id="upload-file-selector" type="file" (change)="selectChangeImage($event);">
+                        <i class="fa_icon icon-upload-alt margin-correction"></i>UPLOAD PHOTO
+                    </label>
+                  </span>
+                  <div class="fileTwoBtn" style="padding: 0; margin-top: 70px;">
+                    <button class="btn btn-default btn-cancel" (click)="uploadPhotoCloseModal()"> CANCEL </button>
+                    <button class="btn btn-primary btn-save" (click)="updateProfilePicture()"> SAVE </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="modal fade in custom-modal" id="profilePhysRes" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content custom-modal-content">
+      <div class="modal-body custom-modal-body" *ngIf="userRole == 'researcher'">
+        <div class="custom-modal-header">
+          <button type="button" class="close custom-close" data-dismiss="modal" (click)="closeProfilePhysResModal()" aria-label="Close">
+            &times;
+          </button>
+          <div class="clearfix">
+            <img class="ico-edit-profile pull-left" src="assets/modules/img/icons/editLarge1.png">
+            <p class="custom-modal-header-text">Edit Info</p>
+          </div>
+        </div>
+        <section id="nameDiv" style="display: block;">
+          <div class="row info-row">
+            <div class="col-md-2 info-label">
+              NAME
+            </div>
+            <div class="col-md-7 info-data">
+              {{userProfilePhysRes.first_name}} {{userProfilePhysRes.last_name}}
+            </div>
+          </div>
+        </section>
+        <div class="horizontal-rule">SCHOOL
+        </div>
+        <section id="degreeEarned" style="display: block;">
+          <div class="row info-row">
+            <div class="col-md-3 info-label-optional">
+              DEGREE EARNED (OPTIONAL)
+            </div>
+            <div class="col-md-4 modal-input">
+              <div class="info-data" *ngIf="!editDegree"> {{searchDegreeKeyword}} </div>
+              <input *ngIf="editDegree" type="text" class="form-control custom-form-control" placeholder="Enter your degree" [(ngModel)]="searchDegreeKeyword" (ngModelChange)="searchDegrees($event)">
+              <div class="show-items" *ngIf="showDegreeList == true">
+                <div class="items text-left" role="menu" *ngFor="let item of searchDegreeItems" (click)="selectDegree(item)" >
+                  <p>{{item.name}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-5">
+              <button *ngIf="!editDegree" class="btn btn-default edit-btn pull-right" (click)="editDegree=true"> EDIT </button>
+              <button *ngIf="editDegree" class="btn btn-primary pull-right save-btn" (click)="updateDegree()"> SAVE </button>
+              <button *ngIf="editDegree" class="btn btn-default cancel-btn pull-right" (click)="cancelEditDegree()"> CANCEL </button>
+            </div>
+          </div>
+        </section>
+        <section id="yearCompleted" style="display: block;">
+          <div class="row info-row">
+            <div class="col-md-3 info-label-optional">
+              YEAR COMPLETED (OPTIONAL)
+            </div>
+            <div class="col-md-4 modal-input">
+              <div class="info-data" *ngIf="!editYear"> {{year_completed}} </div>
+              <select class="visibility" *ngIf="editYear" class="form-control custom-form-control" [(ngModel)]="year_completed">
+                <option value="undefined" selected disabled>Select year</option>
+                <option *ngFor="let year of years;" value="{{year}}">{{year}}</option>
+              </select>
+            </div>
+            <div class="col-md-5">
+              <button *ngIf="!editYear" class="btn btn-default edit-btn pull-right" (click)="editYear=true"> EDIT </button>
+              <button *ngIf="editYear" class="btn btn-primary pull-right save-btn" (click)="updateYear()"> SAVE </button>
+              <button *ngIf="editYear" class="btn btn-default cancel-btn pull-right" (click)="cancelEditYear()"> CANCEL </button>
+            </div>
+          </div>
+        </section>
+        <div class="horizontal-rule">ADDITIONAL DETAILS
+        </div>
+        <section id="attachments" style="display: block;">
+          <div class="row info-row">
+            <div class="col-md-4 info-label-optional" *ngIf="!editDoc">
+              ADDITIONAL DOCUMENTS (OPTIONAL)
+            </div>
+            <div class="col-md-6" *ngIf="!editDoc">
+              <div class="td-container">
+                <div *ngFor="let file of fileArray; let i = index">
+                  <div class="row">
+                    <div class="docs-data wrap">
+                      {{file.attachment_url.substring(file.attachment_url.lastIndexOf('/')+1,file.attachment_url.lastIndexOf('?'))}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2" *ngIf="!editDoc">
+              <button class="btn btn-default edit-btn pull-right" (click)="editDoc=true"> EDIT </button>
+            </div>
+            <div class="col-md-12 info-label-optional" *ngIf="editDoc">
+              ADDITIONAL DOCUMENTS (OPTIONAL)
+            </div>
+            <div class="col-md-12" *ngIf="editDoc">
+              <div class="row" *ngIf="fileArray.length > 0">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-10">
+                    <table class="table table-borderless custom-table">
+                        <thead>
+                            <tr>
+                                <th>FILE/IMAGE NAME</th>
+                                <th>VISIBLE TO</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let file of fileArray; let i = index">
+                                <td width="40%" height="30">{{file.attachment_url.substring(file.attachment_url.lastIndexOf("/")+1,file.attachment_url.lastIndexOf("?"))}}
+                                </td>
+                                <td width="50%" height="30">
+                                    <select class="form-control visibility" [(ngModel)]="file.visibility">
+                                        <option value="all_users" selected>Visible to All Users</option>
+                                        <option value="only_me">Only me</option>
+                                        <option value="followers" selected="selected">Followers</option>
+                                    </select>
+                                </td>
+                                <td width="10%" height="30">
+                                    <button class="recycle" (click)="deleteFileValue($event, i)"><img src="assets/modules/img/recycle.png"></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+              <div class="row">
+                  <form *ngIf="attachment_limit == false">
+                      <div for="file-upload" class="uploader">
+                          <img src="assets/modules/img/ico/cloud-upload.png" class="cloud">
+                          <div class="drag-drop text-center">
+                              <div class="drag-drop-text">DRAG & DROP FILE</div>
+                              <p>OR SELECT AND OPTION BELOW</p>
+                              <div class="row">
+                                  <div class="col-md-3">
+                                  </div>
+                                  <div class="col-md-3 img-upload">
+                                      <label for="img-upload2" class="btn-upload text-left"><img src="assets/modules/img/ico/img-upload.png" > ADD IMAGE </label>
+                                      <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFile" (change)="onAttach($event)" name="newAttributeFile" placeholder="Enter URL" id="img-upload2"  accept=".jpg,.png">
+                                  </div>
+                                  <div class="col-md-3 doc-upload">
+                                      <label for="doc-upload2" class="btn-upload text-left"><img src="assets/modules/img/ico/doc-upload.png" > ADD FILE </label>
+                                      <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFile" (change)="onAttach($event)" name="newAttributeFile" placeholder="Enter URL" id="doc-upload2"  accept=".pdf">
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="text-center upload-limit">
+                                      Maximum file size upload 20MB<br>
+                                     (pdf, jpn, png format are all accepted format)
+                                  </div>
+                              </div>
+                          </div>
+                          <input class="form-control custom-form-control-file file-upload" type="file" [ngModel]="newAttributeFile" (change)="onAttach($event)" name="newAttributeFile" placeholder="Enter URL">
+                      </div>
+                  </form>
+              </div>
+              <div class="row">
+                <div class="col-md-12 mb-10">
+                  <button *ngIf="editDoc" class="btn btn-primary pull-right save-btn" (click)="updateDoc()"> SAVE </button>
+                  <button *ngIf="editDoc" class="btn btn-default cancel-btn pull-right" (click)="cancelEditDoc()"> CANCEL </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="license_approval_urls" style="display: block;">
+          <div class="row info-row" [class.row-form-bg.mb-10]="editUrl">
+            <div class="col-md-4 info-label-optional" *ngIf="!editUrl">
+             ADDITIONAL URLS<br>(OPTIONAL)
+            </div>
+            <div class="col-md-6" *ngIf="!editUrl">
+              <div *ngFor="let field of fieldArray; let i = index">
+                <div class="row">
+                  <div class="td-container">
+                    <div class="col-md-6 url-data wrap">
+                      <a href="{{field.url}}" target="_blank" class="link">{{field.url}}</a>
+                    </div>
+                    <div class="col-md-6 url-data">
+                      <small class="small" *ngIf="field.visibility == 'all_users'">Visible to All Users</small>
+                      <small class="small"*ngIf="field.visibility == 'only_me'">Only me</small>
+                      <small class="small" *ngIf="field.visibility == 'followers'">Followers</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2" *ngIf="!editUrl">
+              <button class="btn btn-default edit-btn pull-right" (click)="editUrl=true"> EDIT </button>
+            </div>
+            <div class="col-md-12" *ngIf="editUrl">
+              <div class="row">
+                <div class="col-md-12 info-label-optional">ADD UP TO 5 URLS (OPTIONAL)</div>
+                <div class="col-md-1" *ngIf="fieldArray.length > 0">
+                </div>
+                <div class="col-md-10" *ngIf="fieldArray.length > 0">
+                  <table class="table table-borderless custom-table">
+                      <thead>
+                        <tr>
+                          <th>MY URLS</th>
+                          <th>VISIBLE TO</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let field of fieldArray; let i = index">
+                              <td width="40%" height="30">
+                                  <a href="{{field.url}}" target="_blank">{{field.url}}</a>
+                              </td>
+                              <td width="50%" height="30">
+                                <select class="form-control visibility" [(ngModel)]="field.visibility">
+                                  <option value="all_users" [selected]="field.visibilty == 'all_users'">Visible to All Users</option>
+                                  <option value="only_me">Only me</option>
+                                  <option value="followers" selected="selected">Followers</option>
+                                </select>
+                              </td>
+                              <td width="10%" height="30">
+                                  <button class="recycle"  type="button" (click)="deleteFieldValue(i)"><img src="assets/modules/img/recycle.png"></button>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                </div>
+              </div>
+              <form id="url_form" class="row text-center">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-6">
+                    <input class="form-control" type="url" [(ngModel)]="newAttribute" name="newAttribute" placeholder="Enter URL">
+                </div>
+                <div class="col-md-1">
+                  <button class="btn btn-default" type="button" (click)="addFieldValue()"><i class="fa fa-plus"></i></button>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-12 mb-10" *ngIf="editUrl">
+              <button class="btn btn-primary pull-right save-btn" (click)="updateUrl()"> SAVE </button>
+              <button class="btn btn-default cancel-btn pull-right" (click)="cancelEditUrl()"> CANCEL </button>
+            </div>
+          </div>
+        </section>
+        <section id="bio" style="display: block;">
+          <div class="row info-row">
+            <div class="col-md-4 info-label">
+              BIO (OPTIONAL)
+            </div>
+            <div *ngIf="editBio" class="col-md-8">
+              <span class="pull-right"><small>{{bio ? bio.length :0}}/300</small></span>
+            </div>
+            <div class="col-md-6 info-data" *ngIf="!editBio">
+              {{bio}}
+            </div>
+            <div class="col-md-2">
+              <button *ngIf="!editBio" class="btn btn-default edit-btn pull-right" (click)="editBio=true"> EDIT </button>
+            </div>
+            <div class="col-md-12">
+              <textarea *ngIf="editBio" class="form-control custom-textarea" rows="5" maxlength="300" [(ngModel)]="bio" placeholder="Enter a description about your work"></textarea>
+            </div>
+            <div class="col-md-7 top-margin-10">
+            </div>
+            <div class="col-md-5 mb-10">
+              <button *ngIf="editBio" class="btn btn-primary pull-right save-btn" (click)="updateBio()"> SAVE </button>
+              <button *ngIf="editBio" class="btn btn-default cancel-btn pull-right" (click)="cancelEditBio()"> CANCEL </button>
+            </div>
+          </div>
+        </section>
+        <section id="note" style="display: block;">
+          <div class="row">
+            <p class="text-center note">If you would like to update info related to your name please<br><a href="#"><u>submit a request</u></a> with Customer Support</p>
+          </div>
+        </section>
+      </div>
+      <div class="modal-body custom-modal-body" *ngIf="userRole == 'physician'">
+        <div class="custom-modal-header">
+          <button type="button" class="close custom-close" data-dismiss="modal" (click)="closeProfilePhysResModal()" aria-label="Close">
+            &times;
+          </button>
+          <div class="clearfix">
+            <img class="ico-edit-profile pull-left" src="assets/modules/img/icons/editLarge1.png">
+            <p class="custom-modal-header-text">Edit Info</p>
+          </div>
+        </div>
+        <section id="nameDiv" style="display: block;">
+          <div class="row info-row row_custom_bg">
+            <div class="col-md-2 info-label">
+              NAME
+            </div>
+            <div class="col-md-7 info-data">
+              {{userProfilePhysRes.first_name}} {{userProfilePhysRes.last_name}}
+            </div>
+          </div>
+        </section>
+        <div class="horizontal-rule">SCHOOL
+        </div>
+        <section id="medSchool" style="display: block;">
+          <div class="row info-row row_custom_bg">
+            <div class="col-md-3 info-label">
+              MED SCHOOL
+            </div>
+            <div class="col-md-9 modal-input">
+              <div class="info-data"> {{userProfilePhysRes.physicians_researcher.med_school}} </div>
+            </div>
+          </div>
+        </section>
+        <section id="degreeEarned" style="display: block;">
+          <div class="row info-row">
+            <div class="col-md-3 info-label-optional">
+              DEGREE EARNED (OPTIONAL)
+            </div>
+            <div class="col-md-9 modal-input">
+              <div class="info-data"> {{userProfilePhysRes.physicians_researcher.degree_earned_detail.name}} </div>
+            </div>
+          </div>
+        </section>
+        <section id="yearCompleted" style="display: block;">
+          <div class="row info-row row_custom_bg">
+            <div class="col-md-3 info-label-optional">
+              YEAR COMPLETED (OPTIONAL)
+            </div>
+            <div class="col-md-9 modal-input">
+              <div class="info-data"> {{userProfilePhysRes.physicians_researcher.year_completed}} </div>
+            </div>
+          </div>
+        </section>
+        <section id="medicalDegree" style="display: block;">
+          <div class="row info-row">
+            <div class="col-md-3 info-label">
+              MEDICAL DEGREE
+            </div>
+            <div class="col-md-5 modal-input">
+              <div class="info-data"> {{userProfilePhysRes.physicians_researcher.degree_url.substring(userProfilePhysRes.physicians_researcher.degree_url.lastIndexOf("/")+1,userProfilePhysRes.physicians_researcher.degree_url.lastIndexOf("?"))}} </div>
+            </div>
+            <div class="col-md-4">
+              <select class="form-control visibility" [(ngModel)]="degree_visibility" (change)="physDegreeUpdate()">
+                <option value="all_users" selected>Visible to All Users</option>
+                <option value="only_me">Only me</option>
+                <option value="followers" selected="selected">Followers</option>
+              </select>
+            </div>
+          </div>
+        </section>
+        <div class="horizontal-rule">LICENSE</div>
+        <section id="stateLicense" style="display: block;">
+          <div class="row info-row row_custom_bg">
+            <div class="col-md-3 info-label">
+              STATE OF LICENSE
+            </div>
+            <div class="col-md-9 modal-input">
+              <div class="info-data"> {{userProfilePhysRes.physicians_researcher.state_license}} </div>
+            </div>
+          </div>
+        </section>
+        <section id="stateVisibility" style="display: block;">
+          <div class="row info-row">
+            <div class="col-md-3 info-label">
+              STATE LICENSE
+            </div>
+            <div class="col-md-5 modal-input">
+              <div class="info-data"> {{userProfilePhysRes.physicians_researcher.license_url.substring(userProfilePhysRes.physicians_researcher.license_url.lastIndexOf("/")+1,userProfilePhysRes.physicians_researcher.license_url.lastIndexOf("?"))}} </div>
+            </div>
+            <div class="col-md-4">
+              <select class="form-control visibility" [(ngModel)]="license_visibility" (change)="physLicenseUpdate()">
+                <option value="all_users" selected>Visible to All Users</option>
+                <option value="only_me">Only me</option>
+                <option value="followers" selected="selected">Followers</option>
+              </select>
+            </div>
+          </div>
+        </section>
+        <section id="license_approval_urls" style="display: block;">
+          <div class="row info-row row_custom_bg" [class.row-form-bg.mb-10]="editUrl">
+            <div class="col-md-3 info-label-optional" *ngIf="!editUrl">
+             LICENSE APPROVAL<br>URLS (OPTIONAL)
+            </div>
+            <div class="col-md-7" *ngIf="!editUrl">
+              <div *ngFor="let field of fieldArray; let i = index">
+                <div class="row">
+                  <div class="td-container">
+                    <div class="col-md-7 url-data wrap">
+                      <a href="{{field.url}}" target="_blank" class="link_line">{{field.url}}</a>
+                    </div>
+                    <div class="col-md-5 url-data">
+                      <small class="small" *ngIf="field.visibility == 'all_users'">Visible to All Users</small>
+                      <small class="small"*ngIf="field.visibility == 'only_me'">Only me</small>
+                      <small class="small" *ngIf="field.visibility == 'followers'">Followers</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2" *ngIf="!editUrl">
+              <button class="btn btn-default edit-btn pull-right" (click)="editUrl=true"> EDIT </button>
+            </div>
+            <div class="col-md-12" *ngIf="editUrl">
+              <div class="row">
+                <div class="col-md-12 info-label-optional">LICENSE APPROVAL URLS (OPTIONAL)</div>
+                <div class="col-md-1" *ngIf="fieldArray.length > 0">
+                </div>
+                <div class="col-md-10" *ngIf="fieldArray.length > 0">
+                  <table class="table table-borderless custom-table">
+                      <thead>
+                        <tr>
+                          <th>MY URLS</th>
+                          <th>VISIBLE TO</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let field of fieldArray; let i = index">
+                              <td width="40%" height="30">
+                                  <a href="{{field.url}}" target="_blank">{{field.url}}</a>
+                              </td>
+                              <td width="50%" height="30">
+                                <select class="form-control visibility" [(ngModel)]="field.visibility">
+                                  <option value="all_users" [selected]="field.visibilty == 'all_users'">Visible to All Users</option>
+                                  <option value="only_me">Only me</option>
+                                  <option value="followers" selected="selected">Followers</option>
+                                </select>
+                              </td>
+                              <td width="10%" height="30">
+                                  <button class="recycle"  type="button" (click)="deleteFieldValue(i)"><img src="assets/modules/img/recycle.png"></button>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                </div>
+              </div>
+              <form id="url_form" class="row text-center">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-6">
+                    <input class="form-control" type="url" [(ngModel)]="newAttribute" name="newAttribute" placeholder="Enter URL">
+                </div>
+                <div class="col-md-1">
+                  <button class="btn btn-default" type="button" (click)="addFieldValue()"><i class="fa fa-plus"></i></button>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-12 mb-10" *ngIf="editUrl">
+              <button class="btn btn-primary pull-right save-btn" (click)="updateUrl()"> SAVE </button>
+              <button class="btn btn-default cancel-btn pull-right" (click)="cancelEditUrl()"> CANCEL </button>
+            </div>
+          </div>
+        </section>
+        <div class="horizontal-rule">WORK</div>
+        <section id="currentPractive" style="display: block;">
+          <div class="row info-row row_custom_bg">
+            <div class="col-md-4 info-label">
+              CURRENTLY PRACTICING
+            </div>
+            <div class="col-md-3 modal-input">
+              <div class="info-data" *ngIf="!editPractice"> {{searchPracticeKeyword}} </div>
+              <input *ngIf="editPractice" type="text" class="form-control custom-form-control" id="practiceInput" placeholder="Enter your current medical role" [(ngModel)]="searchPracticeKeyword" (ngModelChange)="searchPractices($event)">
+              <div class="show-items" *ngIf="showPracticeList == true">
+                <div class="items" role="menu" *ngFor="let item of searchPracticeItems" (click)="selectPractice(item)" >
+                  <p>{{item.name}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 url-data mt-10" *ngIf="!editPractice">
+              <small class="small" *ngIf="currently_practicing_visibility == 'all_users'">Visible to All Users</small>
+              <small class="small" *ngIf="currently_practicing_visibility == 'only_me'">Only me</small>
+              <small class="small" *ngIf="currently_practicing_visibility == 'followers'">Followers</small>
+            </div>
+            <div class="col-md-2" *ngIf="!editPractice">
+              <button class="btn btn-default edit-btn pull-right" (click)="editPractice=true"> EDIT </button>
+            </div>
+            <div class="col-md-5" *ngIf="editPractice">
+              <button class="btn btn-primary pull-right save-btn" (click)="updatePractice()"> SAVE </button>
+              <button class="btn btn-default cancel-btn pull-right" (click)="cancelEditPractice()"> CANCEL </button>
+            </div>
+            <div class="col-md-12" *ngIf="editPractice">
+              <div class="row mb-10">
+                <div class="col-md-4"></div>
+                <div class="col-md-4 modal-input ">
+                  <select class="form-control visibility" [(ngModel)]="currently_practicing_visibility">
+                    <option value="all_users">Visible to All Users</option>
+                    <option value="only_me">Only me</option>
+                    <option value="followers">Followers</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="locationPractice" style="display: block;">
+          <div class="row info-row" *ngIf="!editPracticeLocation">
+            <div class="col-md-4 info-label">
+              LOCATION OF PRACTICE
+            </div>
+            <div class="col-md-6 modal-input">
+              <div class="info-data"> {{name_of_clinical_facility}}, {{location_of_clinical_facility}} </div>
+            </div>
+            <div class="col-md-2" *ngIf="!editPracticeLocation">
+              <button class="btn btn-default edit-btn pull-right" (click)="editPracticeLocation=true"> EDIT </button>
+            </div>
+          </div>
+          <div class="row info-row row-form-bg mt-10" *ngIf="editPracticeLocation">
+            <div class="col-md-12 info-label-optional">
+              LOCATION OF PRACTICE
+            </div>
+            <div class="col-md-5 info-label-optional">
+              CITY/STATE OF CLINICAL FACILITY
+            </div>
+            <div class="col-md-7">
+              <input type="text" class="form-control custom-form-control" placeholder="Enter location of your clinical facility" [(ngModel)]="location_of_clinical_facility">
+            </div>
+            <div class="col-md-5 info-label-optional">
+              NAME OF CLINICAL FACILITY
+            </div>
+            <div class="col-md-7">
+              <input type="text" class="form-control custom-form-control" placeholder="Enter location of your clinical facility" [(ngModel)]="name_of_clinical_facility">
+            </div>
+            <div class="col-md-7">
+            </div>
+            <div class="col-md-5 mb-10">
+              <button class="btn btn-primary pull-right save-btn" (click)="updatePracticeLocation()"> SAVE </button>
+              <button class="btn btn-default cancel-btn pull-right" (click)="cancelEditPracticeLocation()"> CANCEL </button>
+            </div>
+          </div>
+        </section>
+        <section id="attachments" style="display: block;">
+          <div class="row info-row row_custom_bg">
+            <div class="col-md-4 info-label-optional" *ngIf="!editDoc">
+              ADDITIONAL DOCUMENTS (OPTIONAL)
+            </div>
+            <div class="col-md-6" *ngIf="!editDoc">
+              <div *ngFor="let file of fileArray; let i = index">
+                <div class="row">
+                  <div class="td-container">
+                    <div class="col-md-6 docs-data wrap">
+                      <a href="{{file.attachment_url}}" class="link" rel="noopener noreferrer" target="_blank">{{file.attachment_url.substring(file.attachment_url.lastIndexOf('/')+1,file.attachment_url.lastIndexOf('?'))}}</a>
+                    </div>
+                    <div class="col-md-6 url-data">
+                      <small class="small" *ngIf="file.visibility == 'all_users'">Visible to All Users</small>
+                      <small class="small"*ngIf="file.visibility == 'only_me'">Only me</small>
+                      <small class="small" *ngIf="file.visibility == 'followers'">Followers</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2" *ngIf="!editDoc">
+              <button class="btn btn-default edit-btn pull-right" (click)="editDoc=true"> EDIT </button>
+            </div>
+            <div class="col-md-12 info-label-optional row-form-bg mt-10" *ngIf="editDoc">
+              ADDITIONAL DOCUMENTS (OPTIONAL)
+            </div>
+            <div class="col-md-12 row-form-bg" *ngIf="editDoc">
+              <div class="row" *ngIf="fileArray.length > 0">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-10">
+                    <table class="table table-borderless custom-table">
+                        <thead>
+                            <tr>
+                                <th>FILE/IMAGE NAME</th>
+                                <th>VISIBLE TO</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let file of fileArray; let i = index">
+                                <td width="40%" height="30">{{file.attachment_url.substring(file.attachment_url.lastIndexOf("/")+1,file.attachment_url.lastIndexOf("?"))}}
+                                </td>
+                                <td width="50%" height="30">
+                                    <select class="form-control visibility" [(ngModel)]="file.visibility">
+                                        <option value="all_users" selected>Visible to All Users</option>
+                                        <option value="only_me">Only me</option>
+                                        <option value="followers" selected="selected">Followers</option>
+                                    </select>
+                                </td>
+                                <td width="10%" height="30">
+                                    <button class="recycle"  type="button" (click)="deleteFileValue($event, i)"><img src="assets/modules/img/recycle.png"></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+              <div class="row">
+                  <form *ngIf="attachment_limit == false">
+                      <div for="file-upload" class="uploader">
+                          <img src="assets/modules/img/ico/cloud-upload.png" class="cloud">
+                          <div class="drag-drop text-center">
+                              <div class="drag-drop-text">DRAG & DROP FILE</div>
+                              <p>OR SELECT AND OPTION BELOW</p>
+                              <div class="row">
+                                  <div class="col-md-3">
+                                  </div>
+                                  <div class="col-md-3 img-upload">
+                                      <label for="img-upload2" class="btn-upload text-left"><img src="assets/modules/img/ico/img-upload.png" > ADD IMAGE </label>
+                                      <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFile" (change)="onAttach($event)" name="newAttributeFile" placeholder="Enter URL" id="img-upload2"  accept=".jpg,.png">
+                                  </div>
+                                  <div class="col-md-3 doc-upload">
+                                      <label for="doc-upload2" class="btn-upload text-left"><img src="assets/modules/img/ico/doc-upload.png" > ADD FILE </label>
+                                      <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFile" (change)="onAttach($event)" name="newAttributeFile" placeholder="Enter URL" id="doc-upload2"  accept=".pdf">
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="text-center upload-limit">
+                                      Maximum file size upload 20MB<br>
+                                     (pdf, jpn, png format are all accepted format)
+                                  </div>
+                              </div>
+                          </div>
+                          <input class="form-control custom-form-control-file file-upload" type="file" [ngModel]="newAttributeFile" (change)="onAttach($event)" name="newAttributeFile" placeholder="Enter URL">
+                      </div>
+                  </form>
+              </div>
+              <div class="row row-form-bg">
+                <div class="col-md-12 mb-10">
+                  <button *ngIf="editDoc" class="btn btn-primary pull-right save-btn" (click)="updateDoc()"> SAVE </button>
+                  <button *ngIf="editDoc" class="btn btn-default cancel-btn pull-right" (click)="cancelEditDoc()"> CANCEL </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="bio" style="display: block;">
+          <div class="row info-row" [class.row-form-bg]="editBio" [class.mt-10]="editBio">
+            <div class="col-md-4 info-label">
+              BIO (OPTIONAL)
+            </div>
+            <div *ngIf="editBio" class="col-md-8">
+              <span class="pull-right"><small>{{bio ? bio.length :0}}/150</small></span>
+            </div>
+            <div class="col-md-6 info-data" *ngIf="!editBio">
+              {{bio}}
+            </div>
+            <div class="col-md-2">
+              <button *ngIf="!editBio" class="btn btn-default edit-btn pull-right" (click)="editBio=true"> EDIT </button>
+            </div>
+            <div class="col-md-12">
+              <textarea *ngIf="editBio" class="form-control custom-textarea" rows="5" maxlength="150" [(ngModel)]="bio" placeholder="Enter a description about your work"></textarea>
+            </div>
+            <div class="col-md-7 top-margin-10">
+            </div>
+            <div class="col-md-5 mb-10">
+              <button *ngIf="editBio" class="btn btn-primary pull-right save-btn" (click)="updateBio()"> SAVE </button>
+              <button *ngIf="editBio" class="btn btn-default cancel-btn pull-right" (click)="cancelEditBio()"> CANCEL </button>
+            </div>
+          </div>
+        </section>
+        <section id="note" style="display: block;">
+          <div class="row">
+            <p class="text-center note">If you would like to update info related to your name please<br><a href="#"><u>submit a request</u></a> with Customer Support</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade in custom-modal-condition" id="add-condition" role="dialog">
+  <div class="modal-dialog custom-modal-dialog-condition" role="document">
+    <div class="modal-content custom-modal-content-condition cstom_height text-center" id="cstom_height">
+      <div class="modal-body custom-modal-body-condition">
+        <div class="custom-modal-header text-center">
+          <button type="button" class="close custom-close" data-dismiss="modal" (click)="closeProfilePhysResModal()" aria-label="Close">
+            &times;
+          </button>
+          Conditions
+          <div class="row text-center">
+            <div class="col-md-12 mt-20 condition-text-select">
+              Tag conditions you're interested in
+              <div class="input-group input-group-condition margT10">
+                  <span class="input-group-addon custom-addon">#</span>
+                  <input type="text" class="form-control input-condition" [(ngModel)]="searchConditionKeyword" (ngModelChange)="searchCondition($event)">
+              </div>
+              <div class="show-items-conditions" *ngIf="showConditionList == true">
+                <div class="items select-text-condition" role="menu" *ngFor="let item of searchConditionItems" (click)="selectCondition(item)" >
+                  <p>#{{item.name}}</p>
+                  <p class="sub-result">{{item.count ? item.count+' others tagged this condition' : 'No one tagged this condition'}} </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button _ngcontent-c6="" class="btn btn-primary mt-10" data-toggle="modal" (click)= "add_to_profile()">ADD TO PROFILE</button>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

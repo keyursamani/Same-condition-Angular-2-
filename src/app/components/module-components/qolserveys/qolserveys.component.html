@@ -1,0 +1,306 @@
+<div class="row inline_flex">
+  <div class="col-md-9">
+    <div class="qol_tab_info">
+       <h3 class="qol_head">QOL Surveys</h3>
+        <div class="sub-description" style="margin-bottom: 23px;">Based upon physical, mental and social criteria, my Quality of Life (QOL) score is decided. Here are the details.</div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="qol_drowpdown inline_block">
+              <label>I want to see</label>
+              <select class="form-control" [(ngModel)]="filterstring" (ngModelChange)="filterQol($event)">
+                <option value="3_months">Last 3 months</option>
+                <option value="6_months">Last 6 months</option>
+                <option value="1_year">Last 1 year</option>
+                <option value="2_years">Last 2 years</option>
+                <option value="everything">Since Joining</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="qol_add inline_block">
+              <button class="btn" (click)="addQOLOpen()">TAKE NEW QOL SURVEY</button>
+            </div>
+          </div>
+        </div>
+        <!--<div class="qol_meter">
+          <img src="assets/modules/img/qol_meter.png" alt="">
+        </div>-->
+        <qolchart></qolchart>
+        <div class="qol_survey_table">
+
+          <div class="QOLTable">
+            <div class="QOLTableHead">
+              <div class="col-md-3 headDate">
+                <strong style="color: #4E6484;"> Date </strong>
+              </div>
+              <div class="col-md-3 headDate">
+                <strong style="color: #4E6484;"> Total Scores </strong>
+              </div>
+              <div class="col-md-3 headDate">
+                <strong style="color: #4E6484;"> Visible to </strong>
+              </div>
+            </div>
+            <div class="QOLTableBody">
+              <div class="QOLTableRow QolOuter" *ngFor="let qol of qolScoreList" >
+                <div class="rowTableInside "  [ngClass]="{'activeDropdown':qol.show==true}">
+                  <div class="col-md-3 bodyDate paddFirst">
+                    <span class="nopointer"> {{qol.score_date | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}} </span>
+                  </div>
+                  <div class="col-md-3 bodyDate">
+                    <span class="nopointer">
+                      Social: {{qol.scores.Social | totalScore}} <br/>
+                      Mental: {{qol.scores.Mental | totalScore}} <br/>
+                      Physical: {{qol.scores.Physical | totalScore}}
+                    </span>
+                  </div>
+                  <div class="col-md-3 bodyDate padd_remove paddSelect">
+                    <div class="col-md-10" style="height: 30px; width: 140px; padding-left: 0;">
+                      <span class="nopointer">
+                        <select class="form-control" [(ngModel)]="qol.visibility" (ngModelChange)="set_visibility($event, qol.id)">
+                          <option value="all_users"> All Users</option>
+                          <option value="only_me">Only Me</option>
+                          <option value="followers">Followers</option>
+                        </select>
+                      </span>
+                    </div>
+                    <div class="col-md-1 padd_remove textAligned">
+                      <img title="Delete" class="pointer" (click)="deleteQOLOpen(qol.id)"  *ngIf="qol.show!=true" src="assets/modules/img/recycle.png">
+                      <img title="Delete" class="pointer" (click)="deleteQOLOpen(qol.id)" *ngIf="qol.show==true" src="assets/modules/img/recycleWhite.png">
+
+                    </div>
+                    <div class="col-md-1 padd_remove textAligned" >
+                       <button  class="clear_button" (click)="accordianQol(qol);">
+                          <i  *ngIf="qol.show==true" class="fa fa-caret-down fs-20"></i>
+                          <i  *ngIf="qol.show!=true" class="fa fa-caret-right fs-20 activeColor"></i>
+                        </button>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="sectionAlign" *ngIf="qol.show==true" >
+                  <div class="qol_survey_ques">
+                    <div class="qol_survey_social">
+                      <p>Social: {{qol.scores.Social}}
+                      <div class="qol_survey_social_ques"  *ngFor="let social of qol.quality_of_life_scores.Social;let i=index">
+                          <p>{{i+1}}. {{social.qol_score_question}}</p>
+                          <div class="inline_block">
+                            <button class="nopointer" [ngClass]="{'active': social.score=='none'}"  >NONE OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': social.score=='a_little'}"  >A LITTLE OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': social.score=='some'}"  >SOME OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': social.score=='most'}"  >MOST OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': social.score=='all'}"  >ALL OF THE TIME</button>
+                          </div>
+                      </div>
+                      <p>Mental: {{qol.scores.Mental}}
+                      <div class="qol_survey_social_ques"  *ngFor="let mental of qol.quality_of_life_scores.Mental;let i=index">
+                          <p>{{i+1}}. {{mental.qol_score_question}}</p>
+                          <div class="inline_block">
+                            <button class="nopointer" [ngClass]="{'active': mental.score=='none'}"  >NONE OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': mental.score=='a_little'}"  >A LITTLE OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': mental.score=='some'}"  >SOME OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': mental.score=='most'}"  >MOST OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': mental.score=='all'}"  >ALL OF THE TIME</button>
+                          </div>
+                      </div>
+                      <p>Physical: {{qol.scores.Physical}}
+                      <div class="qol_survey_social_ques"  *ngFor="let physical of qol.quality_of_life_scores.Physical;let i=index">
+                          <p>{{i+1}}. {{physical.qol_score_question}}</p>
+                          <div class="inline_block">
+                            <button class="nopointer" [ngClass]="{'active': physical.score=='none'}"  >NONE OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': physical.score=='a_little'}"  >A LITTLE OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': physical.score=='some'}"  >SOME OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': physical.score=='most'}"  >MOST OF THE TIME</button>
+                            <button class="nopointer" [ngClass]="{'active': physical.score=='all'}"  >ALL OF THE TIME</button>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+      <div class="advertis_sec">
+          <div class="add_two">
+            <img src="assets/modules/img/270x540.jpg">
+          </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="deleteQOLModal" class="modalOverlay">
+<div class="modalBox modalBoxFix messageModal modal-sm">
+    <div class="modal-content">
+        <div class="proHead">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <img src="./assets/modules/img/icons/close@2x.png" alt="close delete modal" width="12px">
+          </button>
+          <h3 class="text-center"> Are you sure? </h3>
+        </div>
+        <div class="proBody alignRight">
+          <p> Your Survey will be deleted if you chose to continue. </p>
+        </div>
+        <div class="footModal QOLfoot">
+          <button class="btn btn-primary btn-keep-survey pointer" data-dismiss="modal"> NO, KEEP SURVEY </button>
+          <button class="btn btn-default btn-delete-survey pointer" (click)="deleteQolList()"> YES, DELETE </button>
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="addQOLModal" class="modalOverlay">
+<div class="modalBox modalBoxFix lg-modal-box">
+    <div class="modal-content">
+        <div class="proHead">
+          <button type="button" class="close" data-toggle="modal" data-target="#confirmationModal" aria-label="Close">
+            <img src="./assets/modules/img/icons/close@2x.png" alt="close modal" width="12px">
+          </button>
+          <h3> <img src="assets/modules/img/ico/condition1.png"> New Quality of Life Score <span> <span class="starLeft">*</span> Indicates required fields </span> </h3>
+        </div>
+        <div class="treatmentBody form-dashboard">
+          <div class="gray_table removeMargin">
+            <div class="row removeMargin flex-row">
+              <div class="col-md-3 padd_remove">
+                <div class="valign-center">
+                  <label for="" class="label-sm label-fade">Select date:<span class="asteriskcolor pelement"> *</span></label>
+                </div>
+              </div>
+              <div class="col-md-5 padd_remove">
+                <div class="inputLabel" style="width: 300px;">
+                  <!-- <my-date-picker name="mydate" [options]="myDatePickerOptions"
+                  (dateChanged)="onDateChangeddiagnose($event)"
+                  [(ngModel)]="selectedDate"
+                  [placeholder]="placeholder"></my-date-picker> -->
+                  <calendar
+                  [dateValue]="selectedDate"
+                  [isDisplaySaveBtn]="true"
+                  [myLeft]="288"
+                  (getDate)='onDateChangeddiagnose($event)'></calendar>
+                </div>
+                <div class="fs-12 text_red" *ngIf="formValidation == true && selectedDate =='' ">Date cannot be blank.</div>
+
+              </div>
+            </div>
+          </div>
+          <div class="gray_table removeMargin addCss">
+            <div class="row removeMargin">
+              <div class="col-md-10 paddingLeft">
+                <div class="inputLabel">
+                  <input style="padding-left: 30px;"  [(ngModel)]="tagsSearchname" (ngModelChange)="searchTags($event)" type="text" class="form-control input-tags" placeholder="TAG A CONDITION, TREATMENT OR SYMPTOM">
+                  <i class="fa fa-hashtag">#</i>
+                  <i class="fa fa-times" (click)="cleartTag();"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+           <div *ngIf="TagList.length > 0">
+                <div class="hospitalizeLabel" *ngFor="let item of TagList;let i=index;" >
+                    {{item.name}}
+                    <button class="tagremoveIcon" (click)="removeTag(i);">
+                      <i class="fa fa-times "></i>
+                      </button>
+                </div>
+            </div>
+            <div *ngIf="showSuggest">
+              <div class="suggestions "  *ngIf="searchTagList.length > 0 && searchtTagString==true">
+                  <div class="pointer" *ngFor="let item of searchTagList" (click)="selectTag(item)" >
+                      <p >{{item.name}}</p>
+                  </div>
+              </div>
+            </div>
+          <section class="contentSpace">
+            <h4> Social </h4>
+            <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+          </section>
+         <div class="qol_survey_social_ques"  *ngFor="let social of socialList;let i=index">
+          <p>{{i+1}}. {{social.question}} <span class="asteriskcolor"> *</span></p>
+            <div class="inline_block">
+              <button [ngClass]="{'active': social.selected=='none'}"  (click)="selectSocial(i,'none');">NONE OF THE TIME</button>
+              <button [ngClass]="{'active': social.selected=='a_little'}"  (click)="selectSocial(i,'a_little');">A LITTLE OF THE TIME</button>
+              <button [ngClass]="{'active': social.selected=='some'}"  (click)="selectSocial(i,'some');">SOME OF THE TIME</button>
+              <button [ngClass]="{'active': social.selected=='most'}"  (click)="selectSocial(i,'most');">MOST OF THE TIME</button>
+              <button [ngClass]="{'active': social.selected=='all'}"  (click)="selectSocial(i,'all');">ALL OF THE TIME</button>
+            </div>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && isSocialRatingRequired == true ">Social rating is required.</div>
+          </div>
+
+          <section class="contentSpace">
+            <h4> Mental </h4>
+            <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+          </section>
+
+          <div class="qol_survey_social_ques"  *ngFor="let mental of mentalList;let i=index">
+            <p>{{i+1}}. {{mental.question}} <span class="asteriskcolor"> *</span></p>
+            <div class="inline_block">
+              <button [ngClass]="{'active': mental.selected=='none'}"  (click)="selectMental(i,'none');">NONE OF THE TIME</button>
+              <button [ngClass]="{'active': mental.selected=='a_little'}"  (click)="selectMental(i,'a_little');">A LITTLE OF THE TIME</button>
+              <button [ngClass]="{'active': mental.selected=='some'}"  (click)="selectMental(i,'some');">SOME OF THE TIME</button>
+              <button [ngClass]="{'active': mental.selected=='most'}"  (click)="selectMental(i,'most');">MOST OF THE TIME</button>
+              <button [ngClass]="{'active': mental.selected=='all'}"  (click)="selectMental(i,'all');">ALL OF THE TIME</button>
+            </div>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && isMentalRatingRequired == true ">Mental rating is required.</div>
+          </div>
+
+          <section class="contentSpace">
+            <h4> Physical </h4>
+            <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+          </section>
+          <div class="qol_survey_social_ques"  *ngFor="let physical of physicalList;let i=index">
+            <p>{{i+1}}. {{physical.question}} <span class="asteriskcolor"> *</span></p>
+            <div class="inline_block">
+              <button [ngClass]="{'active': physical.selected=='none'}"  (click)="selectPhysical(i,'none');">NONE OF THE TIME</button>
+              <button [ngClass]="{'active': physical.selected=='a_little'}"  (click)="selectPhysical(i,'a_little');">A LITTLE OF THE TIME</button>
+              <button [ngClass]="{'active': physical.selected=='some'}"  (click)="selectPhysical(i,'some');">SOME OF THE TIME</button>
+              <button [ngClass]="{'active': physical.selected=='most'}"  (click)="selectPhysical(i,'most');">MOST OF THE TIME</button>
+              <button [ngClass]="{'active': physical.selected=='all'}"  (click)="selectPhysical(i,'all');">ALL OF THE TIME</button>
+            </div>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && isPhysicalRatingRequired == true ">Physical rating is required.</div>
+          </div>
+
+        </div>
+        <div class="footModal textAligned">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="col-md-3 padd_remove">
+                <strong class="alignLeft" style="color: #4E6484;"> Visible to </strong>
+              </div>
+              <div class="col-md-9 padd_remove">
+                <select class="form-control" [(ngModel)]="visibility" style="height: 32px;">
+                  <option value="all_users"> All Users</option>
+                  <option value="only_me">Only Me</option>
+                  <option value="followers">Followers</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6 ">
+              <button class="btn btn-default" data-toggle="modal" data-target="#confirmationModal">CANCEL </button>
+              <button class="btn btn-primary" (click)="addserveys();"> SAVE </button>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+<div id="confirmationModal" class="modalOverlay">
+<div class="modalBox proSmallModal">
+    <div class="modal-content">
+        <div class="proHead">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h3 class="alignRight"> Are you sure you want to close? </h3>
+        </div>
+        <div class="footModal QOLfoot">
+          <button data-dismiss="modal" class="btn btn-primary"> No, Cancel </button>
+          <button (click)="confirmClosed()" class="btn btn-default"> Yes, Close </button>
+        </div>
+    </div>
+</div>
+</div>

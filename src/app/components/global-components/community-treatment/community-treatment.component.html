@@ -1,0 +1,161 @@
+<div class="middle_section">
+		<div class="container">
+			<br>
+			<!-- Container section -->
+			<div class="row row-flex">
+				<!-- Begin col-md-8 -->
+				<div class="col-md-9">
+					<!-- Search Field -->
+					<div class="sc-container-shadow publications-container community-treatments">
+						<!-- Search Field -->
+						<div class="row row-title-box">
+							<div class="col-md-4">
+								<h2>Community Treatments</h2>
+							</div>
+							<div class="col-md-8">
+								<div class="container-forms-tag">
+									<form class="search-form-sc" role="search">
+										<h6>Search for Treatments - {{formValidation}}</h6>
+										<div class="input-group add-on">
+											<div class="form-control-filter">
+												<i class="fa fa-search"></i>
+												<input class="form-control" placeholder="Enter the treatment you’re looking for" name="srch-term" id="srch-term" type="text" [(ngModel)]="searchtTreatmentString" (ngModelChange)="listTreatmentList()">
+												<span class="icon-filter-addon" *ngIf="userRole == 'patient'" (click)="filterTreatmentOpen()"><img src="assets/modules/images/icons/icon-filter-addon@2x.png" width="12px"></span>
+												<div class="select-options opt-md-lg from-right" id="filter-conditions" [ngClass]="classin ? 'in' : ''">
+													<label for="">Show:</label>
+													<ul class="list-unstyled form">
+														<li>
+															<div class="checkbox">
+																<input type="checkbox" name="symp_filter[]" [checked]="isAllCheckedCondition()" (change)="checkAllCondition($event)" id="symp_filer-2">
+																<label for="symp_filer-2">Only treatments related to my Conditions</label>
+															</div>
+														</li>
+														<li *ngFor="let con of conditions ; let i = index">
+															<div class="checkbox">
+																<input type="checkbox" name="symp_filter[]" id="symp_filer-{{i+3}}" value="{{con.id}}" [(ngModel)]="con.state" (change)="listTreatmentList();">
+																<label for="symp_filer-{{i+3}}">{{con.name}}</label>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="input-group-btn">
+												<button class="btn btn-default" type="button" (click)="searchTreatmentList();">Search</button>
+											</div>
+										</div>
+									</form>
+								</div>              
+							</div>
+						</div>
+						<!-- End Search Field -->
+	
+						<!-- Table results -->
+						<div class="row search-results" infinite-scroll
+						[infiniteScrollDistance]="0.8"
+						[infiniteScrollThrottle]="1300"
+						(scrolled)="onScrollDown()">
+							<div class="col-md-12">
+								<table class="table-publications table-ext community-treatments-tbl">
+									<thead>
+										<tr>
+											<th>Treatment</th>
+											<th>
+												<div class="dropdown form dropdowntreatment">
+													<a *ngIf="userRole == 'patient'"  class="dropdown-toggle dropdown-toggle-treatment"  role="button" (click)="showCaretFn()">
+													Treatment category <span class="caret" *ngIf="showcaret"></span>
+													<span class="dropup" *ngIf="!showcaret"><span class="caret"></span></span> 
+													</a>
+													<a *ngIf="userRole !== 'patient'"  class="dropdown-toggle dropdown-toggle-treatment"  role="button">
+														Treatment category 
+													</a>
+													<ul class="dropdown-menu dropdown-box dropdown-inputs width-lg" [style.display]="showcaret ? 'none' : 'block'" (click)="onEvent($event)">
+															<li><div class="checkbox">
+																	<input type="checkbox" id="filter1" name="filters[]" [checked]="isAllChecked()" (change)="checkAll($event)"><label for="filter1">All categories</label>
+																</div>
+															</li>
+															<li *ngFor="let cat of category ; let i = index">
+																<div class="checkbox">
+																	<input type="checkbox" id="filter{{i+2}}" name="filters[]" value="{{cat.id}}" [(ngModel)]="cat.state" (change)="listTreatmentList();"><label for="filter{{i+2}}">{{cat.name}}</label>
+																</div>
+															</li>										
+													</ul>
+												</div>
+											</th>
+											<th colspan="2">Number of patients </th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr *ngFor="let treat of treatmentList ; let i = index"> 
+											<td *ngIf="treat.is_active==true"><a [routerLink]="['/global/community-treatment-detail', treat.id,treat.name]" class="td-link">{{treat.name}}</a></td>
+											<td *ngIf="treat.treatment_category && treat.is_active==true">{{treat.treatment_category.name}}</td>
+											<td *ngIf="treat.is_active==true">{{treat.patient_count}} patients</td>
+											<td align="right" class="opt-col" *ngIf="treat.is_active==true">
+											<a href="javascript:void(0);" *ngIf="userRole == 'patient'" class="btn btn-secondary btn-xs btn-w-150" (click)="addTreatmentOpen(treat)">ADD TO MY PROFILE</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							
+							</div>
+						</div>
+						<!-- End Table results -->
+	
+					</div>
+					<!-- End Search field -->
+	
+				</div>
+				<!-- end col-md-8 -->
+				<!--<div class="col-md-1"></div>-->
+				<!-- Begin col-md-3 -->
+				<div class="col-md-3">
+					<img src="assets/modules/images/notifications/advertisement-1.png">
+					<p>&nbsp;</p>
+					<img src="assets/modules/images/notifications/advertisement-2.png">
+				</div>
+				<!-- End col-md-3 -->
+			</div>
+			<!-- / Container section -->
+		</div>
+	</div>
+	
+	<div id="treatmentAddModal" class="modalOverlay" [style.display]="addTreatment ? 'block' : 'none'">
+		<div class="modalBox">
+			<div class="modal-content">
+				<div class="proHead">
+					<button type="button" class="close" (click)="addTreatmentClosed()" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3> <img src="assets/modules/img/ico/condition1.png"> Add new Treatment to profile </h3>
+				</div>
+				<section id="treatmentSearchField">
+					<div class="treatmentBody">
+						<div class="gray_table grayMargin">
+							<h6> Treatments to add to your profile </h6>
+							<input type="text" class="form-control" placeholder="Add treatment" [(ngModel)]="treatmentSearchname" disabled>
+						</div>
+						<p> Does this treatment require a dosage? </p>
+						<div class="checkedSection">
+							<div class="radio">
+								<label class="square_radio">
+									<input type="radio" name="diagnose" [(ngModel)]="requiredDosage" value="true">
+									<span> YES </span>
+								</label>
+							</div>
+							<div class="radio">
+								<label class="square_radio">
+									<input type="radio" name="diagnose" [(ngModel)]="requiredDosage" value="false">
+									<span> NO </span>
+								</label>
+							</div>
+							<div class="fs-12 text_red" *ngIf="formValidation == true && requiredDosage =='' ">Please select treatment require a dosage.</div>
+						</div>
+					</div>
+					<div class="footModal textAligned">
+						<button class="btn btn-default borderNone" (click)="addTreatmentClosed()"> CANCEL </button>
+						<button class="btn btn-primary" (click)="addTreatmentOurProfile()"> ADD </button>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+

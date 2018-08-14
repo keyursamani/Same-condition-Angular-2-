@@ -1,0 +1,158 @@
+<div class="middle_section">
+  <div class="container">
+    <br>
+    <!-- Container section -->
+    <div class="row row-global-main">
+      <!-- Begin col-md-7 -->
+      <div class="col-md-7">
+        <!-- Search Field -->
+        <div class="sc-container-shadow">
+          <div class="blue-container-sc">
+            <form class="search-form-sc" role="search">
+              <h6>Search FAQs</h6>
+              <div class="input-group add-on">              
+                <i class="fa fa-search"></i>
+                <input class="form-control" placeholder="What would you like to know?" name="srch-term" id="srch-term" type="text"
+                [(ngModel)]="search_word" (input)="refreshPage($event);">
+                <div class="input-group-btn">
+                  <button class="btn btn-default" type="submit" (click)="searchFaqs();">Search</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- End Search field -->
+
+        <div class="sc-container-shadow">
+
+          <div class="text-center results-faq" *ngIf="noDataFound==true">
+            <h3>Sorry, we can’t find that question!</h3>
+            <p>Select from one of our questions below or submit your own</p>
+            <p>&nbsp;</p>
+          </div>
+
+          <!-- <div id="accordion-faq" class="accordion-sc" role="tablist">
+            <div class="card" *ngFor="let faq of listFaq; let i = index;">
+              <div class="sc-text-blue" style="background: #5667aa;     padding: 8px 15px; padding-bottom: 8px;" >
+                <p style="color: #fff;">{{faq.name}}</p>
+              </div>
+
+              <div *ngFor="let faq1 of faq.faqs; let i1 = index;">
+                <div class="card-header" role="tab">
+                  <h5 class="mb-0">
+                    <a class="collapsed" data-toggle="collapse" href="#{{i}}_{{i1}}" role="button" aria-expanded="false" aria-controls="collapseOne">
+                      {{faq1.title}}
+                    </a>
+                  </h5>
+                </div>
+
+                <div id="{{i}}_{{i1}}" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                  <div class="card-body" [innerHTML]="faq1.description">
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div> -->
+
+         
+          <!-- Container section -->
+          <div class="row" *ngFor="let faq of listFaq; let i = index;">
+            <!-- Begin col-md-6 -->
+            <div class="col-md-12">
+              <div class="sc-container-shadow">
+                <div id="accordion-faq" class="accordion-sc" role="tablist">
+                  <div class="card">
+                    <div class="card-header" role="tab" id="headingOne">
+                      <h5 class="mb-0">
+                        <a class="collapsed">
+                          {{faq.name}}
+                        </a>
+                      </h5>
+                    </div>             
+                  </div>
+
+                  <div id="collapseGroup1">
+
+                    <div class="card" *ngFor="let faq1 of faq.faqs; let i1 = index;">
+                      <div class="card-header" role="tab" id="headingTwo">
+                        <h5 class="mb-0">
+                          <a class="inner-collapse-title collapsed" data-toggle="collapse" href="#{{i}}_{{i1}}" role="button" aria-expanded="false" aria-controls="collapseTwo" data-parent="#collapseGroup1">
+                            {{faq1.title}}
+                          </a>
+                        </h5>
+                      </div>
+                      <div id="{{i}}_{{i1}}" class="collapse" role="tabpanel" aria-expanded="false" style="height: 0px;">
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-12" 
+                            [innerHTML]="faq1.description">
+                              
+                            </div>                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end col-md-6 -->           
+          </div>
+          <!-- / Container section -->
+
+        </div>
+
+      </div>
+      <!-- end col-md-7 -->
+      <!-- Begin col-md-5 -->
+      <div class="col-md-5" *ngIf="isQuestionSubmitted == false">
+        <div class="dark-blue-sc">
+          <h5>Submit a Question</h5>
+          <form class="question-form-sc">
+            <div class="form-group">
+              <label for="exampleInputEmail1">What is the best email to send a response to? *</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter your email" 
+              name="email_address"
+              [(ngModel)]="faq.email_address" #email_address="ngModel">
+              <div class="fs-12 text_red" *ngIf="formValidation == true && faq.email_address =='' ">Email cannot be blank.</div>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputsubject">What is the subject of your question? *</label>
+              <input type="text" class="form-control" id="exampleInputsubject" placeholder="Enter a subject"
+              name="subject" 
+              [(ngModel)]="faq.subject" #subject="ngModel">
+              <div class="fs-12 text_red" *ngIf="formValidation == true && faq.subject =='' ">Subject cannot be blank.</div>
+              <div class="fs-12 text_red" *ngIf="faq.subject !='' && faq.subject.length > 50 ">Subject cannot be more than 50 character long..</div>
+            </div>
+            <div class="form-group">
+              <label for="exampleTextarea">What is your question? *</label>
+              <textarea class="form-control" id="exampleTextarea" rows="7" placeholder="Please explain your question"
+              name="description" 
+              [(ngModel)]="faq.description" #description="ngModel"></textarea>
+              <div class="fs-12 text_red" *ngIf="formValidation == true && faq.description =='' ">Description cannot be blank.</div>
+              <div class="fs-12 text_red" *ngIf="faq.description != '' && faq.description.length < 3 ">Please enter atleast 3 character of description.</div>
+              <div class="fs-12 text_red" *ngIf="faq.description != '' && faq.description.length > 2200 ">Description cannot be more than 2200 character long.</div>
+            </div>
+            <button type="submit" class="btn btn-primary" (click)="addFaqs()">Submit</button>
+          </form>
+        </div>
+      </div>
+      <!-- End col-md-5 -->
+
+      <!--Begin of col-md-5 for question post-->
+      <div class="col-md-5" *ngIf="isQuestionSubmitted == true">
+        <div class="dark-blue-sc">
+          <div class="submitted-faq text-center">
+          <h5>Question Submitted!</h5>
+          <p>Your question has been submitted and will be reviewed<br>and answered by the SameCondition team shortly. </p>
+          <button (click)="resetPage()">ASK ANOTHER QUESTION</button>
+          </div>
+        </div>
+      </div>
+      <!--End of col-md-5-->
+    </div>
+    <!-- / Container section -->
+  </div>
+</div>

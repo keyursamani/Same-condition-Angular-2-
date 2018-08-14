@@ -1,0 +1,37 @@
+.nav_section > li > a{
+    padding: 12px 8px 20px;
+    margin-right: 14px;
+    font-size: 11px;
+    font-family: 'Open Sans Semibold';
+  }
+
+  .nav_section>li.active>a, .nav_section>li.active>a:focus, .nav_section>li.active>a:hover{
+    background: none;
+    color: #2A426C;
+      font-family: 'Open Sans Bold';
+    border-bottom: 2px solid #5E9CE5;
+  }
+
+.pointer{
+  cursor: pointer;
+}
+.noScroll{
+  overflow: hidden;
+}
+.spcl_drop_dwn{
+  top: 132% !important;
+  left: -50px !important;
+}
+.spcl_drop_dwn li{
+  padding: 0px !important;
+  display: block !important;
+   text-align: left !important;
+}
+
+.nPadBT{
+  padding-bottom: 0px !important;
+}
+
+.dropdown .open a{
+  color: #fff !important;
+}

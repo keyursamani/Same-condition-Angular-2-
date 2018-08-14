@@ -1,0 +1,146 @@
+<div class="crisis-blue-container">
+  <div class="container">
+    <h3>Crisis Hotlines</h3>
+    <p>Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor.</p>
+  </div>
+</div>
+
+<div class="middle_section">
+  <div class="container">
+    <br>
+    <!-- Container section -->
+    <div class="row">
+      <!-- Begin col-md-6 -->
+
+      <div class="col-md-6" *ngFor="let crisis of listCrisis; let i = index;">
+        <div class="sc-container-shadow">
+          <div id="accordion-faq" class="accordion-sc" role="tablist">
+            <div class="card">
+              <div class="card-header" role="tab" id="headingOne">
+                <h5 class="mb-0">
+                  <a class="collapsed" data-toggle="collapse"  aria-controls="collapseOne">
+                    {{crisis.title}}
+                  </a>
+                </h5>
+              </div>
+            </div>
+
+            <div id="collapseGroup1">
+              <div class="card" *ngFor="let faq_sub_categories of crisis.faq_sub_categories; let i1 = index;">
+                <div class="card-header" role="tab" id="headingTwo">
+                  <h5 class="mb-0">
+                    <a class="inner-collapse-title" data-toggle="collapse" href="#{{i}}_{{i1}}" role="button" aria-expanded="false" aria-controls="collapseTwo" data-parent="#collapseGroup1">
+                      {{faq_sub_categories.name}}
+                    </a>
+                  </h5>
+                </div>
+                <div id="{{i}}_{{i1}}" class="collapse" role="tabpanel">
+                  <div class="card-body">
+                    <div class="row" *ngFor="let faq of faq_sub_categories.faqs; let i2 = index;">
+                      <div class="col-md-6">
+                        <span [innerHTML]="faq.title"></span><br>
+                        <span [innerHTML]="faq.description"></span><br>
+                      </div>
+                      <!-- <div class="col-md-6">
+                        India<br>
+                        www.hotlineinfo.in<br>
+                        1-800-555-hotline
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <!-- end col-md-6 -->
+
+      <!-- Begin col-md-6 -->
+      <!-- <div class="col-md-6">
+        <div class="sc-container-shadow">
+
+          <div id="accordion-faq" class="accordion-sc" role="tablist">
+            <div class="card">
+              <div class="card-header" role="tab" id="headingThree">
+                <h5 class="mb-0">
+                  <a class="collapsed" data-toggle="collapse" href="#collapseFour" role="button" aria-expanded="false" aria-controls="collapseThree">
+                    Suicide
+                  </a>
+                </h5>
+              </div>
+              <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+              </div>
+            </div>
+
+            <div class="sc-text-blue">
+              <p>Name of hotline <i class="glyphicon glyphicon-triangle-right"></i></p>
+            </div>
+
+            <div class="sc-text-blue">
+              <p>Name of hotline <i class="glyphicon glyphicon-triangle-right"></i></p>
+            </div>
+
+            <div class="sc-text-blue">
+              <p>Name of hotline <i class="glyphicon glyphicon-triangle-right"></i></p>
+            </div>
+
+            <div class="sc-text-blue">
+              <p>Name of hotline <i class="glyphicon glyphicon-triangle-right"></i></p>
+            </div>
+
+            <div class="sc-text-blue">
+              <p>Name of hotline <i class="glyphicon glyphicon-triangle-right"></i></p>
+            </div>
+
+            <div class="card">
+              <div class="card-header" role="tab" id="headingThree">
+                <h5 class="mb-0">
+                  <a class="collapsed" data-toggle="collapse" href="#collapseFive" role="button" aria-expanded="false" aria-controls="collapseThree">
+                    Counseling
+                  </a>
+                </h5>
+              </div>
+              <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+              </div>
+            </div>
+
+            <div class="sc-text-blue">
+              <p>Name of hotline <i class="glyphicon glyphicon-triangle-right"></i></p>
+            </div>
+
+            <div class="sc-text-blue">
+              <p>Name of hotline <i class="glyphicon glyphicon-triangle-right"></i></p>
+            </div>
+
+            <div class="sc-text-blue">
+              <p>Name of hotline <i class="glyphicon glyphicon-triangle-right"></i></p>
+            </div>
+
+            <div class="sc-text-blue">
+              <p>Name of hotline <i class="glyphicon glyphicon-triangle-right"></i></p>
+            </div>
+
+            <div class="sc-text-blue">
+              <p>Name of hotline <i class="glyphicon glyphicon-triangle-right"></i></p>
+            </div>
+          </div>
+          
+        </div>
+      </div> -->
+
+      <!-- End col-md-6 -->
+    </div>
+    <!-- / Container section -->
+  </div>
+</div>

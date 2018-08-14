@@ -1,0 +1,127 @@
+ <div  class="tab-pane">
+        <div class="condition_sec">
+          <div class="row">
+              <div class="col-md-9">
+                <div class="row bg_color">
+                  <div class="myCondition">
+                      <h2> My Charts </h2>
+                      <div class="sub-description"> This page displays the analytics of your data. </div>
+
+                      <div class="chart_section">
+                        <div class="chartBlueHeading">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="col-md-12 padd_remove">
+                                <h4> <i *ngIf="feelingChart.show==true" (click)="feelingChart.show = !feelingChart.show" class="fa fa-caret-down fs-20"></i>
+                                  <i *ngIf="feelingChart.show!=true" class="fa fa-caret-right activeColor fs-20" (click)="feelingChart.show = !feelingChart.show"></i> My Feelings <span> Updated: {{feelingLastUpdated | amLocale:'en' | amDateFormat:'MMMM Do YYYY'| customDate}} </span> </h4>
+                              </div>
+                            </div>
+                            <div class="col-md-6 textAligned">
+                                <select class="form-control charts_select" [(ngModel)]="feeling_filter" (ngModelChange)="load_feelings()">
+                                  <option value="3_months">Last 3 months</option>
+                                  <option value="6_months">Last 6 months</option>
+                                  <option value="1_year">Last 1 year</option>
+                                  <option value="2_years">Last 2 year</option>
+                                  <option value="since_joining">Since Joining</option>
+                                </select>
+                                <button class="updateBtn" [routerLink]="['/app/dashboard/feeling']">Update info </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="line_chart"
+                        [hidden]="hideElementFeelings">
+                          <div id="chartdivFeeling"
+                          [style.display]="arrFeelings.length > 0 ? 'block' : 'none'"></div>
+                          <div id="chartdivFeelingNoData" class="chartdivFeelingNoData"
+                          [style.display]="arrFeelings.length == 0 ? 'block' : 'none'">
+                          <span style="color: ##4E6484; font-size: 15px; line-height: 240px;">No chart data found to display</span>
+                        </div>
+
+                        </div>
+
+
+                      </div>
+
+                      <div class="chart_section margT-20">
+                        <div class="chartBlueHeading">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="col-md-12 padd_remove">
+                                <h4> <i *ngIf="hideElement!=true" (click)="this.hideElement = !this.hideElement;" class="fa fa-caret-down fs-20"></i>
+                                  <i *ngIf="hideElement==true" class="fa fa-caret-right activeColor fs-20" (click)="this.hideElement = !this.hideElement;"></i> QOL Survey <span> Updated: {{qolLastUpdated | amLocale:'en' | amDateFormat:'MMMM Do YYYY'| customDate}} </span> </h4>
+                              </div>
+                            </div>
+                            <div class="col-md-6 textAligned">
+                                <select class="form-control charts_select" [(ngModel)]="qol_survey_filter" (ngModelChange)="loadQollist();">
+                                  <option value="3_months">Last 3 months</option>
+                                  <option value="6_months">Last 6 months</option>
+                                  <option value="1_year">Last 1 year</option>
+                                  <option value="2_years">Last 2 year</option>
+                                  <option value="everything">Since Joining</option>
+                                </select>
+                                <button class="updateBtn" [routerLink]="['/app/dashboard/qolserveys']">Update info </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="qolHolder">
+                          <qolchart></qolchart>
+                        </div>
+                      </div>
+                      <div class="chart_section margT-20">
+                        <div class="chartBlueHeading">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="col-md-12 padd_remove">
+                                <h4> <i *ngIf="hideElementWeight!=true" (click)="this.hideElementWeight = !this.hideElementWeight;" class="fa fa-caret-down fs-20"></i>
+                                  <i *ngIf="hideElementWeight==true" class="fa fa-caret-right activeColor fs-20" (click)="this.hideElementWeight = !this.hideElementWeight;;"></i> My Weight <span> Updated: {{qolLastUpdated | amLocale:'en' | amDateFormat:'MMMM Do YYYY'| customDate}} </span> </h4>
+                              </div>
+                              <!--<div class="col-md-8 removePadding">
+                                <h6> Update: August 7th, 2017 </h6>
+                              </div>-->
+                            </div>
+                            <div class="col-md-6 textAligned">
+                                <select class="form-control charts_select" [(ngModel)]="my_weight_filter" (ngModelChange)="loadWeights();">
+                                  <option value="3_months">Last 3 months</option>
+                                  <option value="6_months">Last 6 months</option>
+                                  <option value="1_year">Last 1 year</option>
+                                  <option value="2_years">Last 2 year</option>
+                                  <option value="since_joining">Since Joining</option>
+                                </select>
+                                <button class="updateBtn" [routerLink]="['/app/dashboard/weight']">Update info </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="feelSlider"
+                        [hidden]="hideElementWeight">
+                          <div class="line_chart" style="margin-left: 350px;">
+                              <ul class="legend">
+                                <li *ngIf="isDisplayKGChart==true" (click)="display_lbs_graph()"><span class="superawesome"></span> KG</li>
+                                <li *ngIf="isDisplayKGChart==false" (click)="display_kg_graph()"><span class="awesome"></span> LBS</li>
+                              </ul>
+                            </div>
+                            <div class="line_chart">
+                              <div id="chartdiv" [style.display]="isDisplayKGChart ? 'block' : 'none'"></div>
+                              <div id="chartdivLbs" style="position: absolute; background: lightgray; height: 290px; width: 90%; top: 910px; text-align: center;" *ngIf="arrKG.length == 0 && isDisplayKGChart == true;">
+                                <span style="color: ##4E6484; font-size: 15px; line-height: 300px;">No chart data found to display</span>
+                              </div>
+
+                              <div id="chartdivLbs" [style.display]="isDisplayKGChart ? 'none' : 'block'"></div>
+                              <div id="chartdivLbs" style="position: absolute; background: lightgray; height: 290px; width: 90%; top: 910px; text-align: center;" *ngIf="arrLBS.length == 0 && isDisplayKGChart == false;">
+                                <span style="color: ##4E6484; font-size: 15px; line-height: 300px;">No chart data found to display</span>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="advertis_sec">
+                    <div class="add_two">
+                      <img src="assets/modules/img/270x540.jpg">
+                    </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>

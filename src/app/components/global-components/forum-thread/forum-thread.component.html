@@ -1,0 +1,140 @@
+<div class="middle_section">
+  <div class="container forum forum-threads">
+    <div class="sc-box-content box-md">
+
+      <div class="row row-title-box row-title-inverse row-flex row-valign">
+        <div class="col-md-8">
+          <div class="comm-tool-box">
+            <form class="search-form-sc" role="search">
+              <div class="input-group add-on">
+                <div class="form-control-filter">
+                  <i class="fa fa-search"></i>
+                  <input class="form-control" placeholder="Enter the conditions you’re looking for" name="srch-term" id="srch-term" type="text" [(ngModel)]="search_word" (ngModelChange)="reset_thread_search()">
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && search_word =='' ">Please enter some search keyword to find forum thread.</div>
+                </div>
+                <div class="input-group-btn">
+                  <button class="btn btn-default" type="submit" 
+                  (click)="search_thread();">Search</button>
+                </div>
+              </div>
+            </form>
+          </div> 
+        </div>
+        <div class="col-md-3 text-right">
+        	<button type="button" class="btn btn-secondary btn-sm-xs btn-w-150" data-toggle="modal" data-target="#newThreadModal" (click)="CreateNewThread()" >New THread +</button>
+        </div>
+      </div>
+
+      <div class="thin-blue-nav">
+        <div class="row">
+          <div class="col-md-5"><p>Showing threads in category one</p></div>
+          <div class="col-md-7 text-right">
+            <div class="paginator-wrap">
+              <span class="page-info">Page 1 of 3</span>
+              <ul>
+                <li><a href="" class="page-link active">1</a></li>
+                <li><a href="" class="page-link">2</a></li>
+                <li><a href="" class="page-link">3</a></li>
+              </ul>
+              <a href="" class="page-link-ctrl">Next</a>
+              <a href="" class="page-link-ctrl">Last</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="table-publications table-ext">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Thread started</th>
+            <th>Replies</th>
+            <th>Last Post <span class="caret"></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr  *ngFor="let item of threadList" (click)="Selectedthread(item)">
+            <td width="305px" class="pointer">{{item.title}}</td>
+            <td>{{item.created_at |date: 'MM-dd-yyyy'}} at {{item.created_at |date: '  HH:mm a'}} by<br><span class="post-author">{{item.thread_user}}</span></td>     
+             <td align="center">{{item.thread_replies}}</td>
+             <td *ngIf="item.last_post.length === 12"> {{item.last_post}}<br><span class="post-author"></span></td>
+             <td *ngIf="item.last_post.length !== 12" >{{item.last_post.created_at |date: 'MM-dd-yyyy ' }} at {{item.last_post.created_at |date: '  HH:mm a'}}  by<br><span class="post-author">{{item.last_post.commenter}}</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="thin-blue-nav">
+        <div class="row">
+          <div class="col-md-5"><p>Showing threads in category one</p></div>
+          <div class="col-md-7 text-right">
+            <div class="paginator-wrap">
+              <span class="page-info">Page 1 of 3</span>
+              <ul>
+                <li><a href="" class="page-link active">1</a></li>
+                <li><a href="" class="page-link">2</a></li>
+                <li><a href="" class="page-link">3</a></li>
+              </ul>
+              <a href="" class="page-link-ctrl">Next</a>
+              <a href="" class="page-link-ctrl">Last</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal fade box-modal in" id="addNewForumThread" tabindex="-1" role="dialog" aria-labelledby="newThreadModalTitle" style="display: block; padding-right: 17px;">
+          <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content normal-shadow">
+              <div class="modal-header">
+                <h3 class="modal-title text-center" id="newThreadModalTitle">Start a New Thread</h3>
+              </div>
+              <div class="modal-body">
+                <div class="lightblue-panel  width-550 mb-0">
+                    <div class="row" style="text-align: left">
+                      <div class="col-md-5 form-group">
+                        <p for="sel_cat">Select a category<span class="required">*</span></p>
+                        <select class="form-control" [(ngModel)]="SelectedforumThread">
+                          <option value="">--select category--</option>
+                          <option value="{{categoryItem.id}}" *ngFor="let categoryItem of forumCategoryItemList" >{{categoryItem.name}}</option>
+                        </select>
+                      </div>
+                      <div class="col-md-12 form-group">
+                        <p for="title">Add a title<span class="required">*</span></p>
+                        <input  [(ngModel)]="forumThreadTitle"  type="text" class="form-control" placeholder="Enter a title for your thread"> 
+                      </div>
+        
+                      <div class="col-md-12 form-group">
+                        <label for="question">Enter your question or topic of interest<span class="required">*</span></label>
+                        <div class="reply-panel">
+                          <textarea   [(ngModel)]="forumThreadDescription" rows="7" class="form-control"  placeholder="Enter a question or topic that you would like to discuss with the community"></textarea>
+                          <div class="panel-bottom">
+                            <span>Tags</span>
+                            <div class="input-area">
+                              <input type="text" [(ngModel)]="forumThreadTags" value="Tim Pe">
+                              <div class="select-options select-reply-tag in">
+                                <ul>
+                                  <!-- <li>
+                                    <span><img src="assets/modules/images/notifications/mike.png" alt=""></span>
+                                    Tim Peterman
+                                  </li> -->
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /.reply panel -->
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div class="width-550">
+                  <button type="button" class="btn btn-empty btn-sm" (click)="closeAddThreadModal()" data-dismiss="modal">CANCEL</button>
+                  <button type="button" class="btn btn-secondary btn-sm" (click)="createThreadApi()" >CREATE THREAD</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+  <!-- / Container section -->
+</div>

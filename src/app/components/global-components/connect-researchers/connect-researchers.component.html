@@ -1,0 +1,783 @@
+<div class="middle_section">
+  <div class="container" 
+  infinite-scroll
+[infiniteScrollDistance]="0.3"
+[infiniteScrollThrottle]="1300"
+(scrolled)="onScrollDown()">
+    <br>
+    <!-- Container section -->
+    <div class="row">
+      <!-- Begin col-md-8 -->
+      <div class="col-md-9">
+        <!-- Search Field -->
+        <div class="sc-container-shadow publications-container community-symptoms">
+          <!-- Search Field -->
+          <div class="row row-title-box">
+            <div class="col-md-4">
+              <h2 style="margin-top:10px;">Connect with patients,<br>
+              researchers and physicians</h2>
+            </div>
+            <div class="col-md-8">
+              <div class="container-forms-tag">
+                <form class="search-form-sc" role="search">
+                  <h6>{{placeHolderTitle}}</h6>
+                  <div class="input-group add-on">
+                    <div class="form-control-filter">
+                      <i class="glyphicon glyphicon-search"></i>
+                      <input class="form-control" placeholder="{{placeHolder}}" (ngModelChange)="searchUser()" (focus)="showAutoCompletePopup('type_user_popup', true)" (blur)="showAutoCompletePopup('type_user_popup', false)"  [(ngModel)]="SearchResearchName" name="srch-term" id="srch-term" type="text">
+                      <ul class="autocomplete-popup" id="type_user_popup">
+                        <li   *ngFor="let user of alluserlist" (click)="selectname(user.first_name)"  >{{user.first_name}}  {{user.first_name}}</li>
+                      </ul>
+                      <span class="icon-filter-addon"  (click)="showAutoCompletePopupfilter('filter-conditions', toogelflag)"><img src="assets/modules/images/icons/icon-filter-addon@2x.png" width="12px"></span>
+                      <div class="select-options opt-md-lg from-right" id="filter-conditions">
+                        <label for="">Show:</label>
+                        <ul class="list-unstyled form">
+                          <li>
+                            <div class="checkbox">
+                              <input type="checkbox" name="symp_filter[]" id="symp_filer-1" checked="">
+                              <label for="symp_filer-1">All symptoms</label>
+                            </div>
+                          </li>
+                          <li>
+                            <div class="checkbox">
+                              <input type="checkbox" name="symp_filter[]" id="symp_filer-2">
+                              <label for="symp_filer-2">Only sympoms related to my Conditions</label>
+                            </div>
+                          </li>
+                          <li>
+                            <div class="checkbox">
+                              <input type="checkbox" name="symp_filter[]" id="symp_filer-3">
+                              <label for="symp_filer-3">Bi-Polar disorder</label>
+                            </div>
+                          </li>
+                          <li>
+                            <div class="checkbox">
+                              <input type="checkbox" name="symp_filter[]" id="symp_filer-4">
+                              <label for="symp_filer-4">AIDs</label>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="input-group-btn">
+                      <button class="btn btn-default" (click)="searchButton();" type="submit">Search</button>
+                    </div>
+                  </div>
+                </form>
+              </div>              
+            </div>
+          </div>
+          <!-- End Search Field -->
+          <!-- Box with accordions -->
+          <div class="accordions-box-connect w-sm researchers-filter" *ngIf="researchersTabflag==true" >
+            <div class="row top-row">
+              <div class="col-md-6">
+                Filter Researchers
+              </div>
+            </div>
+
+            <div class="form-dashboard form-inline">
+              <div class="checkbox">
+                <input type="checkbox" id="all_researchers" (change)="allResearchCheked()" [checked]="allResearchChekedFlag">
+                <label for="all_researchers">All Researchers</label>
+              </div>
+              &nbsp; &nbsp; 
+              <div class="checkbox">
+                <input type="checkbox" id="only_r_w_pub" (change)="publicationResearchCheked()" [checked]="publicationResearchChekedFlag" >
+                <label for="only_r_w_pub">Only Researchers with Publications</label>
+              </div>
+            </div>
+            
+          </div>
+
+           <!-- Box with accordions -->
+           <div class="accordions-box-connect" *ngIf="physiciansTabflag==true" >
+            <div class="row top-row">
+              <div class="col-md-6">
+                Filter Physician
+              </div>
+              <div class="col-md-6 text-right">
+                <a (click)="restephysicians();" >Reset Filters</a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="ac-cnt">
+                  <button class="{{filter1flag}}" type="button" (click)="setfilterPhy(1);"  data-target="#type_physician" aria-expanded="false" aria-controls="type_physician">TYPE OF PHYSICIAN <span>(All)</span></button>
+                  <div class="{{filter1}}" id="type_physician" style="width:265px;">
+                    <input type="search" name="" placeholder="Enter type of physician"    [(ngModel)]="searchPhysiciansType" (focus)="showAutoCompletePopup('type_physician_popup', true)"  (ngModelChange)="searchPhysician()" >
+                    <ul class="autocomplete-popup" id="type_physician_popup">
+                      <li   *ngFor="let currentPhysician of currentPhysicianList"   (click)="addMcurrentPhysician(currentPhysician);">{{currentPhysician.name}} <span>{{currentPhysician.physician_count}} physicians</span></li>
+                    </ul>
+                    <div class="mt-10">
+                      <div class="reply-tag reply-tag-soft"   *ngFor="let CurrentPhysician of selectedCurrentPhysicianList;let i = index;">{{CurrentPhysician.name}}
+                        <button  (click)="removeSelectedPhysician(i);"    class="close-tag" ><i class="icon icon-close"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="ac-cnt">
+                  <button class="{{filter2flag}}" type="button" (click)="setfilterPhy(2);"  data-target="#medical_degree" aria-expanded="false" aria-controls="medical_degree">MEDICAL DEGREE <span>(All)</span></button>
+                  <div class="{{filter2}}" id="medical_degree" style="width:265px;">
+                    <input type="search" name="" placeholder="Enter a medical degree"    [(ngModel)]="searchPhysicianWithMedicalDegree" (focus)="showAutoCompletePopup('medical_degree_popup', true)"  (ngModelChange)="physicianWithMedicalDegree()" >
+                    <ul class="autocomplete-popup" id="medical_degree_popup">
+                      <li  *ngFor="let physicianWithMedicalDegree of physicianWithMedicalDegreelist" (click)="addMedicalDegree(physicianWithMedicalDegree);">{{physicianWithMedicalDegree.name}} <span>{{physicianWithMedicalDegree.physician_count}} physicians</span></li>
+                    </ul>
+                    <div class="mt-10">
+                      <div class="reply-tag reply-tag-soft"   *ngFor="let selectedPhysicianWithMedicalDegree of selectedPhysicianWithMedicalDegreelist">{{selectedPhysicianWithMedicalDegree.name}}
+                        <button  (click)="removeMedicalDegree(selectedPhysicianWithMedicalDegree);"   class="close-tag" ><i class="icon icon-close"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>                
+              </div>
+              <div class="col-md-4">
+                <div class="ac-cnt">
+                  <button class="{{filter3flag}}"  type="button" (click)="setfilterPhy(3);"  data-target="#location" aria-expanded="false" aria-controls="location">LOCATION <span>(Any)</span></button>
+                  <div class="{{filter3}}" id="location" style="width:240px;">
+                    <select class="form-control" style="color:#5E6B82;"   [(ngModel)]="selectedphysiciansCountry" >
+                        <option value="">Select country</option>
+                        <option *ngFor="let country of countries" value="{{country.code}}">{{country.name}}</option>
+                    </select>
+                    <input type="search" name="" placeholder="Enter city or state" (keydown)="addcitysate($event)" [(ngModel)]="entercitystatenamelist" >
+                    <div class="reply-tag reply-tag-soft" style="padding-top: 3px"   *ngFor="let StateCity of alreadyselectedcitystatenamephysication;let i = index;">{{StateCity}}
+                      <button  (click)="removecitystatephysication(i);"   class="close-tag" ><i class="icon icon-close"></i></button>
+                    </div>  
+                   </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin-top:11px;">
+              <div class="col-md-4"></div>
+              <div class="col-md-4 text-center search-form-sc">
+                <button class="btn btn-default"  (click)="loadPhysicians();">Save search</button>
+              </div>
+              <div class="col-md-4 text-right" style="padding-top:14px;">
+                <a href="" class="btn btn-outline btn-xst" style="color:#4E6484;">MY SAVED SEARCHES +</a>
+              </div>              
+            </div>
+          </div>
+          <!-- End Box with accordions -->
+
+          <div *ngIf="patientTabflag==true">
+            <div class="accordions-box-connect">
+              <div class="row top-row">
+                <div class="col-md-6">
+                  Filter Patients
+                </div>
+                <div class="col-md-6 text-right">
+                  <a (click)="resetPatient();">Reset Filters</a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="ac-cnt" >
+                    <button id="btnAgeRange" class="{{filterpatient1flag}}" (click)="setfilter(1);" type="button"   data-target="#ageRange" aria-expanded="false" aria-controls="ageRange">AGE RANGE <span>(12-100)</span></button>
+                    <div class="{{filterpatient1}}" id="ageRange">
+                      <input type="number" name="" [(ngModel)]="minage"  min="12" value="12"> <span class="sep">to</span> <input type="number" [(ngModel)]="maxage" name="" max="100" value="100"> <span class="sep">years</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="ac-cnt">
+                    <button  id="btnLocation"  (click)="setfilter(2);" class="{{filterpatient2flag}}" type="button"  data-target="#location" aria-expanded="false" aria-controls="location">LOCATION <span>(any)</span></button>
+                    <div class="{{filterpatient2}}" id="location" style="width:240px;">
+                      <select class="form-control" style="color:#5E6B82;"  [(ngModel)]="selectedCountry"  >
+                        <option value="">Select country</option>
+                        <option *ngFor="let country of countries" value="{{country.code}}">{{country.name}}</option>
+                      </select>
+                      <input type="search" name="" placeholder="Enter city or state" (keydown)="handleKeyDown($event)" [(ngModel)]="StateCityNameList" >
+                      <div class="reply-tag reply-tag-soft" style="padding-top: 3px"   *ngFor="let StateCity of alreadyselectedStateCity;let i = index;">{{StateCity}}
+                        <button  (click)="removecitystate(i);"   class="close-tag" ><i class="icon icon-close"></i></button>
+                      </div> 
+                    </div>
+                  </div>                
+                </div>
+                <div class="col-md-4">
+                  <div class="ac-cnt" >
+                    <button id="btnsymptoms" (click)="setfilter(3);" class="{{filterpatient3flag}}" type="button"  data-target="#symptoms" aria-expanded="true" aria-controls="symptoms">SYMPTOMS <span>(all)</span></button>
+                    <div class="{{filterpatient3}}" id="symptoms" aria-expanded="true" style="">                  
+                        <div class="selected">
+                          <div class="row p-row">
+                            <div class="bordered">
+                              <div class="col-md-8">
+                                <strong>{{selectedMYsymptomsCount}} Selected</strong> <small>(My Symptoms)</small>
+                              </div>
+                              <div class="col-md-4 text-right" style="padding-left:0px;padding-right:15px;">
+                                <a  (click)="resetPatientSymptoms();" >Reset Filters</a>
+                              </div>
+                            </div>
+                          </div>
+                          <input type="text" name="" value="{{selectedMYsymptomslistValue}}">
+                        </div>
+                        <div class="select-options form">
+                          <p>Show patients with</p>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <ul class="list-unstyled" style="padding-left:13px;">
+                                <li style="background:transparent;">
+                                  <div class="checkbox">
+                                    <input  [(ngModel)]="allsymptomsFlag"  (change)='allsymptomsSelected(allsymptomsFlag)' type="checkbox" name="" id="all-symptoms">
+                                    <label  for="all-symptoms">ALL SYMPTOMS</label>
+                                      </div>                                       
+                                </li>                                      
+                                <li style="background:transparent;">
+                                  <div class="checkbox">
+                                    <input type="checkbox"  [(ngModel)]="mysymptomsFlag"   (change)='mysymptomsSelected(mysymptomsFlag)' name="" checked="" id="my-symptoms">
+                                    <label for="my-symptoms">MY SYMPTOMS</label>
+                                  </div>
+                                </li>                                                                          
+                              <li *ngFor="let Mysymptoms of showMysymptoms; let i = index;">
+                               
+                                  <div *ngIf="mysymptomsFlag==true">                                      
+                                    <input type="checkbox"
+                                     [checked]="Mysymptoms.checked" (change)="handleChangeSymptoms(Mysymptoms.checked, i)">
+                                     <label for="my-symptoms">{{Mysymptoms.symptom_name.name}}</label>  
+                                  </div>
+                              </li>      
+                              <a (click)="loadMoreSymptoms();"  *ngIf="mysymptomsFlag==true && SymptomsShowMoreButtonFlag==true"><b><u> Show More</u></b></a>                  
+                              </ul> 
+                            </div>
+                          </div>
+                          <p>Search for specific symptoms</p>
+                          <div class="input-group">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" class="form-control" name="" (focus)="showAutoCompletePopupSymptoms('Search_symptoms_popup', true)" [(ngModel)]="SearchAllSymptomsString" (ngModelChange)="SearchAllSymptoms()" placeholder="Search Symptoms">
+                            <ul class="autocomplete-popup" style="margin-top: 35px;"  id="Search_symptoms_popup">
+                              <li  *ngFor="let SearchAllSymptoms of SearchAllSymptomsList" (click)="addAllSymptomsList(SearchAllSymptoms);"> {{SearchAllSymptoms.name}}</li>
+                            </ul>
+                            <button class="btn btn-default" (click)="savesearchfilter();" >Search</button>
+                          </div>
+                          <div class="tags-conditions tags-squared" style="margin-top:15px;">
+                            <div class="reply-tag reply-tag-soft" *ngFor="let selectedSymptoms of selectedSearchAllSymptoms">{{selectedSymptoms.name}}
+                              <button class="close-tag" (click)="removeAllSymptoms(selectedSymptoms);" ><i class="icon icon-close"></i></button>
+                            </div>
+                        </div>
+                      </div>                      
+                </div>
+              </div>                    
+            </div>
+          </div>     
+         <div class="row">
+                <div class="col-md-4">
+                  <div class="ac-cnt" >
+                    <button id="btnsex" (click)="setfilter(4);" class="{{filterpatient4flag}}" type="button"  data-target="#sex" aria-expanded="false" aria-controls="sex">SEX <span>(any)</span></button>
+                    <div class="{{filterpatient4}}" id="sex">
+                      <input type="radio" [checked]="gederAny" (change)="genderAnyChecked()" name="sex" id="any" checked="">
+                      <label for="any">Any</label>
+                      <input type="radio" [checked]="genderMale" (change)="genderMaleChecked()" name="sex" id="male">
+                      <label for="male">Male</label>
+                      <input type="radio" [checked]="genderFemale" (change)="genderFemaleChecked()"  name="sex" id="female">
+                      <label for="female">Female</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="ac-cnt" >
+                    <button id="btninterests" (click)="setfilter(5);" class="{{filterpatient5flag}}" type="button"  data-target="#interests" aria-expanded="false" aria-controls="interests">INTERESTS <span>(any)</span></button>
+                                     <!-- <div class="collapse floating-c" id="interests">
+                      custom text
+                                         </div> -->
+                    <div class="{{filterpatient5}}" id="interests">
+                      <div class="selected-inter">
+                        <span>3 Selected</span>
+                        <input type="text" name="" value="Donating, Volunteering, Interests">
+                      </div>
+                      <div class="select-options form">
+                        <p>Select one or more interests</p>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <ul class="list-unstyled" style="padding-left:13px;">
+                              <li style="background:transparent;">
+                                <div class="checkbox">
+                                  <input type="checkbox" name="" [checked]="AnyInterestFlag" (change)="AnyInterestFlag=!AnyInterestFlag" id="anyInt">
+                                  <label for="anyInt">ANY</label>
+                                </div>
+                              </li>
+                              <li style="background:transparent;">
+                                <div class="checkbox">
+                                  <input type="checkbox" name="" [checked]="chkdonating" (change)="chkdonating = !chkdonating" id="donating">
+                                  <label for="donating">DONATING</label>
+                                </div>
+                              </li>
+                              <li style="background:transparent;">
+                                <div class="checkbox">
+                                  <input type="checkbox" [checked]="chkFundRaising" (change)="chkFundRaising = !chkFundRaising" name="" id="fundraising">
+                                  <label for="fundraising">FUNDRAISING</label>
+                                </div>
+                              </li>                                
+                            </ul>
+                          </div>
+                          <div class="col-md-6">
+                            <ul class="list-unstyled">
+                              <li style="background:transparent;">
+                                <div class="checkbox">
+                                  <input type="checkbox" name="" [checked]="chkVolunteering" (change)="chkVolunteering = !chkVolunteering" id="volunteering">
+                                  <label for="volunteering">VOLUNTEERING</label>
+                                </div>
+                              </li>
+                              <li style="background:transparent;">
+                                <div class="checkbox">
+                                  <input type="checkbox" name="" [checked]="chkReading" (change)="chkReading = !chkReading" id="Reading">
+                                  <label for="Reading">READING</label>
+                                </div>
+                              </li>                             
+                            </ul>
+                          </div>
+                          </div>
+                      </div>
+                  </div>                
+                </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="ac-cnt" >
+                    <button id="btntreatments"  (click)="setfilter(6);" class="{{filterpatient6flag}}" type="button"  data-target="#treatments" aria-expanded="true" aria-controls="treatments">TREATMENTS <span>(all)</span></button>
+                      <div class="{{filterpatient6}}" id="treatments" aria-expanded="true" style="">
+                        <!---->
+                        <div class="selected">
+                          <div class="row p-row">
+                            <div class="bordered">
+                              <div class="col-md-8">
+                                <strong>{{selectedMYtreatmentsCount}} Selected</strong> <small>(My Treatments)</small>
+                              </div>
+                              <div class="col-md-4 text-right" style="padding-left:0px;padding-right:15px;">
+                                <a (click)="resetPatienttreatments();">Reset Filters</a>
+                              </div>
+                            </div>
+                          </div>
+                          <input type="text" name="" value="{{selectedMYtreatmenslistValue}}">
+                        </div>
+                        <div class="select-options form">
+                          <p>Show patients with</p>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <ul class="list-unstyled" style="padding-left:13px;">
+                                <li style="background:transparent;">
+                                  <div class="checkbox">
+                                    <input  [(ngModel)]="alltraeatmentsFlag"  (change)='allteratmentSelected(alltraeatmentsFlag)' type="checkbox" name="" id="all-treatments">
+                                    <label  for="all-treatments">ALL TREATMENTS</label>
+                                  </div>
+                                </li>
+                                <li style="background:transparent;">
+                                  <div class="checkbox">
+                                    <input type="checkbox"  [(ngModel)]="mytraeatmentsFlag"   (change)='myteratmentsSelected(mytraeatmentsFlag)' name="" checked="" id="my-treatments">
+                                    <label for="my-treatments">MY TREATMENTS</label>
+                                  </div>
+                                </li>
+                                    <li *ngFor="let Mytreatment of showMytreatment; let i = index;">
+                                     
+                                        <div *ngIf="mytraeatmentsFlag==true">                                      
+                                          <input type="checkbox"
+                                           [checked]="Mytreatment.checked" (change)="handleChange(Mytreatment.checked, i)">
+                                           <label for="my-treatments">{{Mytreatment.name}}</label>  
+                                        </div>
+                                </li>
+                                <a (click)="loadMoreTreatments();"  *ngIf="mytraeatmentsFlag==true && TreatmentShowMoreButtonFlag==true"><b><u> Show More</u></b></a>
+                              </ul>
+                            </div>
+                          </div>
+                          <p>Search for specific treatments</p>
+                          <div class="input-group">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" class="form-control" name="" (focus)="showAutoCompletePopup('Search_treatments_popup', true)" [(ngModel)]="SearchAllTreatmentString" (ngModelChange)="SearchAllTreatments()" placeholder="Search Treatments">
+                            <ul class="autocomplete-popup" style="margin-top: 35px;"  id="Search_treatments_popup">
+                              <li  *ngFor="let SearchAllTreatment of SearchAllTreatmentsList" (click)="addAllTreatmentsList(SearchAllTreatment);"> {{SearchAllTreatment.name}}</li>
+                            </ul>
+                            <button class="btn btn-default" (click)="savesearchfilter();" >Search</button>
+                          </div>
+                          <div class="tags-conditions tags-squared" style="margin-top:15px;">
+                            <div class="reply-tag reply-tag-soft" *ngFor="let selectedTreatment of selectedSearchAllTreatments">{{selectedTreatment.name}}
+                              <button class="close-tag" (click)="removeAllTreatments(selectedTreatment);" ><i class="icon icon-close"></i></button>
+                            </div>
+                          </div>
+                        </div>
+                        <!---->
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="ac-cnt" >
+                    <button id="btngender" (click)="setfilter(7)" type="button"  class="{{filterpatient7flag}}" data-target="#gender" aria-expanded="false" aria-controls="gender">GENDER IDENTITY <span>(any)</span></button>
+                    <div class="{{filterpatient7}}" id="gender">
+                      <select class="form-control" [(ngModel)]="genderIdentity" style="color:#5E6B82;">
+                        <option value="Any" >Any</option>
+                        <option value="Male"> Male  </option>
+                        <option value="Female"> Female  </option>
+                        <option value="Transgender"> Transgender  </option>
+                        <option value="Agender"> Agender  </option>               
+                        <option value="Androgyne"> Androgyne  </option>
+                        <option value="Bigender"> Bigender  </option>
+                        <option value="Genderqueer"> Genderqueer  </option>
+                        <option value="Third gender"> Third gender  </option>
+                        <option value="Two spirit"> Two spirit  </option>
+                        <option value="Hijra"> Hijra  </option>
+                        <option value="Other"> Other  </option>
+                      </select>
+                    </div>
+                  </div>                
+                </div>
+                <div class="col-md-4">
+                  <div class="ac-cnt" >
+                    <button id="btnconditions" (click)="setfilter(8)"  class="{{filterpatient8flag}}" type="button" data-target="#conditions" aria-expanded="false" aria-controls="conditions">CONDITIONS <span>(all)</span></button>
+                    <div class="{{filterpatient8}}"  id="conditions">
+                      <div class="floating-c form-control-filter collapse in" id="conditions" aria-expanded="true" style="">
+                    <div class="selected">
+                      <div class="row p-row">
+                        <div class="bordered">
+                          <div class="col-md-8">
+                            <strong>{{selectedMYconditionCount}} Selected</strong> <small>(My Conditions)</small>
+                          </div>
+                          <div class="col-md-4 text-right" style="padding-left:0px;padding-right:15px;">
+                            <a (click)="resetPatientcondition()" >Reset Filters</a>
+                          </div>
+                        </div>
+                      </div>
+                      <input type="text" name="" value="{{selectedMconditionslistValue}}">
+                    </div>
+                    <div class="select-options form">
+                      <p>Show patients with</p>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <ul class="list-unstyled" style="padding-left:13px;">
+                            <li style="background:transparent;">
+                              <div class="checkbox">
+                                <input type="checkbox" [checked]="AllConditionFlag" (change)="allconditionSelected(AllConditionFlag)" name="" id="all-conditions">
+                                <label for="all-conditions">ALL CONDITIONS</label>
+                              </div>
+                            </li>
+                            <li style="background:transparent;">
+                              <div class="checkbox">
+                                <input type="checkbox"  [checked]="MyconditionFlag"  (change)='myconditionSelected(MyconditionFlag)' name="" checked="" id="my-conditions">
+                                <label for="my-conditions">MY CONDITIONS</label>
+                              </div>
+                            </li>
+                      
+                          <li *ngFor="let showcondition of showconditionCheckBoxList; let i = index;">
+                           
+                              <div *ngIf="MyconditionFlag==true">                                      
+                                <input type="checkbox"
+                                 [checked]="showcondition.checked" (change)="handleChangeCondition(showcondition.checked, i)">
+                                 <label for="my-treatments">{{showcondition.name}}</label>  
+                              </div>
+                          </li>
+                          <a (click)="loadMoreConditionCheckBox();"  *ngIf="MyconditionFlag==true && conditioncheckbocShowMoreButtonFlag==true"><b><u> Show More</u></b></a>
+                          
+                        </ul>
+                        <div class="border-small-options">
+                          <div class="mb-bso">
+                            <p>Age of first symptoms</p>
+                            <input type="number" name="" [(ngModel)]="firstSympMinAge" min="12"> <span class="sep">to</span> <input type="number" name="" [(ngModel)]="firstSympMaxAge" value="100"> <span class="sep">years</span>
+                          </div>
+                          <div >
+                            <p>Age of first symptoms</p>
+                            <input type="radio" name="fs" (click)="anyChecked()" [checked]="firstSympAnyChecked" id="afany" checked="">
+                            <label for="afany">Any</label>
+                            <input type="radio" name="fs" [checked]="firstSyDiagnosedChecked" (click)="diagnosedChecked()" id="fsdiagnosed">
+                            <label for="fsdiagnosed">Diagnosed</label>
+                            <input type="radio" name="fs" [checked]="firstSyNotDiagnosedChecked"  (click)="notDiagnosedChecked()" id="fsnotdiagnosed">
+                            <label for="fsnotdiagnosed" style="width:110px!important;">Not Diagnosed</label>
+                          </div>
+                          <div>
+                            <p>Age when diganosed</p>
+                            <input type="number" name=""  [(ngModel)]="firstSyyDiagnosedminyear"  value="0"> <span class="sep">to</span> <input type="number" [(ngModel)]="firstSyyDiagnosedmaxyear" name="" value="100"> <span class="sep">years</span>
+                          </div>
+                        </div>  
+                        </div>
+                      </div>
+                      <p>Show patients with</p>
+                      <div class="input-group">
+                        <i class="glyphicon glyphicon-search"></i>
+                    <input type="text" class="form-control" name="" placeholder="Search Conditions" (focus)="showAutoCompletePopup('Search_Conditions_popup', true)" [(ngModel)]="SearchConditionsString" (ngModelChange)="SearchConditions()">
+                        <ul class="autocomplete-popup" style="margin-top: 35px;" id="Search_Conditions_popup">
+                          <li  *ngFor="let SearchCondition of SearchConditionList" (click)="addconditionList(SearchCondition);"> {{SearchCondition.name}}</li>
+                        </ul>  
+                         <button  type="button" data-toggle="collapse" (click)="savesearchfilter();" data-target="#conditions" aria-expanded="false" aria-controls="conditions" class="btn btn-default">Search</button>
+                      </div>
+                      <div class="tags-conditions tags-squared" style="margin-top:15px;">
+                        <div class="reply-tag reply-tag-soft" *ngFor="let SelectedSearchCondition of SelectedSearchConditionList">{{SelectedSearchCondition.name}}
+                          <button class="close-tag" (click)="removeCondition(SelectedSearchCondition);" ><i class="icon icon-close"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                    </div>
+                  </div>                
+                </div>
+                <div class="col-md-4"></div>
+              </div>
+              <div class="row" style="margin-top:11px;">
+                <div class="col-md-4"></div>
+                <div class="col-md-4 text-center search-form-sc">
+         <!-- <button class="btn btn-default" data-toggle="modal" (click)="savesearchfilter();" data-target="#saveSearchModal">Save search</button> -->
+         <button class="btn btn-default" (click)="saveSearchOpen();">Save Search</button>        
+        </div>
+                <div class="col-md-4 text-right" style="padding-top:14px;">
+                  <a href="javascript:;" class="btn btn-outline btn-xs" style="color:#4E6484;" (click)="GetSavedSearches('patient')" data-toggle="collapse" data-target="#saved_searches" aria-expanded="false" aria-controls="saved_searches">MY SAVED SEARCHES +</a>
+                  <div class="collapse floating-c text-left floating-c-r" id="saved_searches" style="min-width: 317px;" infinite-scroll
+                  [infiniteScrollDistance]="0.3"
+                  [infiniteScrollThrottle]="1300"
+                  (scrolled)="onScrollDownSearches('patient')">
+                      <table class="table table-common mb-0">
+                        <thead>
+                          <tr><th>NAME</th>
+                            <th>DATE SAVED</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>                          
+                          <tr *ngFor="let savedSearch of lstSavedSearches; let i=index;" >
+                            <td>{{savedSearch.name}}</td>
+                            <td>{{savedSearch.created_at | date : "MMMM dd, y"}}</td>
+                            <td class="opt-col">
+                              <a href="javascript:;">
+                                <i class="fa fa-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Search" (click)="deleteSearchOpen(savedSearch)"></i>
+                              </a>
+                              <!-- <div *ngIf="savedSearch.show==true"><button>Delete Search</button></div>         -->
+                              <!-- <div *ngIf="savedSearch.show==true"><button (click)="deleteSearchOpen(savedSearch)">Delete Search</button></div>                                                   -->
+                            </td>
+                          </tr>
+                          <!-- <tr class="unbordered">
+                            <td>People with chrones</td>
+                            <td>April 15th, 2017</td>
+                            <td class="opt-col">
+                              <a href="javascript:;" onclick="document.querySelector('#options_popup_2').classList.toggle('in')"><i class="fa fa-trash"></i></a>
+                              <ul class="command-options-popup" id="options_popup_2">
+                                <li><button>Delete Search</button></li>
+                              </ul>
+                            </td>
+                          </tr> -->
+                        </tbody>
+                      </table>
+  
+                  </div>
+                </div>              
+              </div>
+            </div>
+          </div>
+          <!-- End Box with accordions -->
+          <!-- Table results -->
+          <div class="box-container">
+      <div class="row heading-division">
+        <div class="col-md-6"  *ngIf="patientTabflag==true" >
+          <div class="form">
+            <label for="">I want to see:</label>
+            <select name="" id="filter_see" [(ngModel)]="patientSortstring" (ngModelChange)="loadPatient()" class="form-control size-sm">
+              <option value="newest">Newest to SameCondition</option>
+              <option value="latest">Latest to SameCondition</option>
+              <option value="alphabetical">Alphabetical to SameCondition</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="physiciansTabflag==true" >
+          <div class="form">
+            <label for="">I want to see:</label>
+            <select name="" id="filter_see"  [(ngModel)]="physiciansortstring"  (ngModelChange)="loadPhysicians()"class="form-control size-sm">
+              <option value="newest">Newest to SameCondition</option>
+              <option value="alphabetical">Alphabetical to SameCondition</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="researchersTabflag==true" >
+          <div class="form">
+            <label for="">I want to see:</label>
+            <select name="" id="filter_see"  [(ngModel)]="researchSortString" (ngModelChange)="loadResearchers()" class="form-control size-sm">
+              <option value="newest">Newest to SameCondition</option>
+              <option value="alphabetical">Alphabetical to SameCondition</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6 text-right">
+          
+        </div>
+      </div>
+
+      <!-- tabs -->
+      <ul class="nav nav-tabs nav-tabs-common navs-c-patient">
+        <li class="active"><a href="#tab_patients" data-toggle="tab"  (click)="tabpatients();" >PATIENTS</a></li>
+        <li class=""><a href="#tab_physicians" data-toggle="tab" (click)="tabphysicians();">PHYSICIANS</a></li>
+        <li class=""><a href="#tab_researchers" data-toggle="tab" (click)="tabresearchers();">RESEARCHERS</a></li>
+      </ul>
+
+      <div class="tab-content tab-content-c">
+        <div class="tab-pane active" id="tab_patients" *ngIf="patientTabflag==true">
+            <table class="table-publications table-ext">
+                <thead>
+                  <tr>
+                    <th style="width:185px;">Patient</th>
+                    <th>Location</th>
+                    <th colspan="2">Conditions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let Patient of PatientList">
+                    <td>
+                      <div class="media media-profile media-on-td"  (click)="movetoconnectFollowing();" >
+                        <div class="media-left">
+                          <img src="{{Patient.photo_url}}">
+                        </div>
+                        <div class="media-body">
+                          <p class="media-title">{{Patient.first_name}} {{Patient.last_name}}</p>
+                          <p>{{Patient.sex}}, Transgender</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{{Patient.city}}, {{Patient.state}}, {{Patient.state}}</td>
+                    <td [innerHTML]="Patient.my_conditions"></td>
+                    <td class="opt-col">
+                        <a  *ngIf="Patient.is_following==false" (click)="follow(Patient.id)"  class="btn btn-secondary btn-xs">FOLLOW</a>
+                        <a  *ngIf="Patient.is_following==true" (click)="unfollw(Patient.id)"  class="btn btn-outline btn-xs">FOLLOWING</a>
+                      <a  class="btn btn-secondary-inverse btn-xs" (click)="movetoconnectmessage()"  >MESSAGE</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        <!-- End tab-patients -->
+
+        <div class="tab-pane" id="tab_physicians" *ngIf="physiciansTabflag==true">
+          <table class="table-publications table-ext">
+            <thead>
+              <tr>
+                <th style="width:210px;">Physician</th>
+                <th width="200px">Currently Practising</th>
+                <th colspan="2">Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let physicians of physiciansList" >
+                <td>
+                  <div class="media media-profile media-on-td"  (click)="movetoconnectFollowing();"  >
+                    <div class="media-left">
+                      <img src="{{physicians.photo_url}}">
+                    </div>
+                    <div class="media-body">
+                      <p class="media-title">{{physicians.first_name}} {{physicians.last_name}}</p>
+                      <p class="text-thin"  *ngIf="physicians.degree_earned_detail!=null" > {{physicians.degree_earned_detail.name}}</p>
+                    </div>
+                  </div>
+                </td>
+                <td>{{physicians.current_practice_detail}}</td>
+                <td> {{physicians.city}} {{physicians.state}} {{physicians.country}}</td>
+                <td class="opt-col">
+                    <a *ngIf="physicians.is_following==false" (click)="follow(physicians.id)" class="btn btn-secondary btn-xs">FOLLOW</a>
+                  <a  *ngIf="physicians.is_following==true"  (click)="unfollw(physicians.id)" class="btn btn-secondary btn-xs">FOLLOW</a>
+                  <a  class="btn btn-secondary-inverse btn-xs" (click)="movetoconnectmessage();">MESSAGE</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- /. tab phisicyans -->
+
+        <div class="tab-pane" id="tab_researchers" *ngIf="researchersTabflag==true">
+          <table class="table-publications table-ext">
+            <thead>
+              <tr>
+                <th>Researcher</th>
+                <th>Number of Publications </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let researchs of researchsList">
+                <td>
+                  <div class="media media-profile media-on-td"  (click)="movetoconnectFollowing();" >
+                    <div class="media-left">
+                      <img src="{{researchs.photo_url}}">
+                    </div>
+                    <div class="media-body valign-middle">
+                      <p class="media-title">{{researchs.first_name}} {{researchs.last_name}}</p>
+                    </div>
+                  </div>
+                </td>
+                <td width="170px" align="center">{{researchs.publication_count}}</td>
+                <td class="opt-col" style="width:40%;">
+                  <a   *ngIf="researchs.is_following==false"  (click)="follow(researchs.id)" class="btn btn-secondary btn-xs">FOLLOW</a>
+                  <a   *ngIf="researchs.is_following==true"  (click)="unfollw(researchs.id)"  class="btn btn-outline btn-xs">FOLLOWING</a>
+                  <a   class="btn btn-secondary-inverse btn-xs" (click)="movetoconnectmessage();">MESSAGE</a>
+                </td>
+              </tr>
+             
+            </tbody>
+          </table>
+        </div>
+        <!-- End tab_patient researchers -->
+        <p>&nbsp;</p>
+      </div>
+
+    </div>
+          <!-- End Table results -->
+
+        </div>
+        <!-- End Search field -->
+
+      </div>
+      <!-- end col-md-8 -->
+      <!--<div class="col-md-1"></div>-->
+      <!-- Begin col-md-3 -->
+      <div class="col-md-3">
+        <img src="assets/modules/images/notifications/advertisement-1.png">
+        <p>&nbsp;</p>
+        <img src="assets/modules/images/notifications/advertisement-2.png">
+      </div>
+      <!-- End col-md-3 -->
+    </div>
+    <!-- / Container section -->
+  </div>
+</div>
+
+<div id="deleteSearchOpen" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox delete-confirm-modal">
+      <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" aria-label="Close" style="margin-right: 5%; margin-bottom: 10%;" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="confirm-title" style="margin-top: 1%;"> Are you sure? </h3>
+          </div>
+          <div class="proBody" >
+            <p class="confirm-description"> {{selected_search}} will be permanently deleted from your profile if you choose to continue. </p>
+          </div>
+          <br>
+          <div class="footModal confirm-footer" style="padding: 0px 0px 30px 0px !important;">
+            <button class="btn btn-primary" data-dismiss="modal" style="width: 170px;"> NO, CANCEL </button>
+            <button class="btn btn-default" (click)="DeleteSavedSearch();" style="width: 100px;"> YES, DELETE </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div id="saveSearchModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox delete-confirm-modal">
+    <div style="overflow: hidden;" class="modal-content">
+      <div class="proHead">
+          <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>                    
+        <strong><h3 class="txtHeaderSheet" style="text-align: center;">Save my search</h3></strong>
+        <h6 style="text-align: center;">Give this search a name for future reference</h6>
+      </div>
+      <div class="mainBody">
+        <div class="teamCare">
+            <div class="row">
+              <div class="col-md-12 padd_remove">                          
+                <div class="col-md-11 paddingRight">
+                  <input [(ngModel)]="searchName"  type="text" class="form-control" placeholder="ie. Patients with anxiety symptoms">
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && searchName =='' ">Search name cannot be blank.</div>
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && searchName.length >100 ">Search Name is too long (maximum is 100 characters).</div>                     
+                </div>
+              </div>                        
+          </div>                             
+        </div>
+        <div class="footModal textAligned">
+            <button class="btn btn-default" data-dismiss="modal"> CANCEL </button>
+          <button class="btn btn-primary" (click)="saveSearchPatient();" > Save Search </button>
+        </div>
+    </div>
+  </div>
+  </div>
+</div>

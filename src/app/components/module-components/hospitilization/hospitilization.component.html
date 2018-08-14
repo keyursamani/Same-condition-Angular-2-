@@ -1,0 +1,337 @@
+
+<div  class="tab-pane">
+  <div class="condition_sec">
+    <div class="row">
+      <div class="search-results" infinite-scroll
+        [infiniteScrollDistance]="0.3"
+        [infiniteScrollThrottle]="1300"
+        (scrolled)="onScrollDown()">
+          <div class="col-md-9">
+            <div class="row bg_color">
+              <div class="myCondition">
+                <h2> My Hospitalizations </h2>
+                <div class="sub-description"> Here you may add the details of hospitalizations (admissions to hospitals). </div>
+                <div *ngIf="NohospitalList" class="hideModal">
+                    <h5> You have not added any hospitalization details to your profile. </h5>
+                    <h5> Click the button below to get started </h5>
+                    <button (click)="addHospitalisedOpen()" class="btn btn-primary"> ADD NEW HOSPITALIZATION </button>
+                </div>
+                <div *ngIf="!NohospitalList" class="addCondition">
+                  <div class="row">
+                    <button class="btn btn-primary" (click)="addHospitalisedOpen()"> LOG NEW HOSPITALIZATION </button>
+                  </div>
+                  <div class="tableSec">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th class="thtdReason">Reason</th>
+                          <th>Date Admitted</th>
+                          <th>Date Discharged</th>
+                          <th>Notes</th>
+                          <th>Visible to</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="trBorder" *ngFor="let myhospitalize of getHospitalizationList" >
+                          <td class="thtdReason text-color"> {{myhospitalize.reason}} </td>
+                          <td class="text-color no-cursor"> {{myhospitalize.date_of_admission | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}} </td>
+                          <td class="text-color">
+                                <span class="no-cursor" *ngIf="myhospitalize.discharged!=false" > {{myhospitalize.date_of_discharged | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}}</span>
+                                <span class="no-cursor" *ngIf="myhospitalize.discharged==false"> N/A</span>
+                          </td>
+                          <td class="text-color"> {{myhospitalize.notes}} </td>
+                          <td class="text-color">
+                            <select class="form-control"
+                            [(ngModel)]="myhospitalize.visibility" (ngModelChange)="setVisibility($event,myhospitalize.id)">
+                              <option value="all_users">All Users</option>
+                              <option  value="followers">Followers</option>
+                              <option  value="only_me">Only Me</option>
+                            </select>
+                          </td>
+                          <td class="text-color">
+                            <div class="actionicon"> <img (click)="deleteHospitalisedOpen(myhospitalize)" src="assets/modules/img/recycle.png"> </div>
+                            <div class="actionicon"> <img (click)="editHospitalisedOpen(myhospitalize)" src="assets/modules/img/edit_1.png"> </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="advertis_sec">
+                <div class="add_two">
+                  <img src="assets/modules/img/270x540.jpg">
+                </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+<div id="hospitalisedDeleteModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox delete-confirm-modal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="confirm-title"> Are you sure? </h3>
+            </div>
+            <div class="proBody" >
+              <p class="confirm-description"> Your hospitalization will be deleted if you choose to continue. </p>
+            </div>
+            <div class="footModal confirm-footer" style="padding: 15px 0">
+              <button class="btn btn-primary" data-dismiss="modal"> NO, KEEP HOSPITALIZATION </button>
+              <button class="btn btn-default" (click)="deleteHospitalised();"> YES, DELETE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="hospitalisedEditModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" (click)="editHospitalisedClosed()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3> <img src="assets/modules/img/ico/condition1.png"> Edit Hospitalization <span> <span class="starLeft">*</span> Indicates required fields </span> </h3>
+      </div>
+      <div class="hospitalisedBody">
+        <p> Why were you Hospitalized?<span class="asteriskcolor">*</span> </p>
+        <input  [(ngModel)]="editHospitalizatonReason" (keypress)="omit_special_char($event)"  type="text" class="form-control" placeholder="BROKEN LEG">
+        <div class="fs-12 text_red" *ngIf="formValidation == true && editHospitalizatonReason =='' ">Reason for hospitalization cannot be blank.</div>
+
+        <div class="inputLabel">
+          <input [(ngModel)]="tagsSearchname" (keypress)="omit_special_char($event)" (ngModelChange)="searchTags($event)" type="text" class="form-control" placeholder="ADD TAGS TO CONNECT WITH OTHERS">
+          <i class="fa fa-hashtag"></i>
+          <i class="fa fa-times"></i>
+        </div>
+        <div *ngIf="hospatalizeTagList.length > 0">
+          <div class="hospitalizeLabel" *ngFor="let item of hospatalizeTagList;let i=index;" >
+              {{item.name}}
+              <button class="tagremoveIcon" (click)="removeHospitalizeTag(i);"> <i class="fa fa-times "></i> </button>
+          </div>
+        </div>
+        <div class="fs-12 text_red" *ngIf="formValidation == true && hospatalizeTagList.length <=0 ">Tag cannot be blank.</div>
+
+        <div class="suggestions "  *ngIf="searchTagList.length > 0 && searchtTagString==true">
+          <div class="pointer" *ngFor="let item of searchTagList"
+          (click)="selectHospitalizeTag(item)" >
+              <p >{{item.name}}</p>
+          </div>
+        </div>
+        <!--<h5> HURT <span>X</span> </h5>-->
+        <div class="savedSearching">
+            <h6> Select date you were admitted<span class="asteriskcolor">*</span> </h6>
+              <div class="inputLabel">
+                <section>
+                 <!--  <my-date-picker name="mydate" [options]="myDatePickerOptions"
+                  (dateChanged)="onDateChangedEditADMITDischarge($event)"  [(ngModel)]="editadmittedDate" [placeholder]="placeholder" ></my-date-picker> -->
+                   <calendar
+                    [dateValue]="editadmittedDate"
+                    [isDisplaySaveBtn]="true"
+                    [myLeft]="535"
+                    (getDate)='onDateChangedEditADMITDischarge($event)'></calendar>
+                </section>
+                 <div class="fs-12 text_red" *ngIf="formValidation == true && editadmittedDate =='' || editadmittedDate==null ">Admitted date cannot be blank.</div>
+              </div>
+
+            <h6 *ngIf="!editHospitalizatonDischarge"> Select date you were discharged (optional) </h6>
+            <div *ngIf="!editHospitalizatonDischarge" class="inputLabel">
+              <section >
+                <!-- <my-date-picker name="mydate"
+                  [options]="myDatePickerOptions"
+                  (dateChanged)="onDateChangedEditDischarge($event)"
+                  [(ngModel)]="editdischargeDate"
+                  [placeholder]="placeholder" >
+                </my-date-picker> -->
+                <calendar
+                    [dateValue]="editdischargeDate"
+                    [isDisplaySaveBtn]="true"
+                    [myLeft]="535"
+                    (getDate)='onDateChangedEditDischarge($event)'></calendar>
+              </section>
+               <div class="fs-12 text_red" *ngIf="formValidation == true && editdischargeDate =='' && editHospitalizatonDischarge==false ">Discharge date cannot be blank.</div>
+            </div>
+            <div class="checkedSection">
+              <div class="checkbox">
+                <label  class="square_radio removePadding">
+                  <input type="checkbox" ng-true-value="true" ng-false-value="false" [(ngModel)]="editHospitalizatonDischarge" (ngModelChange)="edithospitalizeDischarge($event);">
+                  <span class="checkbox-detail">I have not yet been discharged</span>
+                </label>
+              </div>
+            </div>
+        </div>
+        <p> Add Notes (optional) <span class="textareaSpan"> {{editHospitalizatonNotes.length}}/150 </span> </p>
+        <textarea rows="5" placeholder="Notes"
+          (keypress)="editStopWritting()"
+          [(ngModel)]="editHospitalizatonNotes"
+          oninput="this.value = this.value.replace(/^\s+$/, '').replace(/(\..*)\./g, '$1');" class="no-copy-paste">
+        </textarea>
+        <div class="fs-12 text_red" *ngIf="editHospitalizatonNotes.length>150 ">Please enter only 150 character.</div>
+      </div>
+      <div class="footModal">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="col-md-3 padd_remove">
+              <strong> Visible to </strong>
+            </div>
+            <div class="col-md-9 padd_remove">
+              <select class="form-control"  [(ngModel)]="editHospitalizatonVisibility">
+                <option value="all_users">All Users</option>
+                <option value="only_me">Only Me</option>
+                <option value="followers">Followers</option>
+              </select>
+              <div class="fs-12 text_red" *ngIf="formValidation == true && editHospitalizatonVisibility=='' ">Visibility cannot be blank.</div>
+            </div>
+          </div>
+          <div class="col-md-6 textAligned">
+            <button class="btn btn-default borderNone"  (click)="editHospitalisedClosed()"> CANCEL </button>
+            <button class="btn btn-primary" (click)="updateHopitalizaed();" > SAVE </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="hospitalisedAddModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox">
+        <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" aria-label="Close" (click)="addHospitalisedClosed()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3> <img src="assets/modules/img/ico/condition1.png"> Log New Hospitalizations <span> <span class="starLeft">*</span>Indicates required fields </span> </h3>
+          </div>
+          <div class="hospitalisedBody">
+            <p> Why were you hospitalized?<span class="asteriskcolor">*</span> </p>
+            <input [(ngModel)]="hospitalizatonReason" (keypress)="omit_special_char($event)" maxlength="100"  type="text" class="form-control margB0" placeholder="ENTER REASON FOR HOSPITALIZATION">
+            <div class="fs-12 text_red" *ngIf="formValidation == true && hospitalizatonReason =='' ">Reason for hospitalization cannot be blank.
+            </div>
+			      <div class="inputLabel">
+              <input [(ngModel)]="tagsSearchname" (keypress)="omit_special_char($event)" (ngModelChange)="searchTags($event)" type="text" class="form-control margB0" placeholder="TAG A CONDITION, TREATMENT OR SYMPTOM">
+              <i (click)="closeprediction()" class="fa fa-times"></i>
+              <i class="fa fa-hashtag"></i>
+            </div>
+            <div *ngIf="hospatalizeTagList.length > 0">
+                <div class="hospitalizeLabel pointer" *ngFor="let item of hospatalizeTagList;let i=index;" >
+                    {{item.name}}
+                    <button class="tagremoveIcon" (click)="removeHospitalizeTag(i);"> <i class="fa fa-times "></i> </button>
+                </div>
+            </div>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && hospatalizeTagList.length <=0 ">Tag cannot be blank.</div>
+
+            <div *ngIf="showSuggest">
+	            <div class="suggestions "  *ngIf="searchTagList.length > 0 && searchtTagString==true">
+	                <div class="pointer" *ngFor="let item of searchTagList"
+                  (click)="selectHospitalizeTag(item)" >
+	                    <p >{{item.name}}</p>
+	                </div>
+	            </div>
+            </div>
+
+            <div class="savedSearching">
+                <h6> Select date you were admitted<span class="asteriskcolor">*</span> </h6>
+                <div class="removePadding">
+                  <div class="inputLabel" style="border: 1px solid #ccc; border-radius: 4px;" >
+                    <section class="hospitalSec">
+                      <!-- <my-date-picker name="mydate"
+                        [options]="myDatePickerOptions"
+                        (dateChanged)="onDateChanged($event)"
+                        [(ngModel)]="tmodel"
+                        [placeholder]="placeholder">
+                      </my-date-picker> -->
+                      <calendar
+                      [dateValue]="tmodel"
+                      [isDisplaySaveBtn]="true"
+                      [myLeft]="535"
+                      (getDate)='onDateChanged($event)'></calendar>
+                    </section>
+                  </div>
+                   <div class="fs-12 text_red" *ngIf="formValidation == true && admittedDate =='' ">Admitted date cannot be blank.</div>
+                </div>
+
+                <h6 *ngIf="hospitalizatonDischarge==false"> Select date you were discharged (optional) </h6>
+                <div class="removePadding">
+                  <div class="inputLabel" style="border: 1px solid #ccc; border-radius: 4px;" >
+                    <section class="hospitalSec" *ngIf="hospitalizatonDischarge==false" >
+                     <!--  <my-date-picker name="mydate2"
+                        [(ngModel)]="tmodel1"
+                        [options]="myDatePickerOptions"
+                        (dateChanged)="onDateChangedDischarge($event)"
+                        [placeholder]="placeholder" >
+                      </my-date-picker> -->
+                      <calendar
+                      [dateValue]="tmodel1"
+                      [isDisplaySaveBtn]="true"
+                      [myLeft]="535"
+                      (getDate)='onDateChangedDischarge($event)'></calendar>
+                    </section>
+                  </div>
+                 <div class="fs-12 text_red" *ngIf="formValidation == true && dischargeDate =='' && hospitalizatonDischarge==false ">Discharge date cannot be blank.</div>
+                </div>
+
+                <div class="checkedSection removePadding">
+                  <div class="checkbox removePadding">
+                    <label  class="square_radio removePadding">
+                      <input type="checkbox" ng-true-value="true" ng-false-value="false" [(ngModel)]="hospitalizatonDischarge" (ngModelChange)="hospitalizeDischarge($event);">
+                      <span class="checkbox-detail">I have not yet been discharged</span>
+                    </label>
+                  </div>
+                </div>
+            </div>
+            <p> Add Notes (optional) <span class="textareaSpan"> {{hospitalizatonNotes.length}}/150 </span> </p>
+            <textarea rows="5" placeholder="Add a message.."
+            (keypress)="stopWritting()"
+            [(ngModel)]="hospitalizatonNotes"
+            oninput="this.value = this.value.replace(/^\s+$/, '').replace(/(\..*)\./g, '$1');" class="no-copy-paste"> </textarea>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && hospitalizatonNotes.length>150 ">Please enter only 150 character.</div>
+          </div>
+          <div class="footModal">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="col-md-3 removePadding">
+                  <strong> Visible to </strong>
+                </div>
+                <div class="col-md-9 removePadding">
+                  <select class="form-control" style="font-size: 11px;"  [(ngModel)]="hospitalizatonVisibility">
+                    <option value="all_users">All Users</option>
+                    <option value="only_me">Only Me</option>
+                    <option value="followers">Followers</option>
+                  </select>
+                   <div class="fs-12 text_red" *ngIf="formValidation == true && hospitalizatonVisibility =='' ">Visibility cannot be blank.</div>
+                </div>
+              </div>
+              <div class="col-md-6 textAligned">
+                <button class="btn btn-default addcancelbtn" (click)="addHospitalisedClosed();"> CANCEL </button>
+                <button class="btn btn-primary addsavebtn" (click)="addHospitalised();"> SAVE </button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmationModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox proSmallModal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" (click)="noHide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="alignRight"> Are you sure you want to close? </h3>
+            </div>
+            <div class="footModal QOLfoot">
+              <button (click)="noHide()" class="btn btn-primary"> No, Cancel </button>
+              <button (click)="yesdelete()" class="btn btn-default"> Yes, Close </button>
+            </div>
+        </div>
+    </div>
+</div>
+

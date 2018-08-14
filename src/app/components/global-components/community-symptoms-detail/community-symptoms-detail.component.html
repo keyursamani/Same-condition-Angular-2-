@@ -1,0 +1,320 @@
+<div class="middle_section">
+    <div class="container">
+        <br>
+        <!-- Container section -->
+        <div class="row">
+            <!-- Begin col- main -->
+            <div class="col-md-9">
+                <div class="sc-container-shadow box-container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="head-title">
+                                <h3>{{symptomName}} Report</h3>
+                            </div>
+                            <p class="text-sm"> {{symptomDesc}} </p>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <p>&nbsp;</p>
+                            <div id="chart-container">FusionCharts will render here</div>
+                        </div>
+                    </div>
+                </div>
+  
+                <div class="sc-container-shadow box-container">
+                    <div class="row">
+                        <div class="col-md-6" style="text-align: left;">
+                            <!-- <select class="form-control" [(ngModel)]="commSympFilter"  (ngModelChange)="commSympChangeFilter($event)">
+                      <option value="3_months">Last 3 months</option>
+                      <option value="6_months">Last 6 months</option>
+                      <option value="1_year">Last 1 year</option>
+                    </select> -->
+                        </div>
+                        <div class="col-md-6" style="text-align: right">
+                            <button class="btn btn-primary" (click)="addSymptomsThree(headerSymptom.symptom);"> Add {{symptomName}} to my profile </button>
+                        </div>
+                    </div>
+                    <ul class="nav nav-tabs nav-tabs-common">
+                      <li [ngClass]="{'activeClass':symptomStatus=='current'}"><a data-toggle="tab"   (click)="filterSymptom('current');">TREATMENTS FOR {{symptomName}}</a></li>
+                      <li [ngClass]="{'activeClass':symptomStatus!='current'}"><a data-toggle="tab" (click)="filterSymptom('stop');">PATIENT LOG</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div *ngIf="symptomStatus=='current'">
+                            <table class="symptoms_detail_table" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Treatment</th>
+                                        <th style="text-align: left">Number of patients that logged this treatment</th>                                        
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div infinite-scroll [infiniteScrollDistance]="0.8" [infiniteScrollThrottle]="1300" (scrolled)="onScrollDownsIsTreatment()">
+                                <div class="treatment_collapse" *ngFor="let symptomTreatment of symptomTreatmentList;">
+                                    <div class="collapse_section  display_block_inline" [ngClass]="{'activate':symptomTreatment.show==true}">
+                                        <div class="row symptomsRow">
+                                            <div style="width: 35%;" class="col-md-3 removePadding">
+                                                <strong>{{symptomTreatment.name}}</strong>
+                                            </div>
+                                            <div style="width: 15%;" (click)="viewPatientsModalopen();" class="col-md-3 removePadding">
+                                                <strong>{{symptomTreatment.patient_count}} patients</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="symptomStatus!='current'">
+                            <table class="symptoms_detail_table" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th width="21%">Patient</th>
+                                        <th width="27%">Conditions</th>
+                                        <th width="18%">Latest Severity Rating</th>
+                                        <th width="15%"></th>
+                                        <th width="12%">&nbsp;</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div infinite-scroll [infiniteScrollDistance]="0.8" [infiniteScrollThrottle]="1300" (scrolled)="onScrollDownsIsPatient()">
+                                <div class="treatment_collapse" *ngFor="let symptomPatient of symptomPatientlist; let i=index">
+                                    <div class="collapse_section  display_block_inline" [ngClass]="{'activate':symptomPatient.show==true}">
+                                        <div class="row">
+                                            <div class="name_block symptomsRow">
+                                                <div style="width: 5%;" class="col-md-1 removePadding maxWidth1">
+                                                    <img style="background: #3f638c; height: 30px;" *ngIf="symptomPatient.photo_url==''" src="assets/modules/img/profile.png">
+                                                    <img style="height: 30px" *ngIf="symptomPatient.photo_url!=''" src="{{symptomPatient.photo_url}}">
+                                                </div>
+                                                <div style="width: 18%;" class="col-md-4 removePadding">
+                                                    <strong *ngIf="userProfile.first_name != symptomPatient.first_name && userProfile.last_name != symptomPatient.last_name">{{symptomPatient.first_name}} {{symptomPatient.last_name}} </strong>
+                                                    <strong *ngIf="userProfile.first_name == symptomPatient.first_name && userProfile.last_name == symptomPatient.last_name">Me </strong>
+                                                </div>
+                                                <div style="width: 28%;" class="col-md-3 removePadding">                                                                                                          
+                                                        <p *ngIf="symptomPatient.my_conditions.length < 4">                                  
+                                                                <strong *ngFor="let strCondition of symptomPatient.my_conditions; let i = index;">
+                                                                  {{strCondition.name}} <strong *ngIf="i > 0">,</strong>
+                                                                </strong>
+                                                              </p>
+                                                              <p *ngIf="symptomPatient.my_conditions.length > 3">  
+                                                                  <strong *ngFor="let strCondition of symptomPatient.my_conditions; let i = index;">
+                                                                      <strong *ngIf="i < 3">
+                                                                        {{strCondition.name}} <strong *ngIf="i != symptomPatient.my_conditions.length - 1">,</strong>
+                                                                      </strong>
+                                                                      <strong *ngIf="i == 3">
+                                                                        <div class="quick-not-rem">
+                                                                            <a aria-expanded="false" aria-haspopup="true" role="button">
+                                                                                <strong>+ {{symptomPatient.my_conditions.length - 3}} more</strong>  
+                                                                            </a>
+                                                                            <div class="quick-menu">
+                                                                              <div class="not-rem-quick">
+                                                                                  <div class="clearfix">
+                                                                                      <div style="font-size: 11px;color: #4e6484;padding: 0; margin-bottom: 0;">                                                          
+                                                                                          <div class="col-md-7 text-left">
+                                                                                              <p *ngFor="let strConditionAbove of symptomPatient.my_conditions; let i = index;">
+                                                                                                  <strong *ngIf="i > 2">
+                                                                                                     - {{strConditionAbove.name}}
+                                                                                                  </strong>
+                                                                                              </p>
+                                                                                          </div>                                                           
+                                                                                        </div>
+                                                                                      </div>                                                    
+                                                                                  </div>                                                                                               
+                                                                            </div>
+                                                                        </div>
+                                                                      </strong>                                        
+                                                                  </strong>
+                                                                </p>
+                                                </div>
+                                                <div style="width: 18%" class="col-md-3 removePadding">
+                                                    <p *ngIf="symptomPatient.latest_severity != null">
+                                                        <button class="feel_btn doc_yellow" *ngIf="symptomPatient.latest_severity.severity=='moderate'">MODERATE</button>
+                                                        <button class="feel_btn doc_red" *ngIf="symptomPatient.latest_severity.severity=='severe'">SEVERE</button>
+                                                        <button class="feel_btn doc_green" *ngIf="symptomPatient.latest_severity.severity=='mild'">MILD</button>
+                                                    </p>
+                                                </div>
+                                                <div *ngIf="userProfile.first_name != symptomPatient.first_name && userProfile.last_name != symptomPatient.last_name" style="width: 15%" class="col-md-3 removePadding">
+                                                    <p *ngIf="symptomPatient.is_following == false">
+                                                        <button class="btn btn-primary" (click)="followUser(symptomPatient.id);"> FOLLOW </button>
+                                                    </p>
+                                                    <p *ngIf="symptomPatient.is_following == true">
+                                                        <button disabled class="btn btn-primary"> FOLLOWING </button>
+                                                    </p>
+                                                </div>
+                                                <div *ngIf="userProfile.first_name != symptomPatient.first_name && userProfile.last_name != symptomPatient.last_name" style="width: 12%" class="col-md-3 removePadding">
+                                                    <button class="btn btn-primary" (click)="sendMessage(symptomPatient.id);"> MESSAGE </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end col- main -->
+            <!-- Begin col- side -->
+            <div class="col-md-3">
+                <img src="assets/modules/images/notifications/advertisement-1.png" class="responsive-img">
+                <p>&nbsp;</p>
+                <img src="assets/modules/images/notifications/advertisement-2.png" class="responsive-img">
+            </div>
+            <!-- End col- side -->
+        </div>
+        <div id="viewPatientsModal" class="modalOverlay">
+            <div class="modalBox">
+                <div class="modal-content">
+                    <div class="proHead">
+                        <button type="button" class="close" (click)="viewPatientsModalClosed()" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3> <img src="assets/modules/img/ico/condition1.png"> View patients </h3>
+                    </div>
+                    <section >
+                      <div class="tab-pane active" id="tab_patient">
+                        <table class="table-publications table-ext">
+                          <thead>
+                            <tr>
+                            <th>Patient</th>
+                            <th>Conditions</th>
+                            <th ></th>
+                            <th ></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          <tr  *ngFor="let viewPatientsModal of viewPatientsListModal"  >
+                            <td><img src="{{viewPatientsModal.photo_url}}" class="round-img"> {{viewPatientsModal.first_name}} {{viewPatientsModal.last_name}}</td>
+                            <td>
+                                    <p *ngIf="viewPatientsModal.my_conditions.length < 4">                                  
+                                            <strong *ngFor="let strCondition of viewPatientsModal.my_conditions; let i = index;">
+                                              {{strCondition.name}} <strong *ngIf="i > 0">,</strong>
+                                            </strong>
+                                          </p>
+                                          <p *ngIf="viewPatientsModal.my_conditions.length > 3">  
+                                              <strong *ngFor="let strCondition of viewPatientsModal.my_conditions; let i = index;">
+                                                  <strong *ngIf="i < 3">
+                                                    {{strCondition.name}} <strong *ngIf="i != viewPatientsModal.my_conditions.length - 1">,</strong>
+                                                  </strong>
+                                                  <strong *ngIf="i == 3">
+                                                    <div class="quick-not-rem">
+                                                        <a aria-expanded="false" aria-haspopup="true" role="button">
+                                                            <strong>+ {{viewPatientsModal.my_conditions.length - 3}} more</strong>  
+                                                        </a>
+                                                        <div class="quick-menu">
+                                                          <div class="not-rem-quick">
+                                                              <div class="clearfix">
+                                                                  <div style="font-size: 11px;color: #4e6484;padding: 0; margin-bottom: 0;">                                                          
+                                                                      <div class="col-md-7 text-left">
+                                                                          <p *ngFor="let strConditionAbove of viewPatientsModal.my_conditions; let i = index;">
+                                                                              <strong *ngIf="i > 2">
+                                                                                 - {{strConditionAbove.name}}
+                                                                              </strong>
+                                                                          </p>
+                                                                      </div>                                                           
+                                                                    </div>
+                                                                  </div>                                                    
+                                                              </div>                                                                                               
+                                                        </div>
+                                                    </div>
+                                                  </strong>                                        
+                                              </strong>
+                                            </p> 
+                                </td>
+                            <td class="opt-col">
+                            <div *ngIf="userProfile.first_name != viewPatientsModal.first_name && userProfile.last_name != viewPatientsModal.last_name" style="width: 15%" class="col-md-3 removePadding">
+                                    <p *ngIf="viewPatientsModal.is_following == false">
+                                        <button class="btn btn-primary" (click)="followUser(viewPatientsModal.id);"> FOLLOW </button>
+                                    </p>
+                                    <p *ngIf="viewPatientsModal.is_following == true">
+                                        <button disabled class="btn btn-primary"> FOLLOWING </button>
+                                    </p>
+                                </div>                                        
+                            </td>
+                            <td>   
+                                <div *ngIf="userProfile.first_name != viewPatientsModal.first_name && userProfile.last_name != viewPatientsModal.last_name" style="width: 12%" class="col-md-3 removePadding">
+                                    <p>
+                                        <button class="btn btn-primary" (click)="sendMessage(viewPatientsModal.id);"> MESSAGE </button>
+                                    </p>
+                                </div>                         
+                            </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                    <section >
+                        <div class="footModal textAligned">
+                            <button class="btn btn-default borderNone" (click)="viewPatientsModalClosed()" > CANCEL </button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- / Container section -->
+    </div>
+  </div>
+
+  <div id="addAllSymptoms" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+        <div class="modalBox">
+            <div class="modal-content">
+                <div class="proHead">
+                  <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h3> <img src="assets/modules/img/create_file.png"> Add new Symptom to profile <span> Indicates required fields</span> </h3>
+                </div>
+                <div class="proBody" >                    
+                  <section id="addStepThree" style="display: none;">
+                    <div class="gray_table">
+                      <h6> Which of your Conditions is this symptom related to? </h6>
+                      <select class="form-control" [(ngModel)]="addsymptomcondition" (ngModelChange)="selectNewCondition($event)">
+                        <option value="" selected="true">--Select Condition--</option>
+                        <option *ngFor="let condition of conditionList" value="{{condition.condition_name.id}}"> {{condition.condition_name.name}} </option>
+                      </select>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && addsymptomcondition =='' && addsymptomDontknow == false">Condition cannot be blank.</div>
+    
+                      <div class="checkbox">
+                        <label class="square_radio">
+                          <input type="checkbox" name="currenttreat1" class="customRadio" ng-true-value="true"  ng-false-value="false"  [(ngModel)]="addsymptomDontknow" >
+                          <span>I DON'T KNOW</span>
+                        </label>
+                      </div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && addsymptomDontknow ==false && addsymptomcondition == ''">Please select i dont know if you have  no condition.</div>
+                    </div>
+                    <div class="gray_table">
+                      <h6> When did you first notice this symptom? </h6>
+                      <my-date-picker name="mydate" [options]="myDatePickerOptions"
+                    (dateChanged)="onDateChangeddiagnose($event)"  [(ngModel)]="selectedDate" [placeholder]="placeholder" ></my-date-picker>
+                     <div class="fs-12 text_red" *ngIf="formValidation == true && selectDate ==''">Date cannot be blank.</div>
+                    </div>
+                    <div class="gray_table">
+                      <h6> How would you rate the severity of your anxiety? </h6>
+                      <div class="inline_block">
+                      <button [ngClass]="{'active': selectedsevere=='none'}"  (click)="selectSeverity('none');">NONE</button>
+                      <button [ngClass]="{'active': selectedsevere=='mild'}"  (click)="selectSeverity('mild');">MILD</button>
+                      <button [ngClass]="{'active': selectedsevere=='moderate'}"  (click)="selectSeverity('moderate');">MODERATE</button>
+                      <button [ngClass]="{'active': selectedsevere=='severe'}"  (click)="selectSeverity('severe');">SEVERE</button>
+                       <div class="fs-12 text_red" *ngIf="formValidation == true && selectedsevere ==''">Severity cannot be blank.</div>
+                    </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="col-md-3 padd_remove">
+                          <strong class="alignLeft"> Visible to </strong>
+                        </div>
+                        <div class="col-md-9 padd_remove">
+                          <select class="form-control" [(ngModel)]="visibility" >
+                            <option value="all_users"> All Users</option>
+                            <option value="only_me">Only Me</option>
+                            <option value="followers">followers</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="footModal textAligned updateSymptoms">
+                      <button id="addSympBtnThree" style="display: block;" class="btn btn-primary" (click)="addNewSymptom()"> SAVE, FINISH </button>
+                      <button class="btn btn-default" data-dismiss="modal"> CANCEL </button>
+                    </div>
+                  </section>
+                </div>
+            </div>
+        </div>
+    </div>

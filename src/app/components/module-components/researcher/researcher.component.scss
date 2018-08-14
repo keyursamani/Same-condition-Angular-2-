@@ -1,0 +1,410 @@
+/* ===================== For Researcher Profile CSS ==================== */
+.profile-info-researcher {
+
+}
+
+span i, span img, button span {
+  cursor: pointer !important;
+}
+
+.resphys-header {
+  margin-top: 32px;
+  color: #16325C !important;
+  font-family: "Open Sans";
+  font-size: 14px;
+  line-height: 19px;
+}
+
+.documents-holder {
+  padding: 0px 15px 0px 26px!important;
+  width: 30%;
+}
+
+.bio-holder {
+  padding: 0 30px 0 46px!important;
+  width: 70%;
+}
+
+.custom-modal-body {
+  padding: 20px !important;
+}
+
+.custom-modal-body .checkbox{
+  margin-left: 20px !important;
+
+}
+.checkbox-pub label {
+  color: #16325C;
+  font-family: "Open Sans";
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.normal-font {
+  color: #4E6484;
+  font-family: "Open Sans";
+  font-size: 13px;
+  line-height: 30px;
+}
+
+.table-researcher thead {
+  border-bottom: 1px solid #AAA !important;
+  background-color: #F8FAFD;
+  padding: 15px 5px;
+}
+
+.table-researcher th {
+  color: #4E6484;
+  font-family: "Open Sans";
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 17px;
+  min-width: 30px !important;
+  padding-right: 0px !important;
+  padding-left: 10px !important;
+}
+
+.table-researcher td {
+  color: #4E6484;
+  font-family: "Open Sans";
+  font-size: 11px;
+  line-height: 15px;
+  min-width: 35px !important;
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+}
+
+.table-researcher > tbody > tr > td {
+  vertical-align: middle;
+  padding: 11px 10px 12px 10px !important;
+}
+
+.table-img {
+  text-align: center;
+}
+
+.table-pad-10 {
+  padding-right: 10px !important;
+}
+
+.doc-items ul{
+  margin-top: 15px;
+  padding: 10px 0px 10px 15px;
+}
+
+.doc-items li a{
+  padding: 10px 0px;
+  list-style: inside;
+  color: #4E6484 !important;
+  font-family: "Open Sans";
+  font-size: 13px;
+}
+.doc-items li {
+  padding: 0px 0px 10px 0px;
+}
+
+.doc-items ul li{
+  line-height: 25px;
+  word-break: break-all;
+}
+
+.profile-info-researcher{
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px 0 #E4E8ED;
+}
+.right-border {
+  border-right: 1px solid #e1e1e1;
+}
+.researcher-header {
+  color: #4E6484 !important;
+  font-family: "Open Sans" !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  border-bottom: 1px solid #E8E8E8;
+  padding-bottom: 5px;
+}
+.bio-info p {
+  color: #616771 !important;
+  font-family: "Open Sans" !important;
+  font-size: 13px !important;
+  font-weight: normal !important;
+  line-height: 21px;
+}
+.mt-10 {
+  margin-top: 10px
+}
+.mt-32 {
+  margin-top: 32px;
+}
+.mt-20 {
+  margin-top: 20px
+}
+.mt-32 {
+  margin-top: 32px;
+}
+.ml-15 {
+  margin-left: 15px;
+}
+.ml-10 {
+  margin-left: 10px;
+}
+.ml-5 {
+  margin-left: 5px;
+}
+.mb-10 {
+  margin-bottom: 10px;
+}
+.mr-20 {
+  margin-right: 20px;
+}
+.published {
+  height: 23px;
+  width: 100px;
+  border-radius: 4px;
+  background-color: #5667AA;
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 14px;
+  text-align: center;
+  padding: 4px;
+}
+.submitted {
+  box-sizing: border-box;
+  height: 24px;
+  width: 101px;
+  border: 1px solid rgba(86,103,170,0.6);
+  border-radius: 4px;
+  color: #5667AA;
+  font-family: "Open Sans";
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 14px;
+  text-align: center;
+  padding: 4px;
+}
+.notsubmitted {
+  height: 23px;
+  width: 100px;
+  opacity: 0.35;
+  border-radius: 4px;
+  background-color: #5667AA;
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  padding: 4px;
+}
+
+.tooltip-pub {
+    position: relative;
+    display: inline-block;
+}
+.tooltip-pub .tooltiptext {
+  visibility: hidden;
+  width: 390px;
+  background-color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px 0 #E4E8ED;
+  left: -340px;
+  top: 20px;
+  padding: 15px 20px;
+  color: #16325C;
+  font-family: "Open Sans";
+  font-size: 11px;
+  line-height: 16px;
+  position: absolute;
+  z-index: 1;
+}
+.tooltip-pub:hover .tooltiptext {
+    visibility: visible;
+}
+.no-pub p{
+  color: #16325C;
+  font-family: "Open Sans";
+  font-size: 11px !important;
+  line-height: 14px;
+}
+.add-pub{
+  width: 170px !important;
+}
+.add-publication{
+  color: #16325C;
+  font-family: "Open Sans";
+  font-size: 14px;
+  line-height: 19px;
+  padding: 8px 0px 22px 10px;
+  border-bottom: 1px solid #e1e1e1;
+}
+.close-pub span{
+  cursor: pointer;
+  color: #AAAAAA !important;
+  font-size: 21px !important;
+}
+.add-publication span{
+  cursor: text;
+  color: #16325C;
+  font-family: "Open Sans";
+  font-size: 10px;
+}
+.custom-form-group {
+  background-color: #f6f9fd;
+  border-top: 1px solid #f1f1f1;
+  border-bottom: 1px solid #f1f1f1;
+  padding: 10px 10px 10px 10px;
+}
+.publication-body label{
+  color: #16325C;
+  font-family: "Open Sans";
+  font-size: 12px;
+  line-height: 17px;
+}
+.required > label:after{
+    color: #d80005;
+    content: '*';
+}
+.required-before:before{
+    color: #d80005;
+    content: '*';
+}
+.custom-form-group .form-group label {
+  padding: 0;
+  color: #16325C;
+  font-family: "Open Sans";
+  font-size: 12px;
+  line-height: 17px;
+}
+.remove-pub {
+  left: -270px;
+}
+.remove-pub li a {
+  color: #16325C !important;
+  font-family: "Open Sans";
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.checkbox-p {
+  color: #5E6B82;
+  font-family: "Open Sans";
+  font-size: 11px;
+  margin-left: 20px;
+  font-weight: normal;
+}
+.add-pub {
+  width: 92px;
+}
+
+.sub-result {
+  color: #5E6B82;
+  font-family: "Open Sans";
+  font-size: 11px;
+  font-weight: normal;
+  margin-top: -10px;
+}
+.show-items-tags{
+  background: #fff;
+  position: absolute;
+  overflow: auto;
+  max-height: 265px;
+  width: 90%;
+  border: 1px solid #d8d8d8;
+  border-radius: 5px;
+  padding: 0px 5px 0px 5px;
+  margin-top: 4px;
+  padding-left: 10px;
+  z-index: 1;
+}
+.select-text-tag {
+  color: #5E6B82;
+  font-family: "Open Sans";
+  font-size: 13px;
+  font-weight: 600;
+}
+.items {
+  margin-top: 5px;
+  display: block;
+}
+.items p {
+  margin-left: 5px;
+  text-align: left !important;
+}
+.items:hover {
+  cursor: default;
+  background-color: #f1f1f1;
+}
+.remove-tag {
+  cursor: pointer;
+}
+.label-tag {
+  display: inline-block;
+  margin: 2px 2px 0px 0px;
+}
+.tag-form-group {
+
+}
+
+.bootstrap-tagsinput {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  display: block;
+  padding: 4px 6px;
+  color: #555;
+  vertical-align: middle;
+  border-radius: 4px;
+  max-width: 100%;
+  line-height: 22px;
+  cursor: text;
+}
+.bootstrap-tagsinput input {
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background-color: transparent;
+  padding: 0 6px;
+  margin: 0;
+  width: auto;
+  max-width: inherit;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  opacity: 0.6;
+  color: #5E6B82;
+  font-family: "Open Sans";
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: normal;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  opacity: 0.6;
+  color: #5E6B82;
+  font-family: "Open Sans";
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: normal;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  opacity: 0.6;
+  color: #5E6B82;
+  font-family: "Open Sans";
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: normal;
+}
+:-moz-placeholder { /* Firefox 18- */
+  opacity: 0.6;
+  color: #5E6B82;
+  font-family: "Open Sans";
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: normal;
+}
+
+.mt-12{
+  margin-top: -12px;
+}

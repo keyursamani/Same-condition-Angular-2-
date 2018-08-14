@@ -1,0 +1,27 @@
+<div class="middle_section" infinite-scroll 
+	[infiniteScrollDistance]="0.3"
+	[infiniteScrollThrottle]="1300"
+	(scrolled)="onScrollDown()">
+	<div class="container forum forum-categories">
+        <div class="sc-box-content box-md">
+            <div class="row row-table-head">
+                <div class="col-md-8">
+                    <h6>Forum Title</h6>
+                </div>
+                <div class="col-md-4">
+                    <h6>Number of Threads</h6>
+                </div>
+            </div>
+    
+            <div class="row row-table-td first" *ngFor="let item of forumList" (click)="SelectedItem(item)">
+                <div class="col-md-8">
+                    <h5><a >{{item.name}}</a></h5>
+                    <p>{{item.description}}</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="num">{{item.threads_count}}</span>
+                </div>
+          </div>                 
+        </div>
+    </div>
+</div>

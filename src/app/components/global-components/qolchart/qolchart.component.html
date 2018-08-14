@@ -1,0 +1,22 @@
+<div class="feelSlider">
+    <div class="row text-center chartRow"  [ngClass]="{'chartRowSmall': (timeline === true || about === true)}">
+        <div style="width: 33%; float: left;">
+           <!-- <div id="chart-containerSocail"></div> -->
+           <div class="chartDiv" [ngClass]="getCss()" [id]="('chartdivSocial' + qolid)"></div>
+
+           <div class="sm-bold"> Social </div>                   
+        </div>
+        <div style="width: 33%;float: left;">
+          <!-- <div id="chart-containerMental"></div> -->
+          <div class="chartDiv" [ngClass]="getCss()" [id]="('chartdivMental' + qolid)"></div>
+
+          <div class="sm-bold"> Mental </div>
+        </div>
+        <div style="width: 33%;float: left;">
+            <!-- <div id="chart-containerPhysical"></div> -->
+            <div class="chartDiv" [ngClass]="getCss()" [id]="('chartdivPhysical' + qolid)"></div>
+
+            <div class="sm-bold"> Physical </div>
+        </div>
+    </div>
+</div>

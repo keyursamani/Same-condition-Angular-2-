@@ -1,0 +1,710 @@
+<div class="middle_section">
+  <div class="container">
+	<br>
+	<!-- Container section -->
+	<div class="row row-flex community-condition-detail">
+	  <!-- Begin col- main -->
+	  <div class="col-md-9">
+		<div class="sc-container-shadow box-container">
+			<div class="head-title">
+				<h3>{{condition_details.name || ""}} Condition Report</h3>
+			</div>
+			<p class="text-sm">{{condition_details.description || ""}}</p>
+		</div>
+
+		<div class="sc-container-shadow box-container box-content-tabs">
+
+			<!-- tabs -->
+			<ul class="nav nav-tabs nav-tabs-common">
+				<li class="active"><a href="#tab_patient_demographics" data-toggle="tab">PATIENT DEMOGRAPHICS</a></li>
+				<li><a (click)="view_common_symptoms()" href="#tab_patient_evaluations" data-toggle="tab">PATIENT SYMPTOMS</a></li>
+				<li><a (click)="treatments_taken()" href="#tab_patient_treatments" data-toggle="tab">PATIENT TREATMENTS</a></li>
+				<li><a (click)="patients_logs()" href="#tab_patient_log" data-toggle="tab">PATIENT LOG</a></li>
+			</ul>
+
+			<div class="tab-content tab-content-c">
+				<div class="tab-pane tab-demographics active" id="tab_patient_demographics">
+					<div class="lightblue-panel">
+						<p>650 patients have added {{condition_details.name || ""}} to their profiles.</p>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel-demographics">
+								<h6>Age patients were when diagnosed with {{condition_details.name || ""}} <br>&nbsp;</h6>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 96.8%;"><span></span></span>
+									<div class="row">
+										<div class="col-md-4">19 or Younger</div>
+										<div class="col-md-4">{{condition_details.patients_when_diagnosed.less_than_19}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar cursor-pointer">
+									<span style="width: 83.33%;"><span style="opacity: 0.4;"></span></span>
+									<div class="row">
+										<div class="col-md-4">20-29 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_diagnosed.between_20_to_29}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar cursor-pointer">
+									<span style="width: 88.78%;"><span style="opacity: 0.6;"></span></span>
+									<div class="row">
+										<div class="col-md-4">30-39 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_diagnosed.between_30_to_39}}  Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar cursor-pointer">
+									<span style="width:77.24%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">40-49 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_diagnosed.between_40_to_49}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 68.26%;"><span style="opacity: 0.16;"></span></span>
+									<div class="row">
+										<div class="col-md-4">50-59 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_diagnosed.between_50_to_59}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 70.83%;"><span style="opacity: 0.2;"></span></span>
+									<div class="row">
+										<div class="col-md-4">60-69 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_diagnosed.between_60_to_69}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 76.92%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">70-79 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_diagnosed.between_70_to_79}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 68.26%;"><span style="opacity: 0.16;"></span></span>
+									<div class="row">
+										<div class="col-md-4">80-89 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_diagnosed.between_80_to_89}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 70.83%;"><span style="opacity: 0.2;"></span></span>
+									<div class="row">
+										<div class="col-md-4">90+ years</div>
+										<div class="col-md-4">{{condition_details.patients_when_diagnosed.more_than_90}} Patients</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+						<div class="col-md-6">
+							<div class="panel-demographics">
+								<h6>Age patients were when experiencing their first symptom of {{condition_details.name || ""}}</h6>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 96.8%;"><span></span></span>
+									<div class="row">
+										<div class="col-md-4">19 or Younger</div>
+										<div class="col-md-4">{{condition_details.patients_when_exp_diagnosed.less_than_19}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar cursor-pointer">
+									<span style="width: 83.33%;"><span style="opacity: 0.4;"></span></span>
+									<div class="row">
+										<div class="col-md-4">20-29 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_exp_diagnosed.between_20_to_29}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar cursor-pointer">
+									<span style="width: 88.78%;"><span style="opacity: 0.6;"></span></span>
+									<div class="row">
+										<div class="col-md-4">30-39 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_exp_diagnosed.between_30_to_39}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar cursor-pointer">
+									<span style="width:77.24%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">40-49 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_exp_diagnosed.between_40_to_49}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 68.26%;"><span style="opacity: 0.16;"></span></span>
+									<div class="row">
+										<div class="col-md-4">50-59 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_exp_diagnosed.between_50_to_59}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 70.83%;"><span style="opacity: 0.2;"></span></span>
+									<div class="row">
+										<div class="col-md-4">60-69 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_exp_diagnosed.between_60_to_69}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 76.92%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">70-79 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_exp_diagnosed.between_70_to_79}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 68.26%;"><span style="opacity: 0.16;"></span></span>
+									<div class="row">
+										<div class="col-md-4">80-89 years</div>
+										<div class="col-md-4">{{condition_details.patients_when_exp_diagnosed.between_80_to_89}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar cursor-pointer">
+									<span style="width: 70.83%;"><span style="opacity: 0.2;"></span></span>
+									<div class="row">
+										<div class="col-md-4">90+ years</div>
+										<div class="col-md-4">{{condition_details.patients_when_exp_diagnosed.more_than_90}} Patients</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div> <!-- /. row -->
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel-demographics mb-0">
+								<h6>Sex of patients who have logged {{condition_details.name || ""}}</h6>
+
+								<div class="dgbar">
+									<span style="width: 96.8%;"><span></span></span>
+									<div class="row">
+										<div class="col-md-4">Male</div>
+										<div class="col-md-4">{{condition_details.sex.male}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar">
+									<span style="width: 83%;"><span style="opacity: 0.4;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Female</div>
+										<div class="col-md-4">{{condition_details.sex.female}} Patients</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="panel-demographics mb-0">
+								<h6>{{condition_details.name || ""}} patients statuses</h6>
+
+								<div class="dgbar">
+									<span style="width: 96.8%;"><span></span></span>
+									<div class="row">
+										<div class="col-md-4">Diagnosed</div>
+										<div class="col-md-4">{{condition_details.diagnosed}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar">
+									<span style="width: 83%;"><span style="opacity: 0.4;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Not Diagnosed</div>
+										<div class="col-md-4">{{condition_details.not_diagnosed}} Patients</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> <!-- /. row -->
+
+				</div>
+				<!-- End tab_patient_demographics -->
+
+				<div class="tab-pane tab-evaluation" id="tab_patient_evaluations">
+					<table class="table-publications table-ext cc-table">
+						<thead>
+							<tr><th>Symptom</th>
+							<th>Number of patients</th>
+							<th width="275px">Average severity ratings</th>
+						</tr></thead>
+						<tbody>
+							<tr *ngFor="let symptom of patient_symptoms">
+								<td class=""><span class="cursor-pointer" onclick="openPatientSymptomsPopup()">{{symptom.name || "" }}</span></td>
+								<td class="">{{symptom.patient_count}} patients</td>
+								<td class="">
+									<div class="stadistic-block">
+										<div class="row">
+											<div class="col-md-4">None</div>
+											<div class="col-md-8 gray-bar w-150-p"><span>500</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Mild</div>
+											<div class="col-md-8 green-bar w-60-p"><span>200</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Moderate</div>
+											<div class="col-md-8 yellow-bar w-108-p"><span>375</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Severe</div>
+											<div class="col-md-8 red-bar w-98-p"><span>345</span></div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- End tab_patient symptoms -->
+
+				<div class="tab-pane tab-evaluation" id="tab_patient_treatments">
+					<table class="table-publications table-ext cc-table">
+						<thead>
+							<tr><th width="95px">Symptoms</th>
+							<th>Number of patients</th>
+							<th width="215px" class="npl">Effectiveness</th>
+							<th width="215px" class="npl">Average severity ratings</th>
+							<th></th>
+						</tr></thead>
+						<tbody>
+							<tr>
+								<td class=""><span class="cursor-pointer" onclick="openPatientTreatmentPopup()">Anxiety</span></td>
+								<td class="">759 patients</td>
+								<td class="npl">
+									<div class="stadistic-block">
+										<div class="row">
+											<div class="col-md-5">Can't Tell</div>
+											<div class="col-md-7 dblue-bar w-111-p"><span>500</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">None</div>
+											<div class="col-md-7 dblue-bar w-67-p"><span>300</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">Slight</div>
+											<div class="col-md-7 dblue-bar w-56-p"><span>250</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">Moderate</div>
+											<div class="col-md-7 dblue-bar w-27-p"><span>120</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">Major</div>
+											<div class="col-md-7 dblue-bar w-11-p"><span>1<span>6</span></span></div>
+										</div>
+									</div>
+								</td>
+								<td class="npl">
+									<div class="stadistic-block">
+										<div class="row">
+											<div class="col-md-4">None</div>
+											<div class="col-md-8 gray-bar w-111-p"><span>500</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Mild</div>
+											<div class="col-md-8 green-bar w-45-p"><span>200</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Moderate</div>
+											<div class="col-md-8 yellow-bar w-80-p"><span>375</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Severe</div>
+											<div class="col-md-8 red-bar w-73-p"><span>345</span></div>
+										</div>
+									</div>
+								</td>
+								<td class="text-center middle-column"><a href="#">View all<br>evaluations</a></td>
+							</tr>
+							<tr>
+								<td class=""><span class="cursor-pointer" onclick="openPatientTreatmentPopup()">Anxiety</span></td>
+								<td class="">759 patients</td>
+								<td class="npl">
+									<div class="stadistic-block">
+										<div class="row">
+											<div class="col-md-5">Can't Tell</div>
+											<div class="col-md-7 dblue-bar w-111-p"><span>500</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">None</div>
+											<div class="col-md-7 dblue-bar w-67-p"><span>300</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">Slight</div>
+											<div class="col-md-7 dblue-bar w-56-p"><span>250</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">Moderate</div>
+											<div class="col-md-7 dblue-bar w-27-p"><span>120</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">Major</div>
+											<div class="col-md-7 dblue-bar w-11-p"><span>1<span>6</span></span></div>
+										</div>
+									</div>
+								</td>
+								<td class="npl">
+									<div class="stadistic-block">
+										<div class="row">
+											<div class="col-md-4">None</div>
+											<div class="col-md-8 gray-bar w-111-p"><span>500</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Mild</div>
+											<div class="col-md-8 green-bar w-45-p"><span>200</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Moderate</div>
+											<div class="col-md-8 yellow-bar w-80-p"><span>375</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Severe</div>
+											<div class="col-md-8 red-bar w-73-p"><span>345</span></div>
+										</div>
+									</div>
+								</td>
+								<td class="text-center middle-column"><a href="#">View all<br>evaluations</a></td>
+							</tr>
+							<tr>
+								<td class=""><span class="cursor-pointer" onclick="openPatientTreatmentPopup()">Anxiety</span></td>
+								<td class="">759 patients</td>
+								<td class="npl">
+									<div class="stadistic-block">
+										<div class="row">
+											<div class="col-md-5">Can't Tell</div>
+											<div class="col-md-7 dblue-bar w-111-p"><span>500</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">None</div>
+											<div class="col-md-7 dblue-bar w-67-p"><span>300</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">Slight</div>
+											<div class="col-md-7 dblue-bar w-56-p"><span>250</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">Moderate</div>
+											<div class="col-md-7 dblue-bar w-27-p"><span>120</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-5">Major</div>
+											<div class="col-md-7 dblue-bar w-11-p"><span>1<span>6</span></span></div>
+										</div>
+									</div>
+								</td>
+								<td class="npl">
+									<div class="stadistic-block">
+										<div class="row">
+											<div class="col-md-4">None</div>
+											<div class="col-md-8 gray-bar w-111-p"><span>500</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Mild</div>
+											<div class="col-md-8 green-bar w-45-p"><span>200</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Moderate</div>
+											<div class="col-md-8 yellow-bar w-80-p"><span>375</span></div>
+										</div>
+										<div class="row">
+											<div class="col-md-4">Severe</div>
+											<div class="col-md-8 red-bar w-73-p"><span>345</span></div>
+										</div>
+									</div>
+								</td>
+								<td class="text-center middle-column"><a href="#">View all<br>evaluations</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- End tab_patient_evaluations -->
+
+				<div class="tab-pane tab-patient-log" id="tab_patient_log">
+					<table class="table-publications table-ext">
+						<thead>
+						  <tr>
+							<th width="165px">Patient</th>
+							<th>Date of<br>first symptom</th>
+							<th>Date of diagnosis <a class="hover-diagnosis" data-toggle="collapse" data-target="#small-popup"><i class="glyphicon glyphicon-triangle-bottom"></i><div class="filters-cf" id="small-popup">
+				              <div class="check-filter">
+				                <input type="checkbox" name="check-feeling" id="check-feeling">                
+				                <label for="check-feeling">Feelings Posts</label>
+				              </div>
+				              <div class="check-filter">
+				                <input type="checkbox" name="check-qol" id="check-qol">                
+				                <label for="check-qol">QOL Scores</label>
+				              </div>
+				              <div class="check-filter">
+				                <input type="checkbox" name="check-publications" id="check-publications">                
+				                <label for="check-publications">Publications</label>
+				              </div>
+				            </div></a>
+        					</th>
+							<th></th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr *ngFor="let log of patients_log_list">
+						  	<td *ngIf="log.photo_url" >
+								<span class="cursor-pointer">
+								<img class="round-img" src="{{log.photo_url}}"> {{log.first_name || ""}} {{log.last_name || ""}}</span>
+							</td>
+							<td *ngIf="!log.photo_url" >
+								<span class="cursor-pointer">
+								<img class="round-img" src="assets/modules/images/no-image-found.png"> {{log.first_name || ""}} {{log.last_name || ""}}</span>
+							</td>
+							<td>{{log.date_of_first_symptom | date:'MMMM dd, yyyy'}}</td>
+							<td *ngIf="log.diagnosis_date != null">Diagnosed on<br>{{log.diagnosis_date | date:'MMMM dd, yyyy'}}</td>
+							<td *ngIf="log.diagnosis_date == null">NA</td>
+							<td class="opt-col">
+								<a class="btn btn-secondary btn-xs" *ngIf="log.is_following==true">FOLLOWING</a>
+								<a class="btn btn-secondary btn-xs" *ngIf="log.is_following==false" (click)="follow(log.id)">FOLLOW</a>
+								<a class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- End tab patient log -->
+			</div>
+
+		</div>
+	  </div>
+	  <!-- end col- main -->
+	  <!-- Begin col- side -->
+	  <div class="col-md-3">
+		<img src="assets/modules/images/notifications/advertisement-1.png" class="responsive-img">
+		<p>&nbsp;</p>
+		<img src="assets/modules/images/notifications/advertisement-2.png" class="responsive-img">
+	  </div>
+	  <!-- End col- side -->
+	</div>
+	<!-- / Container section -->
+  </div>
+  </div>
+
+
+<div id="openDiagnoseAgeRangeModal" class="modalOverlay modalOverlayFix">
+    <div class="modalBox modalBoxFix modalBox-md">
+        <div class="modal-content view-treatment-patients">
+            <div class="proHead">
+              <button type="button" class="close" onclick="document.querySelector('#openDiagnoseAgeRangeModal').classList.toggle('show')" aria-label="Close">
+                <img src="assets/modules/images/icons/icon-close@2x.png" alt="close modal">
+              </button>
+              <h3>
+              	<img src="assets/modules/images/icons/icon-view-list@2x.png" width="24px"> View patients
+              </h3>
+            </div>
+            <div class="treatmentBody">
+
+            	<div class="subheading-spacer text-center">
+            		<h4>Bi-Polar Disorder</h4>
+            		<p><strong>200 patients</strong> between the ages of 20-29 have been diagnosed with <br>Bi-Polar Disorder</p>
+            	</div>
+
+            	<form action="" class="form">
+        			<div class="form-group fg-mb10 fillter-select-view">
+        				<label for="filter_patients">I want to see:</label>
+        				<select id="filter_patients" class="form-control" onchange="changeFilterSelectView(this)">
+        					<option value="">All patients</option>
+        					<option value="20-29" selected="">Patients 20-29</option>
+        					<option value="not-diagnised">Not yet diagnosed</option>
+        				</select>
+        			</div>
+            	</form>
+
+				<div class="table-responsive" id="tbl_default_patients">
+            		<table class="table-publications table-ext">
+						<thead>
+						  <tr>
+							<th>Patient</th>
+							<th>Date of <br>first symptom</th>
+							<th colspan="2">
+								<div class="dropdown form">
+									<a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" role="button">
+										Date of diagnosis <span class="caret"></span>
+									</a>
+									<ul class="dropdown-menu dropdown-box dropdown-inputs">
+									  	<li>
+									  		<div class="checkbox">
+												<input type="checkbox" id="filter1" name="filters[]" checked=""><label for="filter1">Any Status</label>
+											</div>
+									 	</li>
+									  	<li>
+									  		<div class="checkbox">
+												<input type="checkbox" id="filter2" name="filters[]" checked=""><label for="filter2">Diagnosed</label>
+											</div>
+										</li>
+										<li>
+									  		<div class="checkbox">
+												<input type="checkbox" id="filter3" name="filters[]" checked=""><label for="filter3">Not yet diagnosed</label>
+											</div>
+										</li>
+									  	<li><a href="" class="hidden"></a></li>
+									</ul>
+								</div>
+							</th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr>
+							<td width="218px"><img src="assets/modules/images/no-image-found.png" class="round-img"> Ryan Kelly</td>
+							<td>August 7th, 2017</td>
+							<td>Diagnosed on December 11, 2001</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-secondary btn-xs">FOLLOW</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/symptoms/user-private.png" width="30px"> Private User <a href="javascript:;" class="info-tip"><img src="./assets/modules/images/symptoms/icon-info.png" width="10px"></a></td>
+							<td>August 7th, 2017</td>
+							<td>Diagnosed on December 11, 2001</td>
+							<td class="opt-col">
+								
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Jessica Lacey</td>
+							<td>August 7th, 2017</td>
+							<td>Diagnosed on December 11, 2001</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-secondary btn-xs">FOLLOW</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Billy Michaels</td>
+							<td>August 7th, 2017</td>
+							<td>Diagnosed on December 11, 2001</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-outline btn-xs">FOLLOWING</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Ryan Kelly</td>
+							<td>August 7th, 2017</td>
+							<td>Diagnosed on December 11, 2001</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-secondary btn-xs">FOLLOW</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Sandra Stone</td>
+							<td>August 7th, 2017</td>
+							<td>Diagnosed on December 11, 2001</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-secondary btn-xs">FOLLOW</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Jessica Lacey</td>
+							<td>August 7th, 2017</td>
+							<td>Diagnosed on December 11, 2001</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-secondary btn-xs">FOLLOW</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Billy Michaels</td>
+							<td>August 7th, 2017</td>
+							<td>Diagnosed on December 11, 2001</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-outline btn-xs">FOLLOWING</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  
+						</tbody>
+					</table>
+				</div>
+				<div class="table-responsive hidden" id="tbl_not_diagnose">
+            		<table class="table-publications table-ext">
+						<thead>
+						  <tr>
+							<th>Patient</th>
+							<th>Date of <br>first symptom</th>
+							<th></th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Ryan Kelly</td>
+							<td>August 7th, 2017</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-secondary btn-xs">FOLLOW</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/symptoms/user-private.png" width="30px"> Private User <a href="javascript:;" class="info-tip"><img src="./assets/modules/images/symptoms/icon-info.png" width="10px"></a></td>
+							<td>August 7th, 2017</td>
+							<td class="opt-col">
+								
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Jessica Lacey</td>
+							<td>August 7th, 2017</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-secondary btn-xs">FOLLOW</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Billy Michaels</td>
+							<td>August 7th, 2017</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-outline btn-xs">FOLLOWING</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Ryan Kelly</td>
+							<td>August 7th, 2017</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-secondary btn-xs">FOLLOW</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Sandra Stone</td>
+							<td>August 7th, 2017</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-secondary btn-xs">FOLLOW</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Jessica Lacey</td>
+							<td>August 7th, 2017</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-secondary btn-xs">FOLLOW</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  <tr>
+							<td><img src="assets/modules/images/no-image-found.png" class="round-img"> Billy Michaels</td>
+							<td>August 7th, 2017</td>
+							<td class="opt-col">
+								<a href="" class="btn btn-outline btn-xs">FOLLOWING</a>
+								<a href="" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						  
+						</tbody>
+					</table>
+				</div>
+            </div>
+
+        </div>
+    </div>
+</div>

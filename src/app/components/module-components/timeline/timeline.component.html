@@ -1,0 +1,608 @@
+<div class="tab-content">
+  <div class="tab-pane fade in active">
+    <div class="time_line">
+      <div class="row">
+        <div class="col-md-9 removePadding">
+          <div class="col-md-4">
+            <div class="timeline_left">
+              <div class="interest">
+                <div class="interestIcon"> <img src="assets/modules/img/icons/interest.png"> </div>
+                Interests
+              </div>
+              <ul *ngFor="let myinterest of aboutData.user_interested_in">
+                <li *ngIf="myinterest=='Donating'"> <img src="assets/modules/img/icons/donating.png"> Donating & Aiding
+                  </li>
+                <li *ngIf="myinterest=='Fundraising'"> <img src="assets/modules/img/icons/fundaristion.png"> Fundraising </li>
+                <li *ngIf="myinterest=='Volunteering'"> <img src="assets/modules/img/icons/volunteering.png"> Volunteering </li>
+                <li *ngIf="myinterest=='Reading'"> <img src="assets/modules/img/icons/readBook.png"> Reading </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="interest_block">
+              <div class="updates">
+                <div class="col-md-8">
+                  <div class="sub-title"> <img src="assets/modules/img/ico/2.png"> Updates </div>
+                </div>
+                <div class="col-md-4 padd_remove">
+                  <select class="form-control blue-arrow" style="height: 30px; margin: auto; margin-top: 5px; margin-bottom: 5px; margin-right: 15px;" [(ngModel)]="updateFilterStrign" (ngModelChange)="filterSearch($event)">
+                    <option value="">View all updates</option>
+                    <option value="feeling">Feeling </option>
+                    <option value="hospitalization">Hospitalization </option>
+                    <option value="qol_score">QOL Score</option>
+                    <option value="condition">Condition </option>
+                    <option value="treatment">Treatment </option>
+                    <option value="symptom">Symptom </option>
+                  </select>
+                </div>
+              </div>
+              <div class="search-results" infinite-scroll [infiniteScrollDistance]="0.8"
+                [infiniteScrollThrottle]="1300" (scrolled)="onScrollDown()">
+                <div *ngFor="let feed of showfeedList,let i = index">
+                  <section *ngIf="feed.foreign_type!='Feeling' && feed.foreign_type!='QualityOfLifeScoreDate' && feed.foreign_type!='Hospitalization'"
+                    class="message_body">
+                    <div class="messages">
+                      <div class="name_block">
+                        <div class="col-md-1 removePadding maxWidth1">
+                          <img style="background: #3f638c" *ngIf="userProfile.photo_url==''" src="assets/modules/img/profile.png">
+                          <img *ngIf="userProfile.photo_url!=''" src="{{userProfile.photo_url}}">
+                        </div>
+                        <div class="col-md-4 padd_remove maxWidth7" style="margin-left: 5px;">
+                          <div class="profile-name"> {{userProfile.first_name}} {{userProfile.last_name}}
+                          </div>
+                          <h6> {{feed.created_at | amTimeAgo}}</h6>
+                        </div>
+                        <div class="removePadding pull-right" style="padding-right: 0">
+                          <div class="col-md-9 padd_remove">
+                            <select class="form-control small-select blue-arrow" (ngModelChange)="Fbfeedisibility($event,feed.id)"
+                              [(ngModel)]="feed.visibility">
+                                <option value="all_users">Visible to all Users</option>
+                                <option value="only_me">Visible to Only Me </option>
+                                <option value="followers">Visible to Followers</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3 removePadding">
+                            <select class="form-control select-tools small-blue-arrow textin" (ngModelChange)="fbAction($event,feed.id,feed.foreign_type,feed)"
+                              [(ngModel)]="feed.actions">
+                                <option *ngIf="feed.foreign_type=='Hospitalization' || feed.foreign_type=='MyCondition'" value="edit">Edit</option>
+                                <option value="delete">Delete</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <p> {{feed.title}} </p>
+                      <p *ngIf="feed.description!=null"> {{feed.description}}
+                      </p>
+
+                      <div class="col-md-3 padd_remove">
+                        <div class="marker">
+                          <div class="comment-wrapper alignRight pointer">
+                            <b *ngIf="feed.is_liked==true" (click)="updateLikes(feed,i)">Unlike</b>
+                            <b *ngIf="feed.is_liked==false" (click)="updateLikes(feed,i)">Like</b>                            -
+                            <b (click)="ShowCommentData(feed.id,i,feed.comments_count)">Comment</b>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-9 padd_remove">
+                        <div class="marker">
+                          <div *ngIf="feed.likes_count>1" class="col-md-8">
+                            <h4 class="cursor-pointer" (click)="likedOpenModal(feed.id)">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b *ngIf = "feed.first_user_liked.id==current_user_id ">You</b>
+                              <b *ngIf = "feed.first_user_liked.id!=current_user_id ">{{feed.first_user_liked.first_name}} {{feed.first_user_liked.last_name}}</b> like this
+                              and
+                              <b>{{feed.likes_count-1}} others</b> likes
+                              this
+                            </h4>
+                          </div>
+                          <div *ngIf="feed.likes_count==0" class="col-md-8">
+                            <h4 class="cursor-pointer"
+                            (click)="likedOpenModal(feed.id)"
+                            *ngIf="feed.is_liked==true">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b>none </b> like this
+                            </h4>
+                          </div>
+                          <div *ngIf="feed.likes_count==1" class="col-md-8">
+                            <h4 class="cursor-pointer" (click)="likedOpenModal(feed.id)">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b *ngIf = "feed.first_user_liked.id==current_user_id ">You</b>
+                              <b *ngIf = "feed.first_user_liked.id!=current_user_id ">{{feed.first_user_liked.first_name}} {{feed.first_user_liked.last_name}}</b> like this
+                            </h4>
+                          </div>
+                          <div class="cursor-pointer" (click)="ShowCommentData(feed.id,i,feed.comments_count)" class="col-md-4 padd_remove">
+                            <h4 *ngIf="feed.comments_count > 1"><span> {{feed.comments_count}} Comments <img src="assets/modules/img/icons/comment.png"> </span></h4>
+                            <h4 *ngIf="feed.comments_count < 1"><span> {{feed.comments_count}} Comment <img src="assets/modules/img/icons/comment.png"> </span></h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngFor="let CommentData of feed.getCommentdataList,let j = index">
+                       <div *ngIf="feed.shocomments" class="comentBox">
+                        <div class="col-md-1 padd_remove maxWidth1">
+                          <img style="background: #3f638c" *ngIf="CommentData.user_profile.photo_url==''" src="assets/modules/img/profile.png">
+                          <img *ngIf="CommentData.user_profile.photo_url!=''" src="{{userProfile.photo_url}}">
+                        </div>
+                        <div class="col-md-11 padd_remove maxWidth11">
+                          <div class="comment-profile"> <b>{{CommentData.user_profile.first_name}} {{CommentData.user_profile.last_name}}</b> {{CommentData.comment}} </div>
+                          <ul>
+                            <li class="text-color"> {{CommentData.created_at | amTimeAgo}} </li>
+                            <li class="blue-dot">.</li>
+                            <li class="cursor-pointer text-color" (click)="commentDeltepopup(CommentData.id,feed.id,i,j)"> Delete </li>
+                          </ul>
+                        </div>
+                        <div class="comment-line" *ngIf="j != feed.getCommentdataList.length - 1"></div>
+                      </div>
+                      </div>
+                      <h6 class="loadMore" (click)="LoadMoreCommentFun(feed.id,feed.pageNumber,i)" *ngIf="loadmoreComment">Load more...</h6>
+                    </div>
+                    <div class="text_field">
+                      <div class="col-md-1 padd_remove">
+
+                        <img style="background: #3f638c" *ngIf="userProfile.photo_url==''" src="assets/modules/img/profile.png">
+                        <img *ngIf="userProfile.photo_url!=''" src="{{userProfile.photo_url}}">
+
+                      </div>
+                      <div class="col-md-11 padd_remove">
+                        <div class="inputLabel">
+                          <textarea (keyup.enter)="SendComment(feed.id,feed.commentsText,i,feed.comments_count)" [(ngModel)]="feed.commentsText"
+                          rows="1" placeholder="Write a comment..."></textarea>
+                          <img (click)="SendComment(feed.id,feed.commentsText,i,feed.comments_count)" class="commentInter" src="assets/modules/img/icons/commentEnter.png">
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  <section *ngIf="feed.foreign_type==='Hospitalization'" class="message_body">
+                    <div class="messages">
+                      <div class="name_block">
+                        <div class="col-md-1 removePadding maxWidth1">
+                          <img style="background: #3f638c" *ngIf="userProfile.photo_url==''" src="assets/modules/img/profile.png">
+                          <img *ngIf="userProfile.photo_url!=''" src="{{userProfile.photo_url}}">
+                        </div>
+                        <div class="col-md-4 padd_remove maxWidth7" style="margin-left: 5px;">
+                          <div class="profile-name"> {{userProfile.first_name}} {{userProfile.last_name}}
+                          </div>
+                          <h6> {{feed.created_at | amTimeAgo}}</h6>
+                        </div>
+                        <div class="removePadding pull-right" style="padding-right: 0">
+                          <div class="col-md-9 padd_remove">
+                            <select class="form-control small-select blue-arrow" (ngModelChange)="Fbfeedisibility($event,feed.id)"
+                              [(ngModel)]="feed.visibility">
+                                <option value="all_users">Visible to all Users</option>
+                                <option value="only_me">Visible to Only Me </option>
+                                <option value="followers">Visible to Followers</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3 removePadding">
+                            <select class="form-control select-tools small-blue-arrow textin" (ngModelChange)="fbAction($event,feed.id,feed.foreign_type,feed)"
+                              [(ngModel)]="feed.actions">
+                                <option *ngIf="feed.foreign_type=='Hospitalization' || feed.foreign_type=='MyCondition'" value="edit">Edit</option>
+                                <option value="delete">Delete</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="hospPost">
+                        <p><b>Logged a new hospitalization</b></p>
+                        <p class="hospDates">
+                          <span>Date Admitted: <b>{{feed.feed_data.date_of_admission | date}}</b></span>
+                          <span>Date Discharged: 
+                            <b *ngIf='feed.feed_data.date_of_discharged'>{{feed.feed_data.date_of_discharged | date}}</b>
+                            <b *ngIf='!feed.feed_data.date_of_discharged'>Not yet discharged</b>
+                          </span>
+                        </p>
+                        <p>Reason: <b>{{feed.feed_data.reason}}</b></p>
+                        <ul>
+                          <li *ngFor="let tags of feed.feed_data.tags"> {{tags.name}} </li>
+                        </ul>
+                      </div>
+                      <p>{{feed.feed_data.notes}}</p>
+
+
+                      <div class="col-md-3 padd_remove">
+                        <div class="marker">
+                          <div class="comment-wrapper alignRight pointer">
+                            <b *ngIf="feed.is_liked==true" (click)="updateLikes(feed,i)">Unlike</b>
+                            <b *ngIf="feed.is_liked==false" (click)="updateLikes(feed,i)">Like</b>                            -
+                            <b (click)="ShowCommentData(feed.id,i,feed.comments_count)">Comment</b>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-9 padd_remove">
+                        <div class="marker">
+                          <div *ngIf="feed.likes_count>1" class="col-md-8">
+                            <h4 class="cursor-pointer" (click)="likedOpenModal(feed.id)">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b *ngIf = "feed.first_user_liked.id==current_user_id ">You</b>
+                              <b *ngIf = "feed.first_user_liked.id!=current_user_id ">{{feed.first_user_liked.first_name}} {{feed.first_user_liked.last_name}}</b> like this
+                              and
+                              <b>{{feed.likes_count-1}} others</b> likes
+                              this
+                            </h4>
+                          </div>
+                          <div *ngIf="feed.likes_count==0" class="col-md-8">
+                            <h4 class="cursor-pointer"
+                            (click)="likedOpenModal(feed.id)"
+                            *ngIf="feed.is_liked==true">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b>none </b> like this
+                            </h4>
+                          </div>
+                          <div *ngIf="feed.likes_count==1" class="col-md-8">
+                            <h4 class="cursor-pointer" (click)="likedOpenModal(feed.id)">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b *ngIf = "feed.first_user_liked.id==current_user_id ">You</b>
+                              <b *ngIf = "feed.first_user_liked.id!=current_user_id ">{{feed.first_user_liked.first_name}} {{feed.first_user_liked.last_name}}</b> like this
+                            </h4>
+                          </div>
+                          <div class="cursor-pointer" (click)="ShowCommentData(feed.id,i,feed.comments_count)" class="col-md-4 padd_remove">
+                            <h4 *ngIf="feed.comments_count > 1"><span> {{feed.comments_count}} Comments <img src="assets/modules/img/icons/comment.png"> </span></h4>
+                            <h4 *ngIf="feed.comments_count < 1"><span> {{feed.comments_count}} Comment <img src="assets/modules/img/icons/comment.png"> </span></h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngFor="let CommentData of feed.getCommentdataList,let j = index">
+                       <div *ngIf="feed.shocomments" class="comentBox">
+                        <div class="col-md-1 padd_remove maxWidth1">
+                          <img style="background: #3f638c" *ngIf="CommentData.user_profile.photo_url==''" src="assets/modules/img/profile.png">
+                          <img *ngIf="CommentData.user_profile.photo_url!=''" src="{{userProfile.photo_url}}">
+                        </div>
+                        <div class="col-md-11 padd_remove maxWidth11">
+                          <div class="comment-profile"> <b>{{CommentData.user_profile.first_name}} {{CommentData.user_profile.last_name}}</b> {{CommentData.comment}} </div>
+                          <ul>
+                            <li class="text-color"> {{CommentData.created_at | amTimeAgo}} </li>
+                            <li class="blue-dot">.</li>
+                            <li class="cursor-pointer text-color" (click)="commentDeltepopup(CommentData.id,feed.id,i,j)"> Delete </li>
+                          </ul>
+                        </div>
+                        <div class="comment-line" *ngIf="j != feed.getCommentdataList.length - 1"></div>
+                      </div>
+                      </div>
+                      <h6 class="loadMore" (click)="LoadMoreCommentFun(feed.id,feed.pageNumber,i)" *ngIf="loadmoreComment">Load more...</h6>
+                    </div>
+                    <div class="text_field">
+                      <div class="col-md-1 padd_remove">
+
+                        <img style="background: #3f638c" *ngIf="userProfile.photo_url==''" src="assets/modules/img/profile.png">
+                        <img *ngIf="userProfile.photo_url!=''" src="{{userProfile.photo_url}}">
+
+                      </div>
+                      <div class="col-md-11 padd_remove">
+                        <div class="inputLabel">
+                          <textarea (keyup.enter)="SendComment(feed.id,feed.commentsText,i,feed.comments_count)" [(ngModel)]="feed.commentsText"
+                          rows="1" placeholder="Write a comment..."></textarea>
+                          <img (click)="SendComment(feed.id,feed.commentsText,i,feed.comments_count)" class="commentInter" src="assets/modules/img/icons/commentEnter.png">
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  <section *ngIf="feed.foreign_type=='Feeling'" class="message_body">
+                    <div class="messages">
+                      <div class="name_block">
+                        <div class="col-md-1 padd_remove maxWidth1">
+                          <img style="background: #3f638c" *ngIf="userProfile.photo_url==''" src="assets/modules/img/profile.png">
+                          <img *ngIf="userProfile.photo_url!=''" src="{{userProfile.photo_url}}">
+                        </div>
+                        <div class="col-md-4 padd_remove maxWidth7">
+                          <h4> {{userProfile.first_name}} {{userProfile.last_name}}
+                          </h4>
+                          <h6> {{feed.created_at | amTimeAgo}}</h6>
+                        </div>
+                        <div class="padd_remove pull-right" style="padding-right: 0">
+                          <div class="col-md-9 padd_remove">
+                            <select class="form-control small-select blue-arrow" (ngModelChange)="Fbfeedisibility($event,feed.id)"
+                              [(ngModel)]="feed.visibility">
+                                <option value="all_users">Visible to all Users</option>
+                                <option value="only_me">Visible to Only Me </option>
+                                <option value="followers">Visible to Followers</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3 removePadding">
+                            <select class="form-control select-tools small-blue-arrow textin" (ngModelChange)="fbAction($event,feed.id,feed.foreign_type,feed)"
+                              [(ngModel)]="ActionsT">
+                                <option value="delete">Delete</option>
+                                </select>
+                          </div>
+                        </div>
+                      </div>
+                      <p> Logging feeling <b>'{{feed.feed_data.feeling_in_string}}'</b>                        </p>
+                      <ul>
+                        <li *ngFor="let tags of feed.feed_data.tags"> {{tags.name}} </li>
+                      </ul>
+                      <div class="treatmentBody">
+                        <!--<p> Select how you are feeling </p>-->
+                        <div class="feelSlider">
+                          <div class="buttonOuter" [style.margin-left.%]="feed.feed_data.feeling_in_number">
+                            <div class="btnWithArrow">
+                              <strong></strong>
+                              <button class="feelSliderBtn"> {{feed.feed_data.feeling_in_string}} </button>
+                            </div>
+                          </div>
+                          <input disabled [(ngModel)]="feed.feed_data.feeling_in_number" type="range" min="1" max="100" value="{{feed.feed_data.feeling_in_number}}"
+                            class="slider" id="myRange">
+                        </div>
+                      </div>
+                      <div class="col-md-3 padd_remove">
+                        <div class="marker">
+                          <h4 class="alignRight">
+                            <b class="cursor-pointer" *ngIf="feed.is_liked==true" (click)="updateLikes(feed,i)">Unlike</b>
+                            <b class="cursor-pointer" *ngIf="feed.is_liked==false" (click)="updateLikes(feed,i)">Like</b>                            -
+                            <b (click)="ShowCommentData(feed.id,i,feed.comments_count)">Comment</b>
+                          </h4>
+                        </div>
+                      </div>
+                      <div class="col-md-9 padd_remove">
+                        <div class="marker">
+                          <div *ngIf="feed.likes_count>1" class="col-md-8">
+                            <h4 class="cursor-pointer" (click)="likedOpenModal(feed.id)">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b *ngIf = "feed.first_user_liked.id==current_user_id ">You</b>
+                              <b *ngIf = "feed.first_user_liked.id!=current_user_id ">{{feed.first_user_liked.first_name}} {{feed.first_user_liked.last_name}}</b>
+                              and
+                              <b>{{feed.likes_count-1}} others</b> likes
+                              this
+                            </h4>
+                          </div>
+                          <div *ngIf="feed.likes_count==0" class="col-md-8">
+                            <h4 class="cursor-pointer"
+                            (click)="likedOpenModal(feed.id)"
+                            *ngIf="feed.is_liked==true">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b>none </b> like this
+                            </h4>
+                          </div>
+                          <div *ngIf="feed.likes_count==1" class="col-md-8">
+                            <h4  class="cursor-pointer" (click)="likedOpenModal(feed.id)">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b *ngIf = "feed.first_user_liked.id==current_user_id ">You</b>
+                              <b *ngIf = "feed.first_user_liked.id!=current_user_id ">{{feed.first_user_liked.first_name}} {{feed.first_user_liked.last_name}}</b> like this
+                            </h4>
+                          </div>
+                          <div (click)="ShowCommentData(feed.id,i,feed.comments_count)" class="col-md-4 padd_remove">
+                            <h4 *ngIf="feed.comments_count>1"><span> {{feed.comments_count}} Comments <img src="assets/modules/img/icons/comment.png"> </span></h4>
+                            <h4 *ngIf="feed.comments_count<1"><span> {{feed.comments_count}} Comment <img src="assets/modules/img/icons/comment.png"> </span></h4>
+                          </div>
+                        </div>
+                      </div>
+                       <div *ngFor="let CommentData of feed.getCommentdataList,let j = index">
+                       <div *ngIf="feed.shocomments"  class="comentBox">
+                        <div class="col-md-1 padd_remove maxWidth1">
+                          <img style="background: #3f638c" *ngIf="CommentData.user_profile.photo_url==''" src="assets/modules/img/profile.png">
+                          <img *ngIf="CommentData.user_profile.photo_url!=''" src="{{userProfile.photo_url}}">
+                        </div>
+                        <div class="col-md-11 padd_remove maxWidth11">
+                          <h4> <b>{{CommentData.user_profile.first_name}} {{CommentData.user_profile.last_name}}</b> {{CommentData.comment}} </h4>
+                          <ul>
+                            <li class="text-color"> {{CommentData.created_at | amTimeAgo}} </li>
+                            <li class="blue-dot">.</li>
+                            <li class="cursor-pointer text-color" (click)="commentDeltepopup(CommentData.id,feed.id,i,j)"> Delete </li>
+                          </ul>
+                        </div>
+                        <div class="comment-line" *ngIf="j != feed.getCommentdataList.length - 1"></div>
+                      </div>
+                      </div>
+                      <h6 class="loadMore" (click)="LoadMoreCommentFun(feed.id,feed.pageNumber,i)" *ngIf="loadmoreComment">Load more...</h6>
+                    </div>
+                    <div class="text_field">
+                      <div class="col-md-1 padd_remove">
+
+                        <img style="background: #3f638c" *ngIf="userProfile.photo_url==''" src="assets/modules/img/profile.png">
+                        <img *ngIf="userProfile.photo_url!=''" src="{{userProfile.photo_url}}">
+
+                      </div>
+                      <div class="col-md-11 padd_remove">
+                        <div class="inputLabel">
+                          <textarea (keyup.enter)="SendComment(feed.id,feed.commentsText,i,feed.comments_count)" [(ngModel)]="feed.commentsText"
+                          rows="1" placeholder="Write a comment..."></textarea>
+                          <img (click)="SendComment(feed.id,feed.commentsText,i,feed.comments_count)" class="commentInter" src="assets/modules/img/icons/commentEnter.png">
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  <section *ngIf="feed.foreign_type=='QualityOfLifeScoreDate'" class="message_body">
+                    <div class="messages">
+                      <div class="name_block">
+                        <div class="col-md-1 padd_remove maxWidth1">
+                           <img style="background: #3f638c" *ngIf="userProfile.photo_url==''" src="assets/modules/img/profile.png">
+                          <img *ngIf="userProfile.photo_url!=''" src="{{userProfile.photo_url}}">
+                        </div>
+                        <div class="col-md-4 padd_remove maxWidth7">
+                          <h4> {{userProfile.first_name}} {{userProfile.last_name}}
+                          </h4>
+                          <h6 > {{feed.created_at | amTimeAgo}}</h6>
+                        </div>
+                        <div class="padd_remove pull-right" style="padding-right: 0">
+                          <div class="col-md-9 padd_remove">
+                           <select class="form-control small-select blue-arrow" (ngModelChange)="Fbfeedisibility($event,feed.id)"
+                              [(ngModel)]="feed.visibility">
+                                <option value="all_users">Visible to all Users</option>
+                                <option value="only_me">Visible to Only Me </option>
+                                <option value="followers">Visible to Followers</option>
+                            </select>
+                          </div>
+                          <div class="col-md-3 padd_remove">
+                            <select class="form-control select-tools small-blue-arrow textin" (ngModelChange)="fbAction($event,feed.id,feed.foreign_type,feed)"
+                              [(ngModel)]="ActionsT">
+                                <option value="delete">Delete</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <p> {{feed.title}} </p>
+                      <ul>
+                        <li *ngFor="let tags of feed.feed_data.tags"> {{tags.name}} </li>
+                      </ul>
+                      <div class="treatmentBody">
+                        <qolchart></qolchart>
+                      </div>
+                      <div class="col-md-3 padd_remove">
+                        <div class="marker">
+                          <h4 class="alignRight pointer">
+                            <b *ngIf="feed.is_liked==true" (click)="updateLikes(feed,i)">Unlike</b>
+                            <b *ngIf="feed.is_liked==false" (click)="updateLikes(feed,i)">Like</b>                            -
+                            <b (click)="ShowCommentData(feed.id,i,feed.comments_count)">Comment</b>
+                          </h4>
+                        </div>
+                      </div>
+                      <div class="col-md-9 padd_remove">
+                        <div class="marker">
+                          <div *ngIf="feed.likes_count>1" class="col-md-8">
+                            <h4 class="pointer" (click)="likedOpenModal(feed.id)">
+                              <img src="assets/modules/img/icons/like.png">
+                             <b *ngIf = "feed.first_user_liked.id==current_user_id ">You</b>
+                             <b *ngIf = "feed.first_user_liked.id!=current_user_id ">{{feed.first_user_liked.first_name}} {{feed.first_user_liked.last_name}}</b>
+                              and
+                              <b>{{feed.likes_count-1}} others</b> likes
+                              this
+                            </h4>
+                          </div>
+                          <div *ngIf="feed.likes_count==0" class="col-md-8">
+                            <h4 class="pointer"
+                            (click)="likedOpenModal(feed.id)"
+                            *ngIf="feed.is_liked==true">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b>none </b> like this
+                            </h4>
+                          </div>
+                          <div *ngIf="feed.likes_count==1" class="col-md-8">
+                            <h4 class="cursor-pointer" (click)="likedOpenModal(feed.id)">
+                              <img src="assets/modules/img/icons/like.png">
+                              <b *ngIf = "feed.first_user_liked.id==current_user_id ">You</b>
+                              <b *ngIf = "feed.first_user_liked.id!=current_user_id ">{{feed.first_user_liked.first_name}} {{feed.first_user_liked.last_name}}</b> like this
+                            </h4>
+                          </div>
+                          <div class="cursor-pointer" (click)="ShowCommentData(feed.id,i,feed.comments_count)" class="col-md-4 padd_remove">
+                            <h4 *ngIf="feed.comments_count>1"><span> {{feed.comments_count}} Comments <img class="commentIcons" src="assets/modules/img/icons/comment.png"> </span></h4>
+                            <h4 *ngIf="feed.comments_count<1"><span> {{feed.comments_count}} Comment <img class="commentIcons" src="assets/modules/img/icons/comment.png"> </span></h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngFor="let CommentData of feed.getCommentdataList,let j = index">
+                       <div *ngIf="feed.shocomments" class="comentBox">
+                        <div class="col-md-1 padd_remove maxWidth1">
+                          <img style="background: #3f638c" *ngIf="CommentData.user_profile.photo_url==''" src="assets/modules/img/profile.png">
+                          <img *ngIf="CommentData.user_profile.photo_url!=''" src="{{userProfile.photo_url}}">
+                        </div>
+                        <div class="col-md-11 padd_remove maxWidth11">
+                          <h4> <b>{{CommentData.user_profile.first_name}} {{CommentData.user_profile.last_name}}</b> {{CommentData.comment}} </h4>
+                          <ul>
+                            <li> {{CommentData.created_at | amTimeAgo}} </li>
+                            <li class="blue-dot">.</li>
+                            <li (click)="commentDeltepopup(CommentData.id,feed.id,i,j)"> Delete </li>
+                          </ul>
+                        </div>
+                        <div class="comment-line" *ngIf="j != feed.getCommentdataList.length - 1"></div>
+                      </div>
+                      </div>
+                    </div>
+                    <div class="text_field">
+                      <div class="col-md-1 padd_remove">
+
+                        <img  style="background: #3f638c" *ngIf="userProfile.photo_url==''" src="assets/modules/img/profile.png">
+                        <img *ngIf="userProfile.photo_url!=''" src="{{userProfile.photo_url}}">
+
+                      </div>
+                      <div class="col-md-11 padd_remove">
+                        <div class="inputLabel">
+                          <textarea (keyup.enter)="SendComment(feed.id,feed.commentsText,i,feed.comments_count)" [(ngModel)]="feed.commentsText"
+                          rows="1" placeholder="Write a comment..."></textarea>
+                          <img (click)="SendComment(feed.id,feed.commentsText,i,feed.comments_count)" class="commentInter" src="assets/modules/img/icons/commentEnter.png">
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+              <div class="add_sec">
+                <img src="assets/modules/img/addvertise.jpg">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="advertis_sec">
+            <div class="add_one">
+              <img src="assets/modules/img/270x270.jpg">
+            </div>
+            <div class="add_one two">
+              <img src="assets/modules/img/270x540.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--LIKE Modal-->
+<div id="likedInfoModal" class="modalOverlay">
+  <div class="modalBox proSmallModal">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3> <img src="assets/modules/img/like.png">{{getLikeusers.length}}
+          likes </h3>
+      </div>
+      <div class="proBody likeDiv">
+        <div class="row detailsPro" *ngFor="let likeusers of getLikeusers">
+          <div class="col-md-2">
+            <div class="bodyPic">
+              <img *ngIf="likeusers.photo_url==''" src="assets/modules/img/profile.png" style="background: #3f638c">
+              <img *ngIf="likeusers.photo_url!=''" src="{{likeusers.photo_url}}">
+            </div>
+          </div>
+          <div class="col-md-6 padd_remove">
+            <h4> {{likeusers.first_name}} {{likeusers.last_name}}
+            </h4>
+          </div>
+          <div class="col-md-4">
+            <button class="btn btn-default" *ngIf="likeusers.is_following==true"> FOLLOWING </button>
+            <button class="btn btn-primary" *ngIf="likeusers.is_following==false"> FOLLOW </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--LIKE Modal End here-->
+
+<!--ARE YOU SURE Modal-->
+<div id="deleteCommentsModal" class="modalOverlay">
+    <div class="modalBox proSmallModal">
+        <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="alignRight"> Are you sure? </h3>
+          </div>
+          <div class="proBody" >
+            <p> Comment will be deleted if you choose to continue. </p>
+          </div>
+          <div class="footModal footBG noBorder">
+            <button class="btn btn-primary" type="submit" data-dismiss="modal"> NO, KEEP COMMENT </button>
+            <button class="btn btn-default" (click)="deltedCommensts();"> YES, DELETE </button>
+          </div>
+        </div>
+    </div>
+</div>
+<!--ARE YOU SURE Modal End here-->
+
+<div id="confirmationModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+    <div class="modal-content">
+      <div class="proHead timeline_head">
+        <button type="button" class="close"  (click)="setFeedActinoValue()"  data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="alignRight"> Are you sure, you want to delete this from your timeline? </h3>
+      </div>
+      <div class="footModal QOLfoot" style="border: none; background: #fff; margin-top: 0px;">
+        <button data-dismiss="modal" class="btn btn-primary btn-cancel" (click)="setFeedActinoValue()"> NO, CANCEL </button>
+        <button (click)="fbActionDelete()" class="btn btn-default btn-delete"> YES, DELETE </button>
+      </div>
+    </div>
+  </div>
+</div>

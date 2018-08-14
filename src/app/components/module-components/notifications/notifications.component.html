@@ -1,0 +1,174 @@
+<div class="middle_section">
+    <div class="container">
+        <br>
+        <!-- Container section -->
+        <div class="row">
+            <div class="col-md-1"></div>
+            <!-- Begin col-md-7 -->
+            <div class="col-md-7">
+                <!-- Search Field -->
+                <div class="tabs-navigators-sc">
+                    <ul class="animated_tab">
+                        <li [class.active]="notificationsTabs.isNotificationsTabVisible"><a href="#notifications"  data-toggle="tab">Notifications <span>({{notificationsCount}})</span></a></li>
+                        <li [class.active]="notificationsTabs.isRemindersTabVisible"><a href="#reminders"  data-toggle="tab">Reminders <span>({{remindersCount}})</span></a></li>
+                    </ul>
+                </div>
+                <div class="sc-container-shadow">
+
+                    <!-- tabs -->
+                    <div class="tab-content clearfix" infinite-scroll
+                         [infiniteScrollDistance]="2" [infiniteScrollThrottle]="300" (scrolled)="onScroll()">
+
+                        <div class="tab-pane active" id="notifications" [class.active]="notificationsTabs.isNotificationsTabVisible">
+                            <!-- Section notification -->
+                            <div *ngIf="notifications && notifications.length === 0">
+                                <div class="section-notification">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <p style="font-weight: normal">No notification/s available.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="notifications && notifications.length !== 0">
+                                <div class="section-notification" *ngFor="let notificationObject of notifications; let i = index">
+                                    <div class="notification-title" [ngClass]="{'sc-today':checkDate(notificationObject)}"
+                                         *ngFor="let notificationKey of notificationObject | keys">
+                                        <div class="row">
+                                            <div class="col-md-6">{{ formatDate(notificationKey)}}</div>
+                                            <div class="col-md-6 text-right" *ngIf="i === 0">Go to Notification & Reminders Settings</div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngFor="let notificationValues of notificationObject | values">
+                                        <div *ngFor="let notification of notificationValues; let j = index">
+                                            <div class="list-notifications" [ngClass]="{'today-n':!notification.is_read}">
+                                                <div class="individual-notification hide-notification" *ngIf="notification.is_hide">
+                                                    <div class="row">
+                                                        <div class="col-md-9">
+                                                            <p><strong>Notification hidden!</strong> You will no longer have access to this notification. </p>
+                                                        </div>
+                                                      <div class="col-md-3 text-right" (click)="hideNotificationReminder(notification, 'Notification')">
+                                                        <a>UNDO HIDE</a>
+                                                      </div>
+                                                    </div>
+                                                </div>
+                                                <div class="individual-notification" *ngIf="!notification.is_hide">
+                                                    <div class="row">
+                                                        <div class="col-md-1 text-center">
+                                                            <img style="background: #3f638c" *ngIf="!notification.sender_details.photo_url" src="assets/modules/img/profile.png">
+                                                            <img *ngIf="notification.sender_details.photo_url" [src]="notification.sender_details.photo_url">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <p></p>
+                                                            <h6>{{notification.sender_details.first_name}} {{notification.sender_details.last_name}}
+                                                              <i class="user-status-sc" *ngIf="!notification.is_read"></i></h6>
+                                                            <p>{{notification.title}}</p>
+                                                        </div>
+                                                        <div class="col-md-4 text-right">
+                                                            <a><span></span><span></span><span></span>
+                                                                <div class="options">
+                                                                    <button type="button" *ngIf="!notification.is_read"
+                                                                            (click)="markAsRead(notification, 'Notification')">Mark as Read</button>
+                                                                    <button type="button" *ngIf="!notification.is_hide"
+                                                                            (click)="hideNotificationReminder(notification, 'Notification')">Hide Notification</button>
+                                                                </div>
+                                                            </a>
+                                                            {{ notification.created_at | amTimeAgo }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end Section notification -->
+                        </div>
+
+                        <div class="tab-pane" id="reminders" [class.active]="notificationsTabs.isRemindersTabVisible">
+                            <!-- Section notification -->
+                            <div *ngIf="reminders && reminders.length === 0">
+                                <div class="section-notification">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <p style="font-weight: normal">No reminder/s available.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="reminders && reminders.length !== 0">
+                                <div class="section-notification" *ngFor="let reminderObject of reminders; let i = index">
+                                    <div class="notification-title" [ngClass]="{'sc-today':checkDate(reminderObject)}"
+                                         *ngFor="let reminderKey of reminderObject | keys">
+                                        <div class="row">
+                                            <div class="col-md-6">{{ reminderKey | amCalendar:{sameElse:'MMMM Do, YYYY'} }}</div>
+                                            <div class="col-md-6 text-right"></div>
+                                            <div class="col-md-6 text-right" *ngIf="i === 0">Go to Notification & Reminders Settings</div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngFor="let reminderValue of reminderObject | values">
+                                        <div *ngFor="let reminder of reminderValue; let j = index">
+                                            <div class="list-notifications" [ngClass]="{'today-n':!reminder.is_read}">
+                                                <div class="individual-notification hide-notification" *ngIf="reminder.is_hide">
+                                                    <div class="row">
+                                                        <div class="col-md-9">
+                                                            <p><strong>Reminder hidden!</strong> You will no longer have access to this reminder. </p>
+                                                        </div>
+                                                        <div class="col-md-3 text-right" (click)="hideNotificationReminder(reminder, 'Reminder')">
+                                                            <a>UNDO HIDE</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="individual-notification" *ngIf="!reminder.is_hide">
+                                                    <div class="row">
+                                                        <div class="col-md-1 text-center">
+                                                            <img *ngIf="checkDate(reminderObject)" src="assets/modules/images/notifications/reminder-today.png">
+                                                            <img *ngIf="!checkDate(reminderObject)" src="assets/modules/images/notifications/reminder-yesterday.png">
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            <h6>{{reminder.reminder_type}} Reminder <i class="user-status-sc" *ngIf="!reminder.is_read"></i></h6>
+                                                            <p>{{reminder.description}}</p>
+                                                        </div>
+                                                        <div class="col-md-2 text-right">
+                                                            <a><span></span><span></span><span></span>
+                                                                <div class="options">
+                                                                    <button type="button" *ngIf="!reminder.is_read"
+                                                                            (click)="markAsRead(reminder, 'Reminder')">Mark as Read</button>
+                                                                    <button type="button" *ngIf="!reminder.is_hide"
+                                                                            (click)="hideNotificationReminder(reminder, 'Reminder')">Hide Reminder</button>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <!-- end Section notification -->
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- / tabs-->
+
+                </div>
+                <!-- End Search field -->
+
+            </div>
+            <!-- end col-md-7 -->
+            <div class="col-md-1"></div>
+            <!-- Begin col-md-3 -->
+            <div class="col-md-3">
+                <img src="assets/modules/images/notifications/advertisement-1.png">
+                <p>&nbsp;</p>
+                <img src="assets/modules/images/notifications/advertisement-2.png">
+            </div>
+            <!-- End col-md-3 -->
+        </div>
+        <!-- / Container section -->
+    </div>
+</div>

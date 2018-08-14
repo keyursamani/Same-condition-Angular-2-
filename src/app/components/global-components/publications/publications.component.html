@@ -1,0 +1,123 @@
+<div class="middle_section">
+  <div class="container">
+    <br>
+    <!-- Container section -->
+    <div class="row">
+      <!-- Begin col-md-8 -->
+      <div class="col-md-9">
+
+        <!-- Search Field -->
+        <div class="sc-container-shadow publications-container publication-symptoms">
+          <!-- Search Field -->
+          <div class="row row-publication-title-box">
+            <div class="col-md-3">
+              <h2>Publications</h2>
+            </div>
+            <div class="col-md-9">
+              <div class="container-forms-tag">
+                <form class="search-form-sc mb-18" role="search">
+                  <h6>Search Publications</h6>
+                  <div class="input-group add-on">              
+                    <i class="fa fa-search"></i>
+                    <input type="text" name="querytext" class="form-control" placeholder="Enter the title, author or keywords of the publication you’re looking for" [(ngModel)]="queryText"
+                    #querytext="ngModel">
+                    <div class="fs-12 text_red" *ngIf="formValidation == true && queryText =='' ">search cannot be blank.</div>
+
+                    <div class="input-group-btn">
+                      <button class="btn btn-default" type="submit" 
+                      (click)="search_publication()" *ngIf="isReset == false">Search</button>
+                      <button class="btn btn-default" type="submit" 
+                      (click)="reset_search_publication()" *ngIf="isReset == true">Reset</button>
+                    </div>
+                  </div>
+                </form>
+                <form class="search-form-sc">
+                  <h6>Add filter tags</h6>
+                  <div class="input-group add-on tag-input tag-search">
+                    <input [(ngModel)]="tagsSearchname" 
+                      (keypress)="omit_special_char($event)"
+                      (ngModelChange)="searchTags($event)"
+                      type="text" class="form-control" 
+                      placeholder="Enter a condition, treatment or symptom name" name="tag-term" id="tag-term">
+                  </div>
+                  <div *ngIf="hospatalizeTagList.length > 0">
+                    <div class="hospitalizeLabel" 
+                      *ngFor="let item of hospatalizeTagList;let i=index;" >
+                        {{item.name}}
+                        <button class="tagremoveIcon" (click)="removeHospitalizeTag(i);"> <i class="fa fa-times "></i> </button>
+                    </div>
+                  </div>
+                  <div *ngIf="showSuggest">
+                    <div class="suggestions"  
+                      *ngIf="searchTagList.length > 0 && searchtTagString==true">
+                        <div *ngFor="let item of searchTagList" 
+                          (click)="selectHospitalizeTag(item)" class="pointer">
+                            <p >{{item.name}}</p>
+                        </div>
+                    </div>
+                  </div>
+                </form>
+              </div>              
+            </div>
+          </div>
+          <!-- End Search Field -->
+
+          <!-- Table results -->
+          <div class="row">
+            <div class="col-md-12">
+              <table class="table-publications">
+                <thead>
+                  <tr>
+                    <th>Publication title</th>
+                    <th>Tags</th>
+                    <th>Author</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let publication of publicationList">
+                    <td (click)="open_link(publication.link)" class="pointer">{{publication.title || ""}}</td>
+                    <!-- <td>Bi-polar disorder,<br>Chrones disease</td> -->
+                    <td>{{extractTags(publication.tags)}}</td>
+                    <td>
+
+                      <img *ngIf="publication.researcher_details != '' &&
+                                  publication.researcher_details != null &&
+                                  publication.researcher_details != undefined"
+                            src="{{publication.researcher_details.photo_url || 'assets/modules/images/no-image-found.png'}}">
+
+                      <img *ngIf="publication.researcher_details == '' ||
+                                  publication.researcher_details == null ||
+                                  publication.researcher_details == undefined"
+                            src="assets/modules/images/no-image-found.png">
+
+                      {{isEmpty(publication.researcher_details) 
+                        ? 'N/A' 
+                        : publication.researcher_details.first_name}} 
+                      {{isEmpty(publication.researcher_details) 
+                        ? '' 
+                        : publication.researcher_details.last_name}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- End Table results -->
+
+        </div>
+        <!-- End Search field -->
+
+      </div>
+      <!-- end col-md-8 -->
+      <!--<div class="col-md-1"></div>-->
+      <!-- Begin col-md-3 -->
+      <div class="col-md-3">
+        <img src="assets/modules/images/notifications/advertisement-1.png">
+        <p>&nbsp;</p>
+        <img src="assets/modules/images/notifications/advertisement-2.png">
+      </div>
+      <!-- End col-md-3 -->
+    </div>
+    <!-- / Container section -->
+  </div>
+</div>

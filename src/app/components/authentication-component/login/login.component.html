@@ -1,0 +1,978 @@
+<div class="login-container">
+    <nav class="navbar common-font">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">SameCondition</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a class="link" (click)="openSelectTypemodel()">Sign Up</a></li>
+          <li><a class="link" data-toggle="modal" data-target="#loginModal" (click)="openLoginModal(patientRole)">Login</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="loader" *ngIf="loader"></div>
+
+    <!--================================== Bootstrap Modal Box ==================================-->
+
+    <div  id="signUpModal" class="modalOverlay">
+        <div class="modalBox">
+            <!-- Modal content-->
+            <div class="custom-modal-content">
+                <div class="pop_content">
+                    <button type="button" class="close" (click)="closeSelectTypemodel()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="sign-up-header-font"> I want to sign up as a... </h4>
+                    <div class="row">
+                        <div class="col-md-4 pointer">
+                            <div  (click)="openPatientModal()"  class="boxed">
+                                <img src="assets/modules/img/ico/22.png">
+                                <h3 class="inactive-font" *ngIf="userRole=='patient'"> Patient </h3>
+                                <h3 class="inactive-font" *ngIf="userRole=='care_member'"> Care Team </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4 pointer">
+                            <div class="boxed" (click)="openResearcherModal()">
+                                <img src="assets/modules/img/ico/21.png">
+                                <h3 class="inactive-font"> Researcher </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4 pointer">
+                            <div class="boxed" (click)="openPhysicianModal()">
+                                <img src="assets/modules/img/ico/23.png">
+                                <h3 class="inactive-font"> Physician </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="signUpPatient" class="modalOverlay">
+        <div class="modalBox">
+
+
+
+            <!-- Modal content-->
+            <div class="custom-modal-content">
+                <div class="pop_content">
+                    <button type="button" class="close" (click)="closePatientModal()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="sign-up-header-font"> I want to sign up as a... </h4>
+                    <div class="row">
+                        <div class="col-md-4 pointer">
+                            <div class="boxed arrow_box"  (click)="openPatientModal()">
+                                <img src="assets/modules/img/ico/28.png">
+                                <h3 class="active-font" *ngIf="userRole=='patient'"> Patient </h3>
+                                <h3 class="active-font" *ngIf="userRole=='care_member'"> Care Team </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4 pointer">
+                            <div class="boxed" (click)="openResearcherModal()">
+                                <img src="assets/modules/img/ico/21.png">
+                                <h3 class="inactive-font"> Researcher </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4 pointer">
+                            <div class="boxed" (click)="openPhysicianModal()">
+                                <img src="assets/modules/img/ico/23.png">
+                                <h3 class="inactive-font"> Physician </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="signup_sec">
+                    <section id="first_step">
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6 text-center fb-div">
+                                <button class="btn btn-primary fb-btn" data-width=""
+                                (click)="get_access_token_facebook()">Sign up using Facebook</button><br>
+                                <!-- <div class="fb-login-button" data-width=""></div> -->
+                                <p class="or">OR</p>
+                            </div>
+                            <div class="col-md-3"></div>
+                        </div>
+                        <div class="form-group custom-form-group">
+                            <label>Name</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="text" [(ngModel)]="first_name"  class="form-control custom-form-control" placeholder="First name">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" [(ngModel)]="last_name" class="form-control custom-form-control" placeholder="Last name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control custom-form-control"  [(ngModel)]="email" placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control custom-form-control"  [(ngModel)]="password" placeholder="Enter your password">
+                            </div>
+                            <div class="form-group">
+                                <label>Date of Birth</label>
+                                <div class="row">
+                                    <!-- <ng-datepicker class="form-control custom-form-control selctPicker"  [(ngModel)]="birthday" [options]="options"></ng-datepicker> -->
+                                    <!--<p-calendar  styleClass="form-control custom-form-control" [(ngModel)]="birthday"></p-calendar>-->
+                                    <div class="col-md-3">
+                                        <select class="form-control" [(ngModel)]="dob_month">
+                                            <option value="undefined" selected disabled>Month</option>
+                                            <option *ngFor="let month of months;" [ngValue]="month.value">{{month.month}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 no-padding">
+                                        <select class="form-control" [(ngModel)]="dob_day">
+                                            <option value="undefined" selected disabled>Day</option>
+                                            <option *ngFor="let day of days;" [ngValue]="day">{{day}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" [(ngModel)]="dob_year">
+                                            <option value="undefined" selected disabled>Year</option>
+                                            <option *ngFor="let year of years;" [ngValue]="year">{{year}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                             </div>
+                            <div class="form-group">
+                                <div class="checkbox custom-checkbox" style="margin-top: 0px;">
+                                    <label class="label_remember_me">
+                                        <input type="checkbox" ng-true-value="true" ng-false-value="false" [(ngModel)]="rememberMe" style="margin-top: 2px ;">Remember me
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-center mt-15 mb-0">
+                            <button  class="btn btn-primary" (click)="doPatientsignup()"> SIGN UP </button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="signUpResearcher" class="modalOverlay">
+        <div class="modalBox">
+            <div class="custom-modal-content">
+                <div class="pop_content">
+                    <button type="button" class="close" (click)="closeResearcherModal()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="sign-up-header-font"> I want to sign up as a... </h4>
+                    <div class="row">
+                        <div class="col-md-4 pointer">
+                            <div class="boxed" (click)="openPatientModal()">
+                                <img src="assets/modules/img/ico/22.png">
+                               <h3 class="inactive-font" *ngIf="userRole=='patient'"> Patient </h3>
+                                <h3 class="inactive-font" *ngIf="userRole=='care_member'"> Care Team </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4 pointer">
+                            <div class="boxed arrow_box" (click)="openResearcherModal()">
+                                <img src="assets/modules/img/ico/26.png">
+                                <h3 class="active-font"> Researcher </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4 pointer">
+                            <div class="boxed" (click)="openPhysicianModal()">
+                                <img src="assets/modules/img/ico/23.png">
+                                <h3 class="inactive-font"> Physician </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="researcherForm" class="signup_sec">
+                    <section id="first_step">
+                        <div class="form-group custom-form-group">
+                            <label>Name</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="text" [(ngModel)]="first_name"  class="form-control custom-form-control" placeholder="First name">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" [(ngModel)]="last_name" class="form-control custom-form-control" placeholder="Last name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group">
+                            <div class="form-group">
+                                <label class="label_color">Email</label>
+                                <input type="email" class="form-control custom-form-control"  [(ngModel)]="email" placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label class="label_color">Password</label>
+                                <input type="password" class="form-control custom-form-control"  [(ngModel)]="password" placeholder="Enter your password">
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox custom-checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-true-value="true" ng-false-value="false" [(ngModel)]="rememberMe" style="margin-top: 2px ;">Remember me
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer custom-modal-footer mt-10">
+                            <button class="btn btn-primary next-btn pull-right" (click)="doResearcherAddDetails()"> NEXT STEP </button>
+                        </div>
+                    </section>
+                </div>
+                <div id="researcherMoreDetails" class="signup_sec">
+                    <section id="second_step">
+                        <div class="add-details">Add Details</div><span class="pull-right label custom-label">STEP 2 OF 2</span>
+                        <hr>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group">
+                                <label>Degree earned (optional)</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input [(ngModel)]="searchDegreeKeyword" (ngModelChange)="searchDegrees($event)"  type="text" class="form-control custom-form-control" placeholder="Enter your degree">
+                                        <div class="show-items" *ngIf="showDegreeList == true">
+                                            <div class="items" role="menu" *ngFor="let item of searchDegreeItems" (click)="selectDegree(item)" >
+                                                <p class="pointer margBT0">{{item.name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Year completed (optional)</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <select class="form-control custom-form-control" [(ngModel)]="year_completed">
+                                            <option value="undefined" selected disabled>Select year</option>
+                                            <option *ngFor="let year of years;">{{year}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group">
+                                <label>Upload up to five additional documents to verify your identification (optional)</label>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <table class="table table-borderless custom-table" *ngIf="fileArray.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>FILE/IMAGE NAME</th>
+                                                    <th>VISIBLE TO</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let file of fileArray; let i = index">
+                                                    <td class="padT15"><p class="file-text margBT0">{{file.file.name}}</p></td>
+                                                    <td>
+                                                        <select class="form-control custom-form-control custom_text_color" [(ngModel)]="file.visibility">
+                                                            <option value="all_users" selected>Visible to all users</option>
+                                                            <option value="only_me">Only me</option>
+                                                            <option value="followers" selected="selected">Followers</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-default delete_button delete_button"  type="button" (click)="deleteFileValue(i)"><i class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <form id="file_form">
+                                        <div for="file-upload" class="uploader">
+                                            <img src="assets/modules/img/ico/cloud-upload.png" class="cloud">
+                                            <div class="drag-drop text-center">
+                                                <div class="drag-drop-text">DRAG & DROP A FILE</div>
+                                                <p>OR SELECT ADD OPTION BELOW</p>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                    </div>
+                                                    <div class="col-md-3 img-upload">
+                                                        <label for="img-upload" class="btn-upload text-left"><img src="assets/modules/img/ico/img-upload.png" > ADD IMAGE </label>
+                                                        <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFile" (change)="onAttach($event)" name="newAttributeFile" placeholder="Enter URL" id="img-upload" accept=".jpg,.png">
+                                                    </div>
+                                                    <div class="col-md-3 doc-upload">
+                                                        <label for="doc-upload" class="btn-upload text-left"><img src="assets/modules/img/ico/doc-upload.png" > ADD FILE </label>
+                                                        <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFile" (change)="onAttach($event)" name="newAttributeFile" placeholder="Enter URL" id="doc-upload" accept=".pdf">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="text-center upload-limit">
+                                                        Maximum file size upload 20MB<br>
+                                                       (pdf, jpn, png format are all accepted format)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input class="form-control custom-form-control-file file-upload" type="file" [ngModel]="newAttributeFile" (change)="onAttach($event)" name="newAttributeFile" placeholder="Enter URL">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group">
+                                <label>Add up to 5 URLs (optional)</label>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <table class="table table-borderless custom-table" *ngIf="fieldArray.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>MY URLs</th>
+                                                    <th>VISIBLE TO</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let field of fieldArray; let i = index">
+                                                    <td class="padT15">
+                                                        <a href="{{field.url}}" target="_blank">{{field.url}}</a>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control custom-form-control custom_text_color" [(ngModel)]="field.visibility">
+                                                            <option value="all_users" [selected]="field.visibilty == 'all_users'">Visible to all users</option>
+                                                            <option value="only_me">Only me</option>
+                                                            <option value="followers" selected="selected">Followers</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="padT15">
+                                                        <button class="btn btn-default delete_button"  type="button" (click)="deleteFieldValue(i)"><i class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <form id="url_form" class="row">
+                                    <div *ngIf="fieldArray.length > 0" class="col-md-2">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input class="form-control custom-form-control" type="url" [(ngModel)]="newAttribute" name="newAttribute" placeholder="Enter URL">
+                                    </div>
+                                    <button class="btn btn-default submit plus_button" type="button" (click)="addFieldValue()"><i class="fa fa-plus"></i></button>
+                                </form>
+                            </div>
+                            <div class="form-group">
+                                <label>Add a bio (optional)</label><span class="pull-right"><small class="counter">{{bio ? bio.length :0}}/300</small></span>
+                                <textarea class="form-control custom-form-control" rows="5" maxlength="300" [(ngModel)]="bio" placeholder="Enter a short description about your work"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer custom-modal-footer">
+                            <button class="btn btn-primary sign-up-btn" [disabled]="disableBtn == true" (click)="disableBtn || doResearcherSignup()"> CREATE ACCOUNT </button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="signUpPhysician" class="modalOverlay">
+        <div class="modalBox">
+            <div class="custom-modal-content">
+                <div class="pop_content">
+                    <button type="button" class="close" (click)="closePhysicianModal()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="sign-up-header-font"> I want to sign up as a... </h4>
+                    <div class="row">
+                        <div class="col-md-4 pointer">
+                            <div class="boxed" (click)="openPatientModal()">
+                                <img src="assets/modules/img/ico/22.png">
+                                <h3 class="inactive-font" *ngIf="userRole=='patient'"> Patient </h3>
+                                <h3 class="inactive-font" *ngIf="userRole=='care_member'"> Care Team </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4 pointer">
+                            <div class="boxed" (click)="openResearcherModal()">
+                                <img src="assets/modules/img/ico/21.png">
+                                <h3 class="inactive-font"> Researcher </h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4 pointer">
+                            <div class="boxed arrow_box" (click)="openPhysicianModal()">
+                                <img src="assets/modules/img/ico/27.png">
+                                <h3 class="active-font"> Physician </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="physicianForm" class="signup_sec">
+                    <section id="first_step">
+                        <div class="form-group custom-form-group">
+                            <label>Name</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="text" [(ngModel)]="first_name"  class="form-control custom-form-control" placeholder="First name">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" [(ngModel)]="last_name" class="form-control custom-form-control" placeholder="Last name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group">
+                            <div class="form-group">
+                                <label class="label_color">Email</label>
+                                <input type="email" class="form-control custom-form-control"  [(ngModel)]="email" placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label class="label_color">Password</label>
+                                <input type="password" class="form-control custom-form-control"  [(ngModel)]="password" placeholder="Enter your password">
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox custom-checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-true-value="true" ng-false-value="false" [(ngModel)]="rememberMe" style="margin-top: 2px ;">Remember me
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer custom-modal-footer">
+                            <button class="btn btn-primary next-btn" (click)="doPhysicianSchoolDetails()"> NEXT STEP </button>
+                            <button _ngcontent-c4="" class="btn btn-default btn-cancel" (click)= "closePhysicianModal()"> CANCEL </button>
+                        </div>
+                    </section>
+                </div>
+                <div id="physicianSchoolDetails" class="signup_sec">
+                    <section id="second_step">
+                        <h4 class="custom_text_color">Add Details</h4><span class="pull-right custom-required custom_text_color"><small><span style="color: #e32">*</span>Indicates required fields</small></span>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img class="img-responsive margin-cut-bottom" src="assets/modules/img/school.png">
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group required">
+                                <label>Med School</label>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control custom-form-control" [(ngModel)]="med_school" placeholder="Enter the school you have attended">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group required">
+                                <label>Degree earned</label>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input [(ngModel)]="searchDegreeKeyword" (ngModelChange)="searchDegrees($event)"  type="text" class="form-control custom-form-control" placeholder="Enter your degree">
+                                        <div class="show-items-full" *ngIf="showDegreeList == true">
+                                            <div class="items" role="menu" *ngFor="let item of searchDegreeItems" (click)="selectDegree(item)" >
+                                                <p class="pointer margBT0">{{item.name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label>Year completed</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <select class="form-control custom-form-control" [(ngModel)]="year_completed_phys">
+                                            <option value="undefined" selected disabled>Select year</option>
+                                            <option *ngFor="let year of years_phys;">{{year}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group required">
+                                <label>Upload your degree so that SameCondition can verify your account.</label>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <table class="table table-borderless custom-table" *ngIf="fileArrayDegree.name">
+                                            <thead>
+                                                <tr>
+                                                    <th>FILE/IMAGE NAME</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <p class="file-text custom_text_color">{{fileArrayDegree.name}}</p>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-default delete_button"  type="button" (click)="deleteFileValuePhysDegree()"><i class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <form id="file_form_phys_degree">
+                                        <div for="file-upload" class="uploader">
+                                            <img src="assets/modules/img/ico/cloud-upload.png" class="cloud">
+                                            <div class="drag-drop text-center">
+                                                <div class="drag-drop-text">DRAG & DROP A FILE</div>
+                                                <p>OR SELECT ADD OPTION BELOW</p>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                    </div>
+                                                    <div class="col-md-3 img-upload">
+                                                        <label for="img-upload2" class="btn-upload text-left"><img src="assets/modules/img/ico/img-upload.png" > ADD IMAGE </label>
+                                                        <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFileDegree" (change)="onAttachPhysDegree($event)" name="newAttributeFileDegree" placeholder="Enter URL" id="img-upload2"  accept=".jpg,.png">
+                                                    </div>
+                                                    <div class="col-md-3 doc-upload">
+                                                        <label for="doc-upload2" class="btn-upload text-left"><img src="assets/modules/img/ico/doc-upload.png" > ADD FILE </label>
+                                                        <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFileDegree" (change)="onAttachPhysDegree($event)" name="newAttributeFileDegree" placeholder="Enter URL" id="doc-upload2"  accept=".pdf">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="text-center upload-limit">
+                                                        Maximum file size upload 20MB<br>
+                                                       (pdf, jpn, png format are all accepted format)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input class="form-control custom-form-control-file file-upload" type="file" [ngModel]="newAttributeFileDegree" (change)="onAttachPhysDegree($event)" name="newAttributeFileDegree" placeholder="Enter URL">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer custom-modal-footer">
+                            <button class="btn btn-primary next-btn" (click)="doPhysicianAddDetails()"> NEXT STEP </button>
+                            <button class="btn btn-default no-border custom_text_color" (click)="openPhysicianModal()"> CANCEL </button>
+                        </div>
+                    </section>
+                </div>
+                <div id="physicianMoreDetails" class="signup_sec">
+                    <section id="second_step">
+                        <h4>Add Details</h4><span class="pull-right custom-required"><small><span style="color: #e32">*</span>Indicates required fields</small></span>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img class="img-responsive margin-cut-bottom" src="assets/modules/img/license.png">
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group required">
+                                <label>Country of License</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <select class="form-control custom-form-control" [(ngModel)]="country_license" (ngModelChange)="getstate_by_conunty($event)">
+                                            <option value="" selected disabled>Select a country</option>
+                                            <option *ngFor="let country of countries;" value="{{country.code}}">{{country.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label>State of License</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!-- <input type="email" class="form-control custom-form-control"  [(ngModel)]="state_license" placeholder="Enter State"> -->
+                                         <select class="form-control custom-form-control" [(ngModel)]="state_license">
+                                            <option value="" selected disabled>Select a State</option>
+                                            <option *ngFor="let state of states;" value="{{state.short}}">{{state.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group required">
+                                <label>Upload your license so that SameCondition can verify your account.</label>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <table class="table table-borderless custom-table" *ngIf="fileArrayLicense.name">
+                                            <thead>
+                                                <tr>
+                                                    <th>FILE/IMAGE NAME</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <p class="file-text margBT0">{{fileArrayLicense.name}}</p>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-default delete_button" type="button" (click)="deleteFileValuePhysLicense()"><i class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <form id="file_form_phys_license">
+                                        <div for="file-upload" class="uploader">
+                                            <img src="assets/modules/img/ico/cloud-upload.png" class="cloud">
+                                            <div class="drag-drop text-center">
+                                                <div class="drag-drop-text">DRAG & DROP FILE</div>
+                                                <p>OR SELECT AND OPTION BELOW</p>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                    </div>
+                                                    <div class="col-md-3 img-upload">
+                                                        <label for="img-upload4" class="btn-upload text-left"><img src="assets/modules/img/ico/img-upload.png" > ADD IMAGE </label>
+                                                        <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFileLicense" (change)="onAttachPhysLicense($event)" name="newAttributeFileLicense" placeholder="Enter URL" id="img-upload4" accept=".jpg,.png">
+                                                    </div>
+                                                    <div class="col-md-3 doc-upload">
+                                                        <label for="doc-upload4" class="btn-upload text-left"><img src="assets/modules/img/ico/doc-upload.png" > ADD FILE </label>
+                                                        <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFileLicense" (change)="onAttachPhysLicense($event)" name="newAttributeFileLicense" placeholder="Enter URL" id="doc-upload4" accept=".pdf">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="text-center upload-limit">
+                                                        Maximum file size upload 20MB<br>
+                                                       (pdf, jpn, png format are all accepted format)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input class="form-control custom-form-control-file file-upload" type="file" [ngModel]="newAttributeFileLicense" (change)="onAttachPhysLicense($event)" name="newAttributeFileLicense" placeholder="Enter URL">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group">
+                                <label>Add up to 5 additional license approval URLs (optional)</label>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <table class="table table-borderless custom-table" *ngIf="fieldArrayLicense.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>MY URLs</th>
+                                                    <th>VISIBLE TO</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let field of fieldArrayLicense; let i = index">
+                                                    <td class="padT15">
+                                                        <a href="{{field.url}}" target="_blank">{{field.url}}</a>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control custom-form-control" [(ngModel)]="field.visibility">
+                                                            <option value="all_users" [selected]="field.visibilty == 'all_users'">Visible to all users</option>
+                                                            <option value="only_me">Only me</option>
+                                                            <option value="followers" selected="selected">Followers</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="padT15">
+                                                        <button class="btn btn-default delete_button"  type="button" (click)="deleteFieldValuePhys(i)"><i class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <form id="url_form_phys_license" class="row">
+                                    <div *ngIf="fieldArrayLicense.length > 0" class="col-md-2">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input class="form-control custom-form-control" type="url" [(ngModel)]="newAttributeLicense" name="newAttributeLicense" placeholder="Enter URL">
+                                    </div>
+                                    <button class="btn btn-default submit plus_button" type="button" (click)="addFieldValuePhysLicense()"><i class="fa fa-plus"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer custom-modal-footer">
+                            <button class="btn btn-primary next-btn" (click)="doPhysicianExtraDetails()"> NEXT STEP </button>
+                            <button _ngcontent-c4="" class="btn btn-default btn-cancel" (click)= "closePhysicianModal()"> CANCEL </button>
+                        </div>
+                    </section>
+                </div>
+                <div id="physicianExtraDetails" class="signup_sec">
+                    <section id="second_step">
+                        <h4>Add Details</h4><span class="pull-right custom-required"><small><span style="color: #e32">*</span>Indicates required fields</small></span>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img class="img-responsive margin-cut-bottom" src="assets/modules/img/work.png">
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group required">
+                                <label>Currently Practicing</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input [(ngModel)]="searchPracticeKeyword" (ngModelChange)="searchPractices($event)"  type="text" class="form-control custom-form-control" placeholder="Enter your current medical role">
+                                        <div class="show-items" *ngIf="showPracticeList == true">
+                                            <div class="items" role="menu" *ngFor="let item of searchPracticeItems" (click)="selectPractice(item)" >
+                                                <p class="margBT0">{{item.name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group required">
+                                <label>Location of clinical facility you practice at</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control custom-form-control"  [(ngModel)]="location_of_clinical_facility" placeholder="Enter city or state of clinical facility">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group required">
+                                <label>Name of clinical facility you practice at</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control custom-form-control"  [(ngModel)]="name_of_clinical_facility" placeholder="Enter name of clinical facility">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-form-group mt-10">
+                            <div class="form-group required">
+                                <label>Upload up to 5 additional documents verify your account.</label>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <table class="table table-borderless custom-table" *ngIf="fileArray.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>FILE/IMAGE NAME</th>
+                                                    <th>VISIBLE TO</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let file of fileArray; let i = index">
+                                                    <td>
+                                                        <p class="file-text">{{file.file.name}}</p>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control custom-form-control" [(ngModel)]="file.visibility">
+                                                            <option value="all_users" selected>Visible to all users</option>
+                                                            <option value="only_me">Only me</option>
+                                                            <option value="followers" selected="selected">Followers</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-default"  type="button" (click)="deleteFileValuePhys(i)"><i class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <form id="file_form_phys">
+                                        <div for="file-upload" class="uploader">
+                                            <img src="assets/modules/img/ico/cloud-upload.png" class="cloud">
+                                            <div class="drag-drop text-center">
+                                                <div class="drag-drop-text">DRAG & DROP FILE</div>
+                                                <p>OR SELECT AND OPTION BELOW</p>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                    </div>
+                                                    <div class="col-md-3 img-upload">
+                                                        <label for="img-upload3" class="btn-upload text-left"><img src="assets/modules/img/ico/img-upload.png" > ADD IMAGE </label>
+                                                        <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFile" (change)="onAttachPhys($event)" name="newAttributeFile" placeholder="Enter URL" id="img-upload3"  accept=".jpg,.png">
+                                                    </div>
+                                                    <div class="col-md-3 doc-upload">
+                                                        <label for="doc-upload3" class="btn-upload text-left"><img src="assets/modules/img/ico/doc-upload.png" > ADD FILE </label>
+                                                        <input class="form-control custom-form-control-file" type="file" [ngModel]="newAttributeFile" (change)="onAttachPhys($event)" name="newAttributeFile" placeholder="Enter URL" id="doc-upload3"  accept=".pdf">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="text-center upload-limit">
+                                                        Maximum file size upload 20MB<br>
+                                                       (pdf, jpn, png format are all accepted format)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input class="form-control custom-form-control-file file-upload" type="file" [ngModel]="newAttributeFile" (change)="onAttachPhys($event)" name="newAttributeFile" placeholder="Enter URL">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Add a bio (optional)</label><span class="pull-right"><small>{{bio ? bio.length :0}}/150</small></span>
+                                <textarea class="form-control custom-form-control" rows="5" maxlength="150" [(ngModel)]="bio" placeholder="Enter a description about your work"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer custom-modal-footer">
+                            <button class="btn btn-primary next-btn" [disabled]="disableBtn == true" (click)="disableBtn || doPhysicianSignup()"> CREATE ACCOUNT </button>
+                            <button _ngcontent-c4="" class="btn btn-default btn-cancel" (click)= "closePhysicianModal()"> CANCEL </button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="signup_successful" class="modalOverlay">
+        <div class="modalBox">
+            <div class="custom-modal-content">
+                <div class="pop_content">
+                    <button type="button" class="close" (click)="closeSuccessModal()" aria-label="Close">
+                        <span aria-hidden="true" class="sub_vert">&times;</span>
+                    </button>
+                   <!--  <h4>Thank you for signing up on Same Condition. You will get an email as soon as the account is approved by the Same Condition team.
+                    </h4> -->
+                    <h4>Congratulations! Your account has been created. </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade in" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog custom-modal-dialog" role="document">
+            <div class="modal-content custom-modal-content-border">
+                <div class="modal-header custom-modal-header">
+                    <div class="row header-modal-bg">
+                        <a (click)="patientLoginForm($event)"><div class="col-md-6 text-center header-modal-div active">Patient Login</div></a>
+                        <a (click)="patientPhysResForm($event)"><div class="col-md-6 text-center header-modal-div">Researcher & Physician Login</div></a>
+                    </div>
+                </div>
+                <div class="modal-body" id="loginPatient" *ngIf="loginPatientForm == true">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 text-center fb-div">
+                            <button class="btn btn-primary fb-btn" data-width=""
+                            (click)="get_access_token_facebook()">Sign in using Facebook</button><br>
+
+                            <!-- <div class="fb-login-button" data-width=""></div> -->
+                            <p class="or">OR</p>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 no-padding">
+                            <div class="form-group">
+                                <label class="label_color">Email</label>
+                                <input type="email" class="form-control custom-form-control"  [(ngModel)]="useremail" placeholder="Enter your email" id="emailPatient" (keydown)="keyDownLogin($event)">
+                            </div>
+                            <div class="form-group">
+                                <label class="label_color">Password</label>
+                                <input type="password" class="form-control custom-form-control" [(ngModel)]="userpassword" id="pwd" placeholder="Enter your password" name="pwd" (keydown)="keyDownLogin($event)" autocomplete="new-password">
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 checkbox custom-checkbox" style="margin-top: 0px;">
+                                    <label class="label_remember_me">
+                                        <input type="checkbox" ng-true-value="true" ng-false-value="false" [(ngModel)]="rememberMe" style="margin-top: 2px ;">Remember me
+                                    </label>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <a href="#" class="link pull-right" (click)="forgetPassword()">Forgot Password?</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="modal-body" id="loginForgetPassword" *ngIf="forgetPasswordForm == true">
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10 text-center fb-div">
+                            <h4 class="label_remember_me">PASSWORD RECOVERY</h4>
+                            <p class="text-color m-t">Please enter your email address. You will receive a link to create a new password.</p>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row custom_border_bg noMarg">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8 no-padding">
+                            <div class="form-group custom_15_pad">
+                                <label class="label_color">Email</label>
+                                <input type="email" class="form-control custom-form-control"  [(ngModel)]="email" placeholder="Enter your email" id="emailReset" (keydown)="keyDownEmailReset($event)" autocomplete="off">
+                            </div>
+                            <div *ngIf="resetPasswordFail == true" class="error">We do not have accounts with email. Please enter a valid email.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body" id="loginPhysRes" *ngIf="loginPhysResForm == true">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 no-padding">
+                            <div class="form-group">
+                                <label class="label_color">Email</label>
+                                <input type="email" class="form-control custom-form-control"  [(ngModel)]="useremail" placeholder="Enter your email" id="emailPhysRes" (keydown)="keyDownLogin($event)">
+                            </div>
+                            <div class="form-group">
+                                <label class="label_color">Password</label>
+                                <input type="password" class="form-control custom-form-control"  [(ngModel)]="userpassword" id="pwd" placeholder="Enter your password" name="pwd" (keydown)="keyDownLogin($event)" autocomplete="new-password">
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 checkbox custom-checkbox" style="margin-top: 0px;">
+                                    <label class="label_remember_me">
+                                        <input type="checkbox" ng-true-value="true" ng-false-value="false" [(ngModel)]="rememberMe" style="margin-top: 2px ;">Remember me
+                                    </label>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <a href="#" class="link pull-right" (click)="forgetPassword()">Forgot Password?</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body" id="successResetBody" *ngIf="resetPasswordSuccess == true">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 text-center fb-div">
+                            <h4 class="label_remember_me">PASSWORD RECOVERY</h4>
+                            <p class="text-color m-t">An email has been sent to ({{email}}). Please check your email to reset your password</p>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+                <div class="modal-footer custom-modal-footer-bg">
+                    <div class="text-center" id="loginBtn" *ngIf="loginBtn == true">
+                        <button type="button" class="btn btn-primary login-btn" (click)="doLogin()" [disabled]="disableBtn == true">LOGIN</button>
+                    </div>
+                    <div class="text-center" id="resetPwBtn" *ngIf="resetPasswordBtn == true">
+                        <button type="button" class="btn btn-primary login-btn" (click)="resetPassword()" [disabled]="disableBtn == true">RESET PASSWORD</button><br><br>
+                        <a href="#" class="link" (click)="backToLoginForm(patientRole)">Back to Login</a>
+                    </div>
+                    <div class="text-center" id="successReset" *ngIf="resetPasswordSuccessBtn == true">
+                        <button type="button" class="btn btn-primary login-btn" (click)="resendEmail()" [disabled]="disableBtn == true">RESEND EMAIL</button>
+                        <br><br>
+                        <a href="#" class="link" (click)="backToLoginForm(patientRole)">Back to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="confirmationModalFeeling" class="modalOverlay close_confirm">
+    <div class="modalBox proSmallModal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" (click)="noHide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="alignRight"> Are you sure you want to close? </h3>
+            </div>
+            <div class="footModal QOLfoot">
+              <button (click)="noHide()" class="btn btn-primary"> No, Cancel </button>
+              <button (click)="yesdelete()" class="btn btn-default"> Yes, Close </button>
+            </div>
+        </div>
+    </div>
+</div>

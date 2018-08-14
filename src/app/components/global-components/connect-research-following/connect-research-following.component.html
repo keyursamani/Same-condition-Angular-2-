@@ -1,0 +1,122 @@
+<div class="middle_section">
+  <div class="container"
+  infinite-scroll
+  [infiniteScrollDistance]="0.3"
+  [infiniteScrollThrottle]="1300"
+  (scrolled)="onScrollDown()"
+  >
+    <br>
+    <!-- Container section -->
+    <div class="row">
+      <!-- Begin col-md-8 -->
+      <div class="col-md-9">
+        <!-- Search Field -->
+        <div class="sc-container-shadow publications-container community-symptoms mb-20">
+          <!-- Search Field -->
+          <div class="row row-title-box">
+            <div class="col-md-4">
+              <h2 class="mt-0" *ngIf="followingTab==true" id="title_following">Following</h2>
+              <h2 class="mt-0"  *ngIf="followerTab==true" id="title_followers">Followers</h2>
+              <p class="space">&nbsp;</p>
+            </div>
+            
+          </div>
+          <!-- End Search Field -->
+          <!-- Table results -->
+          <div class="box-container">
+
+      <!-- tabs -->
+      <ul class="nav nav-tabs nav-tabs-common navs-c-patient">
+        <li class="active"><a href="#tab_following" data-toggle="tab" (click)="followingtabactive();"   aria-expanded="false">FOLLOWING</a></li>
+        <li class=""><a href="#tab_followers" data-toggle="tab" (click)="followtabactive();"   aria-expanded="true">FOLLOWERS</a></li>
+      </ul>
+
+      <div class="tab-content tab-content-c">
+        <div class="tab-pane" id="tab_followers">
+          <table class="table-publications table-ext">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Conditions</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let followerUser of followerUserList"  >
+                <td>
+                  <div class="media media-profile media-on-td">
+                    <div class="media-left">
+                      <img src="{{followerUser.photo_url}}">
+                    </div>
+                    <div class="media-body valign-middle">
+                      <p class="media-title">{{followerUser.first_name}} {{followerUser.last_name}}</p>
+                    </div>
+                  </div>
+                </td>
+                <td width="40%" [innerHTML]="followerUser.my_conditions"></td>
+                <td class="opt-col">
+                  <a href=""  *ngIf="followerUser.is_following==true" class="btn btn-secondary btn-xs">FOLLOW</a>
+                  <a href=""  *ngIf="followerUser.is_following==false" class="btn btn-outline btn-xs">FOLLOW</a>
+                  <a href=""  class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- End tab-followings -->
+
+        <div class="tab-pane active"  id="tab_following">
+          <table class="table-publications table-ext">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Conditions</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let followinruser of followinruserlist">
+                <td>
+                  <div class="media media-profile media-on-td">
+                    <div class="media-left">
+                      <img src="{{followinruser.photo_url}}">
+                    </div>
+                    <div class="media-body valign-middle">
+                      <p class="media-title"> {{followinruser.first_name}} {{followinruser.last_name}}</p>
+                    </div>
+                  </div>
+                </td>
+                <td width="40%" [innerHTML]="followinruser.my_conditions" ></td>
+                <td class="opt-col">
+                  
+                  <a href=""  *ngIf="followinruser.is_following==true" class="btn btn-secondary btn-xs">FOLLOW</a>
+                  <a href=""  *ngIf="followinruser.is_following==false" class="btn btn-outline btn-xs">FOLLOW</a>
+                  <a href=""  class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- End tab_patient followers -->
+      </div>
+
+    </div>
+          <!-- End Table results -->
+
+        </div>
+        <!-- End Search field -->
+
+      </div>
+      <!-- end col-md-8 -->
+      <!--<div class="col-md-1"></div>-->
+      <!-- Begin col-md-3 -->
+      <div class="col-md-3">
+        <img src="assets/modules/images/notifications/advertisement-1.png">
+        <p>&nbsp;</p>
+        <img src="assets/modules/images/notifications/advertisement-2.png">
+      </div>
+      <!-- End col-md-3 -->
+    </div>
+    <!-- / Container section -->
+  </div>
+</div>

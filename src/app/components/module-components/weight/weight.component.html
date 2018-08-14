@@ -1,0 +1,303 @@
+<div class="tab-pane">
+  <div class="condition_sec weight-condition">
+    <div class="row row-flex">
+      <div class="col-md-9">
+        <div class="sc-container-shadow box-container">
+          <div class="myCondition">
+              <div class="head-title">
+                <h2>My Weight</h2>
+              </div>
+              <p>Enter your weights and you can track how your weight has been over a period. You may also be able to calculate Body Mass Index (BMI). </p>
+              <div *ngIf="Noweight" class="hideModal">
+                  <h5> You have not added any feeling to your profile. </h5>
+                  <h5> Click the button below to get started </h5>
+                  <button (click)="addFeelingOpen()" class="btn btn-primary"> ADD NEW FEELING </button>
+              </div>
+              <div *ngIf="!Noweight" class="weightSec">
+                <div class="row form-dashboard">
+                  <div class="col-md-4">
+                    <label for="weight_want_see">I want to see </label>
+                    <select id="weight_want_see" class="form-control size-sm" [(ngModel)]="weightFilter" (ngModelChange)="weightFiltering($event);">
+                      <option value="3_months">Last 3 months</option>
+                      <option value="6_months">Last 6 months</option>
+                      <option value="1_year">Last 1 year</option>
+                      <option value="2_years">Last 2 year</option>
+                      <option value="since_joining">Since Joining</option>
+                    </select>
+                  </div>
+                  <div class="col-md-8 text-right weightRight">
+                    <div class="text-left inline-b">
+                      <div class="text-left">
+                        <label for="weight_weight_visible">Make my weight visible to</label>
+                      </div>
+                      <div class="toolbar-controls inline-b">
+                        <select id="weight_weight_visible" class="form-control inline-b size-sm weightSelect" [(ngModel)]="visibility"  (ngModelChange)="updateVisibility($event);">
+                          <option value="all_users"> All Users</option>
+                          <option value="only_me">Only me & researchers</option>
+                          <option value="followers">followers</option>
+                        </select>
+                        <button class="btn btn-primary inline-b weightBtn" (click)="addWeightOpen()"> ADD NEW WEIGHT </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="line_chart" style="margin-left: 315px;">
+                <ul class="legend">
+                  <li *ngIf="isDisplayKGChart==true" (click)="display_lbs_graph()"><span class="superawesome"></span> KG</li>
+                  <li *ngIf="isDisplayKGChart==false" (click)="display_kg_graph()"><span class="awesome"></span> LBS</li>
+                </ul>
+              </div>
+              <div class="line_chart">
+                <div id="chartdiv" [style.display]="isDisplayKGChart ? 'block' : 'none'" ></div>
+                <div id="chartdivLbs" style="position: absolute; background: lightgray; height: 300px; width: 90%; top: 255px; text-align: center;" *ngIf="arrKG.length == 0 && isDisplayKGChart == true;">
+                  <span style="color: ##4E6484; font-size: 15px; line-height: 300px;">No chart data found to display</span>
+                </div>
+                
+                <div id="chartdivLbs" [style.display]="isDisplayKGChart ? 'none' : 'block'"></div>
+                <div id="chartdivLbs" style="position: absolute; background: lightgray; height: 300px; width: 90%; top: 255px; text-align: center;" *ngIf="arrLBS.length == 0 && isDisplayKGChart == false;">
+                  <span style="color: ##4E6484; font-size: 15px; line-height: 300px;">No chart data found to display</span>
+                </div>
+              </div>
+
+              <!-- <div class="line_chart" style="margin-left: 315px;">
+              <ul class="legend">
+                <li *ngIf="isDisplayKGChart==true" (click)="display_lbs_graph()"><span class="superawesome"></span> KG</li>
+                <li *ngIf="isDisplayKGChart==false" (click)="display_kg_graph()"><span class="awesome"></span> LBS</li>
+              </ul>
+              </div>
+              <div class="line_chart">
+                <chart [type]="type" [data]="data" [options]="options"
+                *ngIf="isDisplayKGChart==true"></chart>
+                <chart [type]="type" [data]="data1" [options]="options" 
+                *ngIf="isDisplayKGChart==false"></chart>
+              </div> -->
+
+              <div class="weightCalculator">
+                <div class="row">
+                  <div class="col-md-5">
+                    <div class="calculateBMI">
+                      <h3> Calculate your BMI: </h3>
+                      <h6> Select your measurement system </h6>
+                      <div class="row removeMargin">
+                        <div class="col-md-8 removePadding">
+                          <select class="form-control" [(ngModel)]="calculatemeasure" (ngModelChange)="selectMeasure($event);" >
+                            <option value="Customary">Customary (Lbs/Ft)</option>
+                            <option  value="Metric">Metric (Kg/cm)</option>
+                          </select>
+                        </div>
+                      </div>
+                      <h6 class="weightSpace"> Add your current height and weight to calculate </h6>
+                      <div class="row removeMargin">
+                        <div class="col-md-8 removePadding">
+                          <input type="text" class="form-control margBT19"  (keyup)="calculateBMI()" placeholder="Enter your weight" [(ngModel)]="calculateweight"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        </div>
+                        <div class="col-md-4 padd_remove"> <strong> {{calculatemeasure=='Metric'? 'Kg':'Lbs'}} </strong> </div>
+                      </div>
+                      <div class="row removeMargin" *ngIf="calculatemeasure=='Customary'">
+                        <div class="col-md-4 removePadding">
+                          <input type="text" class="form-control"  (keyup)="calculateBMI()" [(ngModel)]="calculateft" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        </div>
+                        <div class="col-md-1 padd_remove"> <strong> Ft </strong> </div>
+                        <div class="col-md-3 removePadding">
+                          <input type="text" class="form-control"  (keyup)="calculateBMI()" [(ngModel)]="calculatein" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        </div>
+                        <div class="col-md-4 padd_remove"> <strong> In </strong> </div>
+                      </div>
+                       <div class="row removeMargin" *ngIf="calculatemeasure=='Metric'">
+                        <div class="col-md-8 removePadding">
+                          <input type="text" class="form-control"  (keyup)="calculateBMI()" [(ngModel)]="calculateheightcm" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        </div>
+                        <div class="col-md-4 padd_remove"> <strong> Cm </strong> </div>
+                      </div>
+                    </div>
+
+                    <div class="weightCalBottom">
+                      <!--<div class="text_center" *ngIf="cachesculateresult==''">
+                        <button  class="btn btn-primary" (click)="calculateBMI()"> Submit </button>
+
+                      </div>-->
+
+                       <div>
+                          <h6> Your BMI: </h6>
+                          <h1> <span>{{totalBMIfirst}}</span>.<span> {{totalBMIsecond}}</span> </h1>
+                       </div>
+                    </div>
+                  </div>
+                  <div class="col-md-7 paddingLeft">
+                    <div class="tableSec">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                            <th>Weight</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let weight of weightList" class="trBorder">
+                            <td> {{weight.weight_date |  amLocale:'en' | amDateFormat:'MMMM Do YYYY' | AbbrevDate}} </td>
+                            <td> {{weight.weight_count | wholeNumber}} {{weight.weight_type}} </td>
+                            <td>
+                              <button (click)="openDeleteConfirm(weight.id);"> <img src="assets/modules/img/recycle.png"> </button>
+                              <button (click)="editWeightOpen(weight);"> <img src="assets/modules/img/edit_1.png"> </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="advertis_sec">
+          <img src="assets/modules/img/advertisement-1.png">
+          <p>&nbsp;</p>
+          <img src="assets/modules/img/advertisement-2.png">
+            <!-- <div class="add_two">
+              <img src="assets/modules/img/270x540.jpg">
+            </div> -->
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="addWeightModal" class="modalOverlay">
+    <div class="modalBox modalBoxFix modal-xs">
+        <div class="modal-content form-dashboard">
+            <div class="proHead">
+              <button type="button" class="close" (click)="confirmOpen()" aria-label="Close">
+                <img src="./assets/modules/img/icons/close@2x.png" alt="close modal" width="12px">
+              </button>
+              <h3> Add New Weight </h3>
+            </div>
+            <div class="treatmentBody" >
+              <label for="">Select date</label> 
+              <div class="row removeMargin">
+                <div class="col-md-8 removePadding">
+                  <div class="inputLabel">
+                    <!-- <my-date-picker class="custom-input" style="font-size: 11px;" name="mydate" [options]="myDatePickerOptions"
+                    (dateChanged)="onDateChangeddiagnose($event)"  [(ngModel)]="selectedDate" [placeholder]="placeholder">
+                    </my-date-picker> -->
+                    <calendar 
+                    [dateValue]="selectedDate" 
+                    [isDisplaySaveBtn]="true" 
+                    [myLeft]="208"
+                    (getDate)='onDateChangeddiagnose($event)'></calendar>
+                  </div>
+                </div>
+              </div>
+
+              <label for="" style="margin-top: 10px;">Weight</label>
+              <div class="row removeMargin">
+                <div class="col-md-8 paddingLeft" style="width: 200px;height: 32px;padding: 0;">
+                  <input style="height: 32px;" type="text" class="form-control custom-input" placeholder="Enter weight" [(ngModel)]="weightcount"  oninput="this.value = this.value.replace(/^\s+$/, '').replace(/(\..*)\./g, '$1');">
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && weightcount =='' ">Weight count cannot be blank.</div>
+                </div>
+                <div class="col-md-4 removePadding" style="width: 120px;height: 32px;margin-left: 10px;">
+                  <select style="height: 32px;" class="form-control" [(ngModel)]="weighttype" >
+                    <option value="lbs"> Lbs </option>
+                    <option value="kg"> Kg </option>
+                  </select>
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && weighttype =='' ">Weight type cannot be blank.</div>
+                </div>
+              </div>
+            </div>
+            <div class="footModal textAligned">
+              <button class="btn btn-default btn-cancel" style="width: 60px" (click)="addWeightClosed()"> CANCEL </button>
+              <button class="btn btn-primary btn-save" style="margin-right: 0;" (click)="addWeights();"> SAVE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editWeightModal" class="modalOverlay">
+    <div class="modalBox proSmallModal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" (click)="confirmOpen()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3> Edit Weight </h3>
+            </div>
+            <div class="treatmentBody" >
+              <p> Select date </p>
+              <div class="row removeMargin">
+                <div class="col-md-8 removePadding">
+                  <div class="inputLabel">
+                    <!-- <my-date-picker name="mydate" [options]="myDatePickerOptions"
+                (dateChanged)="onDateEditWeight($event)"  [(ngModel)]="editselectDate" [placeholder]="placeholder" ></my-date-picker> -->
+                  <calendar 
+                    [dateValue]="editselectDate" 
+                    [isDisplaySaveBtn]="true" 
+                    [myLeft]="208"
+                    (getDate)='onDateEditWeight($event)'>
+                  </calendar>
+                  </div>
+                </div>
+              </div>
+
+              <p> Weight </p>
+              <div class="row removeMargin">
+                <div class="col-md-8 paddingLeft">
+                  <input type="text" class="form-control" placeholder="Enter weight" [(ngModel)]="editweightcount"  oninput="this.value = this.value.replace(/^\s+$/, '').replace(/(\..*)\./g, '$1');">
+                </div>
+                <div class="col-md-4 removePadding">
+                  <select class="form-control" [(ngModel)]="editweighttype" >
+                    <option value="lbs"> Lbs </option>
+                    <option value="kg"> Kg </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="footModal textAligned">
+              <button class="btn btn-default" (click)="closeEditWeight()"> CANCEL </button>
+              <button class="btn btn-primary" (click)="updateWeights();"> SAVE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmationModal" class="modalOverlay">
+    <div class="modalBox proSmallModal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" (click)="noHide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="alignRight"> Are you sure you want to close? </h3>
+            </div>           
+            <div class="footModal QOLfoot">
+              <button (click)="noHide()" class="btn btn-primary"> No, Cancel </button>
+              <button (click)="confirmClosed()" class="btn btn-default"> Yes, Close </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deleteconfirmationModal" class="modalOverlay">
+    <div class="modalBox delete-confirm-modal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" (click)="closeDeleteConfirm()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="confirm-title"> Are you sure? </h3>
+            </div>            
+            <div class="proBody">
+                <p class="confirm-description"> Your weight will be deleted if you choose to continue </p>
+            </div>
+            <div class="footModal confirm-footer">
+              <button (click)="closeDeleteConfirm()" class="btn btn-primary" style="width: 170px;"> NO, KEEP WEIGHT </button>
+              <button (click)="deleteWeights()" class="btn btn-default" style="width: 100px;"> YES, DELETE </button>
+            </div>
+        </div>
+    </div>
+</div>
+

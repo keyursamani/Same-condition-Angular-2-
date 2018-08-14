@@ -1,0 +1,169 @@
+<div class="middle_section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 profile-info-researcher">
+        <div class="row">
+          <div class="col-md-3 documents-holder right-border">
+            <div class="resphys-header" *ngIf="userRole=='physician'">
+                My Degree
+            </div>
+            <div class="doc-items normal-font" *ngIf="userRole=='physician'">
+              <ul >
+                <li>
+                  <a href="{{degrees}}" target="_blank" *ngIf="degrees">{{degrees.split('/').pop()}}</a>
+                </li>
+              </ul>
+            </div>
+            <div class="resphys-header">
+                Documents
+            </div>
+            <div class="doc-items normal-font">
+              <ul >
+                <li *ngFor="let file of fileArray; let i = index">
+                  <a href="{{file.attachment_url}}" target="_blank">{{file.attachment_url.substring(file.attachment_url.lastIndexOf("/")+1,file.attachment_url.lastIndexOf("?"))}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class=" col-md-9 bio-holder">
+            <div class="bio-info">
+              <div class="researcher-header mt-32">Bio</div>
+              <p class="mt-10"> {{userProfile.bio}}</p>
+
+              <!-- <div class="researcher-header mt-20 mb-10" *ngIf="userRole=='researcher'"> My Publication<span data-toggle="modal" data-target="#addPublicationModal" class="pull-right" *ngIf="myPublications.length" (click)="openModalPublication()"><i class="fa fa-plus" title="Add new publication"></i></span> </div> -->
+
+             <div class="researcher-header mt-20 mb-10" *ngIf="userRole=='researcher'"> My Publication<span class="pull-right" *ngIf="myPublications.length">
+               <button class="btn btn-primary add-pub mt-12" data-toggle="modal" data-target="#addPublicationModal" (click)="openModalPublication()">ADD NEW</button>
+             </span> </div>
+              <table class="table table-researcher" *ngIf="userRole=='researcher'">
+                <thead>
+                  <tr>
+                    <th width="70%">Publication Title</th>
+                    <th width="24%" class="table-left-align">Status &nbsp;&nbsp;<i class="fa fa-info-circle tooltip-pub" role="tooltip" data-container="body" data-placement="bottom"><span class="tooltiptext">Status indicates whether your publication has been submitted or already published on the SameCondition Research Page.<br><br>You can submit a publication at any time buy checking the 'submit' button when uploading a new publication or in edit mode of one that already been uploaded</span></i></th>
+                    <th width="3%" class="table-img table-pad-10"></th>
+                    <th width="3%" class="table-img"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let publication of myPublications">
+                    <td width="70%">{{publication.title}}</td>
+                    <td width="24%" class="table-left-align"><div [class.published]="publication.status == 'Published'" [class.submitted]="publication.status == 'Submitted'" [class.notsubmitted]="publication.status == 'Not Submitted'">{{publication.status.toUpperCase()}}</div></td>
+                    <td width="3%" class="table-img table-pad-10">
+                      <span data-toggle="modal" data-target="#editPublicationModal" id="edit-publication" (click)="editPublicationModel($event)"><img src="assets/modules/img/edit_1.png" data-id="{{publication.id}}" title="Edit publication"></span>
+                    </td>
+                    <td width="3%" class="table-img">
+                      <span class="dropdown"><img src="assets/modules/img/recycle.png" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Remove publication">
+                        <ul class="dropdown-menu remove-pub">
+                          <li><a data-id="{{publication.id}}" data-delete="1" (click)="removePublication($event)">Remove this from SameCondition Research page</a></li>
+                          <li><a data-id="{{publication.id}}" data-delete="2" (click)="removePublication($event)">Remove from just profile</a></li>
+                          <li><a data-id="{{publication.id}}" data-delete="5" (click)="removePublication($event)">Remove from both</a></li>
+                        </ul>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="no-pub text-center mt-20" *ngIf="!myPublications.length && userRole=='researcher'">
+                <button class="btn btn-primary add-pub" data-toggle="modal" data-target="#addPublicationModal" (click)="openModalPublication()">ADD NEW</button>
+                <p class="mt-10">You have not yet added any publications. Click the<br>button above to get started.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <img class="img-responsive" src="assets/modules/img/advertisement-2.png">
+      </div>
+    </div>
+  </div>
+</div>
+<div id="addPublicationModal" class="modal fade in" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-body custom-modal-body">
+          <div class="add-publication"> Add Publication
+            <button type="button" data-dismiss="modal" class="close close-pub" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span class="pull-right required-before mr-20">Indicates required fields</span>
+          </div>
+          <div class="publication-body custom-form-group">
+            <div class="form-group required">
+              <label> Publication Title</label>
+              <input type="text" class="form-control" placeholder="Enter publication title. (it will apear like this on your profile)" [(ngModel)]="addPublicationTitle" name="addPublicationTitle" required="true" maxlength="300">
+            </div>
+            <div class="form-group required">
+              <label class="mt-10"> Publication URL</label>
+              <input type="url" class="form-control" placeholder="Add a URL to link to your publication" [(ngModel)]="addPublicationUrl" name="addPublicationUrl" required="true">
+            </div>
+            <div class="form-group">
+              <label class="mt-10"> Add Tags (optional)</label>
+              <input type="text" class="form-control" placeholder="Tag conditions, symptoms or treatments related to your publication" name="addTag" [(ngModel)]="searchTagKeyword" (ngModelChange)="searchTag($event)">
+              <span class="label label-default label-tag" *ngFor="let tag of tags">#{{tag.name}} <span class="remove-tag"data-id="{{tag.id}}" (click)="removeTag($event)">&times;</span></span>
+              <div class="show-items-tags" *ngIf="showTagList == true">
+                <div class="items select-text-tag" role="menu" *ngFor="let item of searchTagItems" (click)="selectTag(item)" >
+                  <p>#{{item.name}}</p>
+                  <p class="sub-result">Tag this {{item.purpose_type}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="checkbox checkbox-pub">
+            <label><input type="checkbox" [(ngModel)]="addSubmitPublication" name="addSubmitPublication" ng-true-value="addSubmitPublication = true" ng-false-value="addSubmitPublication = false">Submit to appear on the SameCondition research page</label>
+            <p class="checkbox-p">Eam minimum omnisque nominavi ne. Oporte temporibus<br>definitionem ea duo.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary pull-right add-pub" (click)="postPublication()"> ADD </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="editPublicationModal" class="modal fade in" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-body custom-modal-body">
+          <div class="add-publication"> Edit Publication
+            <button type="button" data-dismiss="modal" class="close close-pub" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <span class="pull-right required-before mr-20">Indicates required fields</span>
+          </div>
+          <div class="publication-body custom-form-group">
+            <div class="form-group required">
+              <label> Publication Title </label>
+              <input type="text" class="form-control" placeholder="Enter publication title. (it will apear like this on your profile)" [(ngModel)]="editPublicationTitle" name="editPublicationTitle" required="true">
+            </div>
+            <div class="form-group required">
+              <label class="mt-10"> Publication URL </label>
+              <input type="text" class="form-control" placeholder="Add a URL to link to your publication" [(ngModel)]="editPublicationUrl" name="editPublicationUrl" required="true">
+            </div>
+            <div class="form-group tag-form-group">
+              <label class="mt-10"> Add Tags (optional)</label>
+              <input type="text" class="form-control" data-role="tagsinput" placeholder="Tag conditions, symptoms or treatments related to your publication" name="addTag" [(ngModel)]="searchTagKeyword" (ngModelChange)="searchTag($event)">
+              <span class="label label-default label-tag" *ngFor="let tag of tags">#{{tag.name}} <span class="remove-tag"data-id="{{tag.id}}" (click)="removeTag($event)">&times;</span></span>
+              <div class="show-items-tags" *ngIf="showTagList == true">
+                <div class="items select-text-tag" role="menu" *ngFor="let item of searchTagItems" (click)="selectTag(item)" >
+                  <p>#{{item.name}}</p>
+                  <p class="sub-result">Tag this {{item.purpose_type}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" [(ngModel)]="editSubmitPublication" name="editSubmitPublication" ng-true-value="editSubmitPublication = true" ng-false-value="editSubmitPublication = false">Submit to appear on the SameCondition research page</label>
+            <p class="checkbox-p">Eam minimum omnisque nominavi ne. Oporte temporibus<br>definitionem ea duo.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary pull-right ml-5" (click)="editPublication()"> SUBMIT </button>
+          <button class="btn btn-default pull-right" data-dismiss="modal"> CANCEL</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

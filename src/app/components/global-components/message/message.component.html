@@ -1,0 +1,392 @@
+<div class="middle_section">
+  <div class="container messages">
+	
+	<section class="message-center">
+		<div class="row">
+			<aside class="col-md-4 msg-aside">
+				<header class="heading">
+					<input type="text" name="search" placeholder="Search Messages" class="search-control">
+					<a href="" class="new-message-link"><i class="icon icon-plus"></i></a>
+				</header>
+				<div class="aside-content scrollbar-custom">
+					<a class="collapse-title" data-toggle="collapse" href="#collapseNew" aria-expanded="true" aria-controls="collapseNew">NEW <span>({{new_user_list.length}})</span></a>
+					<div class="collapse in inbox-panel" id="collapseNew">
+						<ul class="inbox-list">
+							<li class="media" id="compose-new-message">
+			  					<picture class="media-left">
+			  						<div class="oval-text">+</div>
+			  						<img src="./assets/modules/images/no-image-found.png" alt="user 1" class="hidden">
+			  					</picture>
+			  					<div class="media-body" (click)="isComposeNewMessage = true; isLoaded = true; stopApi = true; messageToUser=''">
+			  						<p class="bigger"><strong>Compose New Message</strong></p>
+			  					</div>
+			  				</li>
+							<li class="media selected" *ngFor="let user of new_user_list;" (click)="switch_chat(user)">
+								<picture class="media-left">
+									<img src="./assets/modules/images/no-image-found.png" alt="user 1">
+								</picture>
+								<div class="media-body">
+									<div class="toolbar">
+										<span class="date">Today</span>
+									</div>
+
+									<h6 class="media-heading">{{user.first_name}} {{user.last_name}}<i class="ibx-status blue"></i></h6>
+									<p>{{user.first_name}}: {{user.body}}</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+
+					<a class="collapse-title last" data-toggle="collapse" href="#collapseOpen" aria-expanded="true" aria-controls="collapseOpen">OPEN <span>({{old_user_list.length}})</span></a>
+					<div class="main-collapse-wrap scrollbar-custom">
+						<div class="collapse in inbox-panel" id="collapseOpen">
+							<div class="filter-panel">
+								<button [class]="message_type=='all_message' ? 'btn-filter active' : 'btn-filter'" data-filter="*" (click)="get_all_message()">All Messages
+								</button>
+								<button [class]="message_type=='sent' ? 'btn-filter active' : 'btn-filter'" data-filter="sent" (click)="get_sent_message()">Sent Messages</button>
+								<button [class]="message_type=='receive' ? 'btn-filter active' : 'btn-filter'" data-filter="received"
+								(click)="get_receive_message()">Received Messages</button>
+							</div>
+							<ul class="inbox-list" *ngIf="message_type=='all_message'">
+								<li class="media" *ngFor="let users of old_user_list; let i = index; " [class]="users.id == user_profile.id ? ' active' : 'read'" (click)="switch_chat(users)">
+									<picture class="media-left">
+										<img src="./assets/modules/images/no-image-found.png" alt="user 1">
+									</picture>
+									<div class="media-body">
+										<!-- <div class="toolbar" *ngIf="users.reported == true">
+					                      	<div class="inline-block">
+					                          <a href="#" data-toggle="tooltip" data-placement="bottom"><i class="icon icon-alert"></i></a>
+					                          <div class="tooltip bottom">
+					                            <div class="tooltip-arrow"></div>
+					                            <div class="tooltip-inner">SENT TO ADMIN</div>
+					                          </div>
+					                        </div> 
+					                      	<span class="date">Today</span>
+					                    </div> -->
+										<h6 class="media-heading">{{users.first_name}} {{users.last_name}}<i class="ibx-status blue"></i></h6>
+										<p>{{users.first_name}}: {{users.body}}</p>
+									</div>
+									<a href="javascript:;" class="dots select-opts-trigger"><i></i><i></i><i></i>
+										<div class="select-options from-right">
+											<button>Mark as Read</button>
+											<button type="button" (click)="delete_conversation_confirm()">Delete Conversation</button>
+											<button type="button" data-toggle="modal" data-target="#modalSendToAdmin">Send to Admin</button>
+										</div>
+									</a>
+								</li>
+								<li *ngIf="old_user_list.length==0">
+									<p class="no-messages" style="overflow: visible;">You have no new messages</p>
+								</li>
+							</ul>
+							<ul class="inbox-list" *ngIf="message_type=='sent'">
+								<li class="media" *ngFor="let users of sent_messages; let i = index; " [class]="users.id == user_profile.id ? ' active' : 'read'" (click)="switch_chat(users)">
+									<picture class="media-left">
+										<img src="./assets/modules/images/no-image-found.png" alt="user 1">
+									</picture>
+									<div class="media-body">
+										<div class="toolbar">
+											<span class="date">Today</span>
+										</div>
+										<h6 class="media-heading">{{users.first_name}} {{users.last_name}}<i class="ibx-status blue"></i></h6>
+										<p>{{users.first_name}}: {{users.body}}</p>
+									</div>
+									<a href="javascript:;" class="dots select-opts-trigger"><i></i><i></i><i></i>
+										<div class="select-options from-right">
+											<button>Mark as Read</button>
+											<button type="button" (click)="delete_conversation_confirm()">Delete Conversation</button>
+											<button type="button" data-toggle="modal" data-target="#modalSendToAdmin">Send to Admin</button>
+										</div>
+									</a>
+								</li>
+								<li *ngIf="sent_messages.length==0">
+									<p class="no-messages" style="overflow: visible;">You have no new messages</p>
+								</li>
+							</ul>
+							<ul class="inbox-list" *ngIf="message_type=='receive'">
+								<li class="media" *ngFor="let users of received_messages; let i = index; " [class]="users.id == user_profile.id ? ' active' : 'read'" (click)="switch_chat(users)">
+									<picture class="media-left">
+										<img src="./assets/modules/images/no-image-found.png" alt="user 1">
+									</picture>
+									<div class="media-body">
+										<div class="toolbar">
+											<span class="date">Today</span>
+										</div>
+										<h6 class="media-heading">{{users.first_name}} {{users.last_name}}<i class="ibx-status blue"></i></h6>
+										<p>{{users.first_name}}: {{users.body}}</p>
+									</div>
+									<a href="javascript:;" class="dots select-opts-trigger"><i></i><i></i><i></i>
+										<div class="select-options from-right">
+											<button>Mark as Read</button>
+											<button type="button" (click)="delete_conversation_confirm()">Delete Conversation</button>
+											<button type="button" data-toggle="modal" data-target="#modalSendToAdmin">Send to Admin</button>
+										</div>
+									</a>
+								</li>
+								<li *ngIf="received_messages.length==0">
+									<p class="no-messages" style="overflow: visible;">You have no new messages</p>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</aside>
+
+			<!-- Main messages content -->
+			<div class="col-md-8 msg-main" *ngIf="isComposeNewMessage == false && isLoaded == true;">
+				<div class="heading chat-heading" style="padding-top: 10px;">
+					<div class="tag-input-wrap">
+		  				<div class="b-tag">{{user_profile.first_name}} {{user_profile.last_name}} <button href="javascript:;" class="close-tag"><i class="icon icon-close"></i></button></div>
+		  			</div>
+
+					<div class="heading-toolbar">
+						<a href="javascript:;" class="dots select-opts-trigger"><i></i><i></i><i></i>
+							<div class="select-options from-right">
+								<button type="button" data-toggle="modal" data-target="#modalDeleteConv">Delete Conversation</button>
+								<button>Select &amp; Delete</button>
+								<button type="button" data-toggle="modal" data-target="#modalSendToAdmin">Send to Admin</button>
+							</div>
+						</a>
+					</div>
+				</div>
+
+				
+
+
+
+				<div class="chat-content">
+		  			<div class="chat-content-header">
+		  				<span>{{user_profile.first_name}}'s Conditions:</span>
+		  				<div class="tags-wrap">
+		  					<span class="c-tag">BI-POLAR DISORDER</span>
+		  					<span class="c-tag">DEPRESSION</span>
+		  				</div>
+		  			</div>
+		  			<div class="chat-content-time">
+		  				<div class="tool-options">
+		  					<button class="btn btn-sm btn-outline" data-toggle="modal" data-target="#modalCancelConv">CANCEL</button>
+		  					<button class="btn btn-sm btn-secondary btn-w-170" type="button" data-toggle="modal" data-target="#modalDeleteConv" [disabled]="messageIds.length==0">DELETE SELECTED ({{messageIds.length}})</button>
+		  				</div>
+		  				<span>TODAY</span></div>
+					<!-- chat messages area -->
+					<div class="chat-wrap form">
+						<div *ngFor = "let messges of list_user_messages; let i = index;">
+							<div class="chat-message" *ngIf="messges.user_id == user_profile.id">
+								<div class="chat-msg-pic">
+									<img src="./assets/modules/images/no-image-found.png" alt="user">
+								</div>
+								<div class="chat-msg-body">
+									<p *ngIf="messges.body != ''">{{messges.body}}</p>
+									<picture *ngIf="messges.body == ''"
+									style="max-width: 300px; max-height: 210px">
+										<a href="javascript:;"><img src="{{messges.attachment_url}}" alt=""
+										style="width: 100%; height: 100%;"></a>
+									</picture>
+
+									<span class="chat-msg-time">{{messges.created_at | date: 'hh:mm a'}}</span>
+									<div class="chat-opt ">
+										<div class="checkbox"> 
+											<input type="checkbox" id="chat{{i}}"
+											(change)="select_message_to_delete($event, messges)"><label for="chat{{i}}"></label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="chat-message chat-message-right" *ngIf="messges.user_id != user_profile.id">
+								<div class="chat-msg-pic">
+									<img src="./assets/modules/images/no-image-found.png" alt="user 2">
+								</div>
+								<div class="chat-msg-body">
+									<p *ngIf="messges.body !=''">{{messges.body}}</p>
+									<picture *ngIf="messges.body ==''" style="width: 300px; height: 210px">
+										<a href="javascript:;"><img src="{{messges.attachment_url}}" alt=""
+										style="width: 100%; height: 100%;"></a>
+									</picture>
+
+									<span class="chat-msg-time">{{messges.created_at | date: 'hh:mm a'}}</span>
+									<div class="chat-opt ">
+										<div class="checkbox">
+											<input type="checkbox" id="chat2{{i}}" (change)="select_message_to_delete($event, messges)"><label for="chat2{{i}}"></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- / chat messages area -->
+		  		</div>
+
+				<div class="chat-footer">
+					<div class="row gutter-0">
+						<div class="col-md-9 col-sm-8">
+							<input type="text" class="chat-input" placeholder="Type something to send…" 
+							[(ngModel)]="chatDescription" 
+							(keypress)="sendMessage($event);">
+						</div>
+						<div class="col-md-3 col-sm-4 chat-buttons text-right">
+							<button *ngIf="displayAttachment == false">
+							<img src="./assets/modules/images/messages/icon-chat-image@2x.png" alt="" width="19px" onclick="document.getElementById('send_file').click();">
+								<input  type="file" (change)="file_select($event)"  id="send_file" style="display:none;" placeholder="Upload file" multiple>
+							</button>
+							<button *ngIf="displayAttachment == true">
+								<img src="./assets/modules/images/attachment.jpg" 
+								alt="" 
+								width="19px">							
+							</button>							 
+
+							<button class="btn-send" title="send" 
+							(click)="send_message();"><img src="./assets/modules/images/messages/icon-chat-send@2x.png" alt="" width="11px"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<!--Compose new message-->
+			<div class="col-md-8 msg-main" *ngIf="isComposeNewMessage == true && isLoaded == true;">
+				<div class="heading chat-heading">
+		  			<label class="text" for="chat_to"><strong>To:</strong></label>
+		  			<div class="tag-input-wrap">
+		  				<div class="b-tag" *ngIf="messageToUser !=''">{{messageToUser}} <button class="close-tag" (click)="messageToUser=''; search_word=''; userId=0;"><i class="icon icon-close"></i></button></div>
+		  				<input id="chat_to" type="text"
+		  				[(ngModel)]="search_word"
+		  				(ngModelChange)="list_users($event)"
+		  				*ngIf="messageToUser ==''">
+		  			</div>
+
+            		<div class="select-options in select-opt-common select-opt-md" *ngIf="users_list.length > 0 && isDisplayUserList == true">
+	  					<ul>
+	  						<li  *ngFor="let user of users_list" 
+	  						(click)="select_user(user)">
+	  							<a href="javascript:;">
+  									<img src="./assets/modules/images/no-image-found.png" alt="user 1">
+									{{user.first_name}} {{user.last_name}}
+  								</a>
+	  						</li>	  						
+	  					</ul>
+	  				</div>
+
+		  			<button class="close" (click)="isComposeNewMessage = false"><i class="icon icon-close"></i></button>
+		  		</div>
+		  		<div class="chat-content">
+		  			
+		  		</div>
+		  		<div class="chat-footer">
+		  			<div class="row gutter-0">
+		  				<div class="col-md-9 col-sm-8">
+		  					<input type="text" class="chat-input" placeholder="Type something to send…"
+		  					[(ngModel)]="chatDescription" 
+							(keypress)="sendMessage($event);">
+		  				</div>
+		  				<div class="col-md-3 col-sm-4 chat-buttons text-right">
+		  					<button><img src="./assets/modules/images/messages/icon-chat-image@2x.png" alt="" width="19px" 
+		  					onclick="document.getElementById('send_file1').click();">
+		  					<input  type="file" (change)="file_select($event)"  id="send_file1" style="display:none;" placeholder="Upload file" multiple></button>
+		  					<button class="btn-send" title="send" (click)="send_message();"><img src="./assets/modules/images/messages/icon-chat-send@2x.png" alt="" width="11px"></button>
+		  				</div>
+		  			</div>
+		  		</div>
+			</div>
+
+			<!---->
+			<div class="col-md-8 msg-main" *ngIf="isLoaded == false">
+		  		<div class="startup-help-content text-center">
+		  			<img src="./assets/modules/images/messages/msg-bubble@2x.png" alt="" width="125px">
+		  			<h3>Welcome to Messages</h3>
+		  			<p>Select an existing conversation or <br>start a new one to continue</p>
+		  		</div>
+			</div>
+		</div>
+	</section>
+
+  </div>
+</div>
+
+<div class="modal fade common-modal in" id="modalSendToAdmin" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-sm chat-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="./assets/modules/images/messages/close-modal@2x.png" alt="close modal" width="12px"></button>
+    <h4 class="modal-title" id="modalSendAdminTitle">Send to Admin</h4>
+    </div>
+    <div class="modal-body">
+      <div class="form">
+        <p class="text-center head-line">Please select a reason for your report.</p>
+        
+        <div class="checkbox form-froup">
+          <input type="checkbox" id="reason" name="reasona"
+          [(ngModel)]="inapropriate" (ngModelChange)="spam = false;other = false;isDisplayTextArea = false;formValidation = false;">
+          <label for="reason">THIS IS INAPPROPRIATE</label>
+        </div>
+        <div class="checkbox form-froup">
+          <input type="checkbox" id="reason2" name="reasona"
+          [(ngModel)]="spam" (ngModelChange)="inapropriate = false;other = false;isDisplayTextArea = false;formValidation = false;">
+          <label for="reason2">THIS IS SPAM</label>
+        </div>
+        <div class="checkbox form-froup mb-0">
+          <input type="checkbox" id="reason3" name="reasona" 
+          [(ngModel)]="other" 
+          (ngModelChange)="displayTextArea($event)">
+          <label for="reason3">OTHER</label>
+        </div>
+        <div class="fs-12 text_red" *ngIf="formValidation == true && inapropriate == false && spam == false && other == false">Plese select reason type.</div>
+
+        <div class="form-group relative mb-5" id="other_form_area" *ngIf="isDisplayTextArea == true">
+          <div class="mb-8"></div>
+          <div class="char-counter"><span>{{reason.length}}</span>/300</div>
+          <textarea name="explain" 
+          	rows="8" 
+          	class="form-control" 
+          	placeholder="Please explain your reasons for this report" 
+          	[(ngModel)]="reason">          	
+          </textarea>
+        </div>
+        <div class="fs-12 text_red" *ngIf="formValidation == true && other == true && reason == ''">Reason cannot be blank.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-outline btn-sm" data-dismiss="modal">CANCEL</button>
+    <button type="button" class="btn btn-secondary btn-sm btn-w-170" 
+    (click)="sendToAdmin()">
+    	SUBMIT
+    </button>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="modal fade common-modal in" id="modalDeleteConv" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-xs chat-dialog" role="document">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="./assets/modules/images/messages/close-modal@2x.png" alt="close modal" width="12px"></button>
+		<h4 class="modal-title" id="modalDeleteConvTitle">Are you sure?</h4>
+	  </div>
+	  <div class="modal-body">
+	  	<p class="text-center mb-0">Your conversation will be deleted if you <br>choose to continue</p>
+	  </div>
+	  <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm btn-w-170" data-dismiss="modal">NO, CANCEL</button>
+		<button type="button" class="btn btn-outline btn-sm" (click)="delete_conversation();">YES, DELETE</button>
+	  </div>
+	</div>
+  </div>
+</div>
+
+<div class="modal fade common-modal in" id="modalCancelConv" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-xs chat-dialog" role="document">
+	<div class="modal-content">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><img src="./assets/modules/images/messages/close-modal@2x.png" alt="close modal" width="12px"></button>
+		<h4 class="modal-title" id="modalDeleteConvTitle">Are you sure?</h4>
+	  </div>
+	  <div class="modal-body">
+	  	<p class="text-center mb-0">Your conversation will be cancelled if you <br>choose to continue</p>
+	  </div>
+	  <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm btn-w-170" data-dismiss="modal">NO, CANCEL</button>
+		<button type="button" class="btn btn-outline btn-sm" (click)="cancel_selected_message();">YES, DELETE</button>
+	  </div>
+	</div>
+  </div>
+</div>

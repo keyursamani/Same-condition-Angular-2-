@@ -1,0 +1,611 @@
+<div class="middle_section">
+  <div class="container">
+	<br>
+	<!-- Container section -->
+	<div class="row row-flex community-treatment-detail">
+	  <!-- Begin col- main -->
+	  <div class="col-md-9">
+		<div class="sc-container-shadow box-container">
+			<div class="head-title">
+				<h3> {{treatmentSearchname}} Treatment Report</h3>
+			</div>
+			<p class="text-sm">
+				{{statistics.description}}
+			</p>
+		</div>
+
+		<div class="sc-container-shadow box-container box-content-tabs">
+			<div class="row heading-division">
+				<div class="col-md-6">
+					<div class="form" id="want_to_see">
+						<label for="">I want to see:</label>
+						<select name="" id="filter_see" class="form-control size-sm">
+							<option value="1">All patients with anxiety</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-6 text-right">
+					<label for="">&nbsp; </label><br>
+					<a *ngIf="userRole == 'patient'" href="javascript:void(0);" class="btn btn-sm btn-secondary btn-w-270" (click)="addTreatmentOpen()">ADD TO MY PROFILE</a>
+				</div>
+			</div>
+
+			<!-- tabs -->
+			<ul class="nav nav-tabs nav-tabs-common">
+				<li class="active"><a href="#tab_patient_demographics" data-toggle="tab" (click)="toggleWantToSee(true);" aria-expanded="true">PATIENT DEMOGRAPHICS</a></li>
+				<li class=""><a href="#tab_patient_evaluations" data-toggle="tab" (click)="toggleWantToSee(true)" aria-expanded="false">PATIENT EVALUATIONS</a></li>
+				<li><a href="#tab_patient_log" data-toggle="tab" (click)="toggleWantToSee(false)">PATIENT LOG</a></li>
+			</ul>
+
+			<div class="tab-content tab-content-c">
+				<div class="tab-pane tab-demographics active" id="tab_patient_demographics">
+					<div class="head-title">
+						<h3>Duration</h3>
+						<p>Length of time that the patient is currently or has been on the treatment</p>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel-demographics">
+								<h6>Patients who logged {{treatmentSearchname}} as a current treatment</h6>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Less Than a Month',statistics.duration.logged_as_current_treatment?.less_than_month,'current treatment')">
+									<span style="width: 96.8%;" ><span></span></span>
+									<div class="row">
+										<div class="col-md-4">Less Than a Month</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.duration.logged_as_current_treatment?.less_than_month}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('1-6 Months',statistics.duration.logged_as_current_treatment.one_month_to_6_months,'current treatment')">
+									<span style="width: 83%;"><span style="opacity: 0.4;"></span></span>
+									<div class="row">
+										<div class="col-md-4">1-6 Months</div>
+										<div class="col-md-4" *ngIf="statistics.duration">{{statistics.duration.logged_as_current_treatment.one_month_to_6_months}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('6 Months - 1 Year',statistics.duration.logged_as_current_treatment.six_months_to_year,'current treatment')">
+									<span style="width: 88.6%;"><span style="opacity: 0.6;"></span></span>
+									<div class="row">
+										<div class="col-md-4">6 Months - 1 Year</div>
+										<div class="col-md-4 " *ngIf="statistics.duration">{{statistics.duration.logged_as_current_treatment.six_months_to_year}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('1 - 2 Years',statistics.duration.logged_as_current_treatment.one_year_to_2_years,'current treatment')">
+									<span style="width:77.2%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">1 - 2 Years</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.duration.logged_as_current_treatment.one_year_to_2_years}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('2 - 5 Years',statistics.duration.logged_as_current_treatment.two_years_to_5_years,'current treatment')">
+									<span style="width: 68.26%;"><span style="opacity: 0.16;"></span></span>
+									<div class="row">
+										<div class="col-md-4">2 - 5 Years</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.duration.logged_as_current_treatment.two_years_to_5_years}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('5 - 10 Years',statistics.duration.logged_as_current_treatment.five_years_to_10_years,'current treatment')">
+									<span style="width: 70.83%;"><span style="opacity: 0.2;"></span></span>
+									<div class="row">
+										<div class="col-md-4">5 - 10 Years</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.duration.logged_as_current_treatment.five_years_to_10_years}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('10+ Years',statistics.duration.logged_as_current_treatment.more_than_10_years,'current treatment')">
+									<span style="width: 76.92%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">10+ Years</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.duration.logged_as_current_treatment.more_than_10_years}} Patients</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+						<div class="col-md-6">
+							<div class="panel-demographics">
+								<h6>Patients who logged {{treatmentSearchname}} as a past treatment</h6>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Less Than a Month',statistics.duration.logged_as_past_treatment.less_than_month,'past treatment')">
+									<span style="width: 96.8%;"><span></span></span>
+									<div class="row">
+										<div class="col-md-4">Less Than a Month</div>
+										<div class="col-md-4 " *ngIf="statistics.duration">{{statistics.duration.logged_as_past_treatment.less_than_month}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('1-6 Months',statistics.duration.logged_as_past_treatment.one_month_to_6_months,'past treatment')">
+									<span style="width: 83%;"><span style="opacity: 0.4;"></span></span>
+									<div class="row">
+										<div class="col-md-4">1-6 Months</div>
+										<div class="col-md-4" *ngIf="statistics.duration">{{statistics.duration.logged_as_past_treatment.one_month_to_6_months}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('6 Months - 1 Year',statistics.duration.logged_as_past_treatment.six_months_to_year,'past treatment')">
+									<span style="width: 88.6%;"><span style="opacity: 0.6;"></span></span>
+									<div class="row">
+										<div class="col-md-4">6 Months - 1 Year</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.duration.logged_as_past_treatment.six_months_to_year}} Patients</div>
+									</div>
+								</div>
+
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('1 - 2 Years',statistics.duration.logged_as_past_treatment.one_year_to_2_years,'past treatment')">
+									<span style="width:77.2%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">1 - 2 Years</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.duration.logged_as_past_treatment.one_year_to_2_years}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('2 - 5 Years',statistics.duration.logged_as_past_treatment.two_years_to_5_years,'past treatment')">
+									<span style="width: 68.26%;"><span style="opacity: 0.16;"></span></span>
+									<div class="row">
+										<div class="col-md-4">2 - 5 Years</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.duration.logged_as_past_treatment.two_years_to_5_years}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('5 - 10 Years',statistics.duration.logged_as_past_treatment.five_years_to_10_years,'past treatment')">
+									<span style="width: 70.83%;"><span style="opacity: 0.2;"></span></span>
+									<div class="row">
+										<div class="col-md-4">5 - 10 Years</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" > {{statistics.duration.logged_as_past_treatment.five_years_to_10_years}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('10+ Years',statistics.duration.logged_as_past_treatment.more_than_10_years,'past treatment')">
+									<span style="width: 76.92%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">10+ Years</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" > {{statistics.duration.logged_as_past_treatment.more_than_10_years}} Patients</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+						
+					</div> <!-- /. row -->
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel-demographics mb-0">
+								<div class="head-title">
+									<h3>Effectiveness</h3>
+									<p>Patient Ratings on how helpful {{treatmentSearchname}} was for<br>its intended purpose</p>
+								</div>
+
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Can’t Tell',statistics.evalautions.effectiveness.cant_tell,'Effectiveness')">
+									<span style="width: 96.8%;"><span></span></span>
+									<div class="row">
+										<div class="col-md-4">Can’t Tell</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.effectiveness.cant_tell}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('None',statistics.evalautions.effectiveness.none,'Effectiveness')">
+									<span style="width: 83%;"><span style="opacity: 0.4;"></span></span>
+									<div class="row">
+										<div class="col-md-4">None</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.effectiveness.none}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Slight',statistics.evalautions.effectiveness.slight,'Effectiveness')">
+									<span style="width: 88.6%;"><span style="opacity: 0.6;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Slight</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.effectiveness.slight}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Moderate',statistics.evalautions.effectiveness.moderate,'Effectiveness')">
+									<span style="width:77.2%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Moderate</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.effectiveness.moderate}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Major',statistics.evalautions.effectiveness.major,'Effectiveness')">
+									<span style="width: 68.26%;"><span style="opacity: 0.16;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Major</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.effectiveness.major}} Patients</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="panel-demographics mb-0">
+								<div class="head-title">
+									<h3>Side Effects</h3>
+									<p>Patient Ratings on the level of side effects experienced<br>from {{treatmentSearchname}}</p>
+								</div>
+
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('None',statistics.evalautions.side_effects.none,'Side Effects')">
+									<span style="width: 83%;"><span style="opacity: 0.4;"></span></span>
+									<div class="row">
+										<div class="col-md-4">None</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.side_effects.none}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Mild',statistics.evalautions.side_effects.mild,'Side Effects')">
+									<span style="width: 88.6%;"><span style="opacity: 0.6;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Mild</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.side_effects.mild}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Moderate',statistics.evalautions.side_effects.moderate,'Side Effects')">
+									<span style="width:77.2%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Moderate</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.side_effects.moderate}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Severe',statistics.evalautions.side_effects.severe,'Side Effects')">
+									<span style="width: 68.26%;"><span style="opacity: 0.16;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Severe</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.side_effects.severe}} Patients</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> <!-- /. row -->
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel-demographics mb-0">
+								<div class="head-title">
+									<h3>Adherence</h3>
+									<p>How often patients say they are doing this treatment</p>
+								</div>
+
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Never',statistics.evalautions.adherence.never,'Adherence')">
+									<span style="width: 83%;"><span style="opacity: 0.4;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Never</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.adherence.never}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Sometimes',statistics.evalautions.adherence.sometimes,'Adherence')">
+									<span style="width: 88.6%;"><span style="opacity: 0.6;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Sometimes</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.adherence.sometimes}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Usually',statistics.evalautions.adherence.usually,'Adherence')">
+									<span style="width:77.2%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Usually</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.adherence.usually}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('Always',statistics.evalautions.adherence.always,'Adherence')">
+									<span style="width: 68.26%;"><span style="opacity: 0.16;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Always</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.adherence.always}} Patients</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<div class="panel-demographics mb-0">
+								<div class="head-title">
+									<h3>Burden</h3>
+									<p>Patient Ratings on how difficult taking {{treatmentSearchname}} was</p>
+								</div>
+
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('not_at_all',statistics.evalautions.burden.not_at_all,'Burden')">
+									<span style="width: 83%;"><span style="opacity: 0.4;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Never</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.burden.not_at_all}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('a_little',statistics.evalautions.burden.a_little,'Burden')">
+									<span style="width: 88.6%;"><span style="opacity: 0.6;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Sometimes</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.burden.a_little}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('somewhat',statistics.evalautions.burden.somewhat,'Burden')">
+									<span style="width:77.2%;"><span style="opacity: 0.3;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Usually</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.burden.somewhat}} Patients</div>
+									</div>
+								</div>
+								<div class="dgbar dgbar-highlight pointerclass" (click)="addsymptomsViewTreatmentPatientsOpen('very',statistics.evalautions.burden.very,'Burden')">
+									<span style="width: 68.26%;"><span style="opacity: 0.16;"></span></span>
+									<div class="row">
+										<div class="col-md-4">Always</div>
+										<div class="col-md-4 " *ngIf="statistics.duration" >{{statistics.evalautions.burden.very}} Patients</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> <!-- /. .row -->
+				</div>
+				<!-- End tab_patient_demographics -->
+
+				<div class="tab-pane tab-evaluation " id="tab_patient_evaluations">
+					<table class="table-publications table-ext">
+						<thead>
+							<tr><th width="150px">Patient</th>
+							<th>Purpose of Treatment</th>
+							<th class="border-r">
+								<div class="dropdown form" [ngClass]="classopen ? 'open' : ''" (click)="toggleStatusDropdown($event)">
+			                        <a  class="dropdown-toggle" role="button">
+									Status
+									<span class="caret" *ngIf="showcaret"></span>
+									<span class="dropup" *ngIf="!showcaret"><span class="caret"></span></span> 
+			                        </a>
+			                        <ul class="dropdown-menu dropdown-box dropdown-inputs">
+			                            <li><div class="checkbox">
+			                                <input type="checkbox" id="filter1" name="filters[]" [checked]="isAllChecked()" (change)="checkAll($event)"><label for="filter1">All statuses
+												
+											</label>
+			                              </div>
+										</li>
+										<li *ngFor="let st of statuslist ; let i = index">
+											<div class="checkbox">
+												<input type="checkbox" id="filter{{i+2}}" name="filters[]" value="{{st.id}}" [(ngModel)]="st.state" (change)="listEvaluation();"><label for="filter{{i+2}}">{{st.name}}</label>
+											</div>
+										</li>		
+			                            
+			                        </ul>
+			                      </div>
+							</th>
+							<th class="th-sm">Duration</th>
+							<th class="th-sm">Effectiveness</th>
+							<th class="th-sm">Side Effects</th>
+							<th class="th-sm">Adherence</th>
+							<th class="th-sm">Burden</th>
+						</tr></thead>
+						<tbody infinite-scroll
+						[infiniteScrollDistance]="0.8"
+						[infiniteScrollThrottle]="1300"
+						(scrolled)="onScrollDown()">
+						<ng-container  *ngFor="let ev of evaluationList ; let i = index">
+							<tr>
+								<td class="td-media">
+									<div class="media media-profile media-on-td">
+										<div class="media-left">
+											<img *ngIf="ev.photo_url" src="{{ev.photo_url}}" class="round-img">
+											<img *ngIf="ev.first_name=='Private' && ev.last_name=='Account'" src="assets/modules/images/symptoms/user-private.png" class="round-img">
+											
+										</div>
+						
+										<div class="media-body">
+											<p class="media-title">{{ev.first_name}} {{ev.last_name}}
+													<a *ngIf="ev.first_name=='Private' && ev.last_name=='Account'" href="javascript:;" class="info-tip"><img src="./assets/modules/images/symptoms/icon-info.png" width="10px"></a>
+											</p>
+											
+											<p>Evaluated on:<br>October 7th, 2017</p>
+										</div>
+									</div>
+								</td>
+								<td class="nowrap" >
+									<span *ngIf="ev.my_treatment_purposes.length<2">
+										<span *ngFor="let treat of ev.my_treatment_purposes ; let j = index">
+									<span class="stat-tag tag-blue tag-xs">{{treat.purpose_name.name}}</span><br>
+								</span>
+								   </span>
+								
+									<span class="stat-tag tag-blue-faint tag-xs dropdown" *ngIf="ev.my_treatment_purposes.length>2" [ngClass]="{'open': ev.active}" (click)="toggleTagDropdown(ev)">2 MORE				
+										    <span class="dropdown-menu dropdown-box dd-pad  dd-center width-sm">
+												<ul class="list-unstyled link-list" *ngFor="let treat of ev.my_treatment_purposes ; let j = index">
+													<li><span>-</span> <a href="javascript:;">{{treat.purpose_name.name}}</a></li>
+													
+												</ul>
+											</span>
+									</span>
+								  
+								</td>
+								<td class="border-r text-normal" *ngIf="ev.is_current_treatment==true">Current<br>Treatment</td>
+								<td class="border-r text-normal" *ngIf="ev.is_current_treatment==false">Past<br>Treatment</td>
+								<td><span class="stat-tag tag-gray tag-sm" *ngIf="ev.duration">{{ev.duration}}</span></td>
+								<td><span class="stat-tag tag-gray tag-sm" *ngIf="ev.effectiveness">{{ev.effectiveness}}</span></td>
+
+								<td><span class="stat-tag tag-gray tag-sm" *ngIf="ev.side_effects">{{ev.side_effects}}</span></td>
+								<td><span class="stat-tag tag-gray tag-sm" *ngIf="ev.adherence">{{ev.adherence}}</span></td>
+								<td><span class="stat-tag tag-gray tag-sm" *ngIf="ev.burden">{{ev.burden}}</span></td>
+							</tr>
+							<tr *ngIf="ev.cost!=null || ev.your_advice_tips!=null">
+								<td colspan="3" class="border-r"> &nbsp; </td>
+								<td colspan="5" class="right-side-col">
+									<p class="text-xs">
+										<strong>Cost: {{ev.cost_currency}} {{ev.cost}} {{ev.cost_frequency}}</strong><br>
+										<strong>Tips / Advice:</strong> {{ev.your_advice_tips}}
+									</p>
+								</td>
+							</tr>
+						</ng-container>
+							
+						</tbody>
+					</table>
+				</div>
+				<!-- End tab_patient_evaluations -->
+
+				<div class="tab-pane tab-patient-log" id="tab_patient_log" infinite-scroll
+				[infiniteScrollDistance]="0.8"
+				[infiniteScrollThrottle]="1300"
+				(scrolled)="onScrollDownPatient()">
+					<table class="table-publications table-ext">
+						<thead>
+						  <tr>
+							<th>Patient</th>
+							<th colspan="2">Conditions</th>
+						  </tr>
+						</thead>
+						<tbody>
+							
+						  <tr *ngFor="let pt of patientList ; let i = index" (click)="toggleSelected(i)" [class.selected]="i == selectedRow" >
+							<td><img *ngIf="pt.photo_url" src="{{pt.photo_url}}" class="round-img"> 
+								<img *ngIf="pt.first_name=='Private' && pt.last_name=='Account'" src="assets/modules/images/symptoms/user-private.png" class="round-img">
+								{{pt.first_name}} {{pt.last_name}}
+								<a *ngIf="pt.first_name=='Private' && pt.last_name=='Account'" href="javascript:;" class="info-tip"><img src="./assets/modules/images/symptoms/icon-info.png" width="10px"></a>
+							
+							</td>
+							<td>
+								<span *ngIf="pt.my_conditions.length<2">
+									<span *ngFor="let treat of pt.my_conditions; let j = index">
+										<span class="stat-tag tag-blue tag-xs">{{treat.name}}</span><br>
+									</span>
+								</span>									
+										<span class="stat-tag tag-blue-faint tag-xs dropdown" *ngIf="pt.my_conditions.length>2" [ngClass]="{'open': pt.active}" (click)="toggleTagDropdown(pt)">2 MORE				
+												<span class="dropdown-menu dropdown-box dd-pad  dd-center width-sm">
+													<ul class="list-unstyled link-list" *ngFor="let treat of pt.my_conditions; let k = index">
+														<li><span>-</span> <a href="javascript:;">{{treat.name}}</a></li>
+													</ul>
+												</span>
+										</span>
+									  
+							</td>
+							<td class="opt-col" *ngIf="pt.first_name!='Private' && pt.last_name!='Account'">
+									<a href="javascript:;" class="btn btn-outline btn-xs" *ngIf="pt.is_following==true">FOLLOWING</a>
+									<a href="javascript:;" class="btn btn-secondary btn-xs" *ngIf="pt.is_following==false"  (click)="follow(pt.id)">FOLLOW</a>
+									<a href="javascript:;" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>
+						
+						</tbody>
+					</table>
+				</div>
+				<!-- End tab patient log -->
+			</div>
+
+		</div>
+	  </div>
+	  <!-- end col- main -->
+	  <!-- Begin col- side -->
+	  <div class="col-md-3">
+		<img src="assets/modules/images/notifications/advertisement-1.png" class="responsive-img">
+		<p>&nbsp;</p>
+		<img src="assets/modules/images/notifications/advertisement-2.png" class="responsive-img">
+	  </div>
+	  <!-- End col- side -->
+	</div>
+	<!-- / Container section -->
+  </div>
+</div>
+
+<div id="symptomsViewTreatmentPatients" class="modalOverlay modalOverlayFix" [style.display]="symptomsViewTreatmentPatients ? 'block' : 'none'">
+    <div class="modalBox modalBoxFix modalBox-sm">
+        <div class="modal-content view-treatment-patients" infinite-scroll
+		[infiniteScrollDistance]="0.8"
+		[infiniteScrollThrottle]="1300"
+		(scrolled)="onScrollDownData()">
+            <div class="proHead">
+              <button type="button" class="close" (click)="addsymptomsViewTreatmentPatientsClosed()" aria-label="Close">
+                <img src="assets/modules/images/icons/icon-close@2x.png" alt="close modal">
+              </button>
+              <h3>
+              	<img src="assets/modules/images/icons/icon-view-list@2x.png" width="24px"> View patients
+              </h3>
+            </div>
+            <div class="treatmentBody">
+
+            	<div class="subheading-spacer text-center">
+					<h4>{{treatmentSearchname}}</h4>
+					<div [innerHTML]="dialogtitle"></div>
+            	</div>
+
+            	<form action="" class="form" name="patientpopupform">
+        			<div class="form-group fg-mb10 fillter-select-view">
+        				<label for="filter_patients">I want to see:</label>
+        				<select [(ngModel)]="patientfilter" name="patientfilter" id="filter_patients" class="form-control" (change)="listData()">
+							<!-- <option value="">All patients</option> -->
+							<option *ngFor="let opt of options" [value]="opt.value">{{opt.name}}</option>    
+        				</select>
+        			</div>
+            	</form>
+
+            	<table class="table-publications table-ext">
+						<thead>
+						  <tr>
+							<th>Patient</th>
+							<th colspan="2">Conditions</th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr *ngFor="let pt of dataList ; let i = index">
+							<td width="218px">
+								<img *ngIf="pt.photo_url" src="{{pt.photo_url}}" class="round-img"> 
+								<img *ngIf="pt.first_name=='Private' && pt.last_name=='Account'" src="assets/modules/images/symptoms/user-private.png" class="round-img">
+								{{pt.first_name}} {{pt.last_name}}
+								<a *ngIf="pt.first_name=='Private' && pt.last_name=='Account'" href="javascript:;" class="info-tip"><img src="./assets/modules/images/symptoms/icon-info.png" width="10px"></a>
+							</td>
+							<td width="220px">
+							<span *ngIf="pt.my_conditions.length<2">
+								<span *ngFor="let treat of pt.my_conditions; let j = index">
+									<span class="stat-tag tag-blue tag-xs">{{treat.name}}</span><br>
+								</span>
+							</span>									
+							<span class="stat-tag tag-blue-faint tag-xs dropdown" *ngIf="pt.my_conditions.length>2" [ngClass]="{'open': pt.active}" (click)="toggleTagDropdown(pt)">2 MORE				
+											<span class="dropdown-menu dropdown-box dd-pad  dd-center width-sm">
+												<ul class="list-unstyled link-list" *ngFor="let treat of pt.my_conditions; let k = index">
+													<li><span>-</span> <a href="javascript:;">{{treat.name}}</a></li>
+												</ul>
+											</span>
+							</span>
+						    </td>
+							<td class="opt-col" *ngIf="pt.first_name!='Private' && pt.last_name!='Account'">
+									<a href="javascript:;" class="btn btn-outline btn-xs" *ngIf="pt.is_following==true">FOLLOWING</a>
+									<a href="javascript:;" class="btn btn-secondary btn-xs" *ngIf="pt.is_following==false" (click)="follow(pt.id)">FOLLOW</a>
+									<a href="javascript:;" class="btn btn-secondary-inverse btn-xs">MESSAGE</a>
+							</td>
+						  </tr>	  
+						</tbody>
+					</table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="treatmentAddModal" class="modalOverlay" [style.display]="addTreatment ? 'block' : 'none'">
+	<div class="modalBox">
+		<div class="modal-content">
+			<div class="proHead">
+				<button type="button" class="close" (click)="addTreatmentClosed()" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h3> <img src="assets/modules/img/ico/condition1.png"> Add new Treatment to profile </h3>
+			</div>
+			<section id="treatmentSearchField">
+				<div class="treatmentBody">
+					<div class="gray_table grayMargin">
+						<h6> Treatments to add to your profile </h6>
+						<input type="text" class="form-control" placeholder="Add treatment" [(ngModel)]="treatmentSearchname" disabled>
+					</div>
+					<p> Does this treatment require a dosage? </p>
+					<div class="checkedSection">
+						<div class="radio">
+							<label class="square_radio">
+								<input type="radio" name="diagnose" [(ngModel)]="requiredDosage" value="true">
+								<span> YES </span>
+							</label>
+						</div>
+						<div class="radio">
+							<label class="square_radio">
+								<input type="radio" name="diagnose" [(ngModel)]="requiredDosage" value="false">
+								<span> NO </span>
+							</label>
+						</div>
+						<div class="fs-12 text_red" *ngIf="formValidation == true && requiredDosage =='' ">Please select treatment require a dosage.</div>
+					</div>
+				</div>
+				<div class="footModal textAligned">
+					<button class="btn btn-default borderNone" (click)="addTreatmentClosed()"> CANCEL </button>
+					<button class="btn btn-primary" (click)="addTreatmentOurProfile()"> ADD </button>
+				</div>
+			</section>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="assets/modules/jscript/custom-ui.js"></script>
+

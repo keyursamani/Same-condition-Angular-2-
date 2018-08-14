@@ -1,0 +1,175 @@
+<div class="middle_section">
+  <div class="container"lass="search-results"
+  infinite-scroll
+[infiniteScrollDistance]="0.3"
+[infiniteScrollThrottle]="1300"
+(scrolled)="onScrollDown()" >
+    <br>
+    <!-- Container section -->
+    <div class="row">
+      <!-- Begin col-md-8 -->
+      <div class="col-md-9">
+        <!-- Search Field -->
+        <div class="sc-container-shadow publications-container community-symptoms">
+          <!-- Search Field -->
+          <div class="row row-title-box">
+            <div class="col-md-4">
+              <h2>Community Symptoms</h2>
+            </div>
+            <div class="col-md-8">
+              <div class="container-forms-tag">
+                <form class="search-form-sc" role="search">
+                  <h6>Search Publications</h6>
+                  <div class="input-group add-on">
+                    <div class="form-control-filter">
+                      <i class="fa fa-search"></i>
+                      <input class="form-control" [(ngModel)]="tempSearchString" placeholder="Enter the symptom you’re looking for" name="srch-term" id="srch-term" type="text">
+                      <span class="icon-filter-addon" (click)="filterConditionOpen();"><img src="assets/modules/images/icons/icon-filter-addon@2x.png" width="12px"></span>
+                      <div class="select-options opt-md-lg from-right " id="filter-conditions">
+                        <label for="">Show:</label>
+                        <ul class="list-unstyled form">
+                          <li>
+                            <div class="checkbox">
+                              <input type="checkbox" name="symp_filter[]" id="symp_filer-1" [checked]="searchFilter1" (change)="searchFilter1 = !searchFilter1">
+                              <label for="symp_filer-1">All symptoms</label>
+                            </div>
+                          </li>
+                          <li>
+                            <div class="checkbox">
+                              <input type="checkbox" name="symp_filter[]" id="symp_filer-2"  [checked]="searchFilter2" (change)="filter2()">
+                              <label for="symp_filer-2">Only sympoms related to my Conditions</label>
+                            </div>
+                          </li>
+                          <li>
+                            <div class="checkbox">
+                              <input type="checkbox" name="symp_filter[]" id="symp_filer-3" [checked]="searchFilter3" (change)="searchFilter3 = !searchFilter3" >
+                              <label for="symp_filer-3">Bi-Polar disorder</label>
+                            </div>
+                          </li>
+                          <li>
+                            <div class="checkbox">
+                              <input type="checkbox" name="symp_filter[]" id="symp_filer-4" [checked]="searchFilter4" (change)="searchFilter4 = !searchFilter4" >
+                              <label for="symp_filer-4">AIDs</label>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="input-group-btn">
+                      <button class="btn btn-default"  (click)="searchSheet();">Search</button>
+                    </div>
+                  </div>
+                </form>
+              </div>              
+            </div>
+          </div>
+          <!-- End Search Field -->
+
+          <!-- Table results -->
+          <div class="row">
+            <div class="col-md-12">
+              <table class="table-publications-symptoms">
+                <thead>
+                  <tr>
+                    <th>Symptoms</th>
+                    <th colspan="2">Number of patients </th>
+                  </tr>
+                </thead>
+                <tbody >
+                  <tr  *ngFor="let symptoName of getheadersymptomList">
+                    <td [routerLink]="['../community-symptoms-detail/']" [queryParams]="{ id: symptoName.id }">{{symptoName.name}}</td>
+                    <td [routerLink]="['../community-symptoms-detail/']" [queryParams]="{ id: symptoName.id, isForPatient : 'true' }">{{symptoName.patient_count}} patients</td>
+                    <td  align="right" class="opt-col">
+                        <button (click)="addSymptomsThree(symptoName);" class="btn btn-primary"> Add to my profile </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- End Table results -->
+
+        </div>
+        <!-- End Search field -->
+
+      </div>
+      <!-- end col-md-8 -->
+      <!--<div class="col-md-1"></div>-->
+      <!-- Begin col-md-3 -->
+      <div class="col-md-3">
+        <img src="assets/modules/images/notifications/advertisement-1.png">
+        <p>&nbsp;</p>
+        <img src="assets/modules/images/notifications/advertisement-2.png">
+      </div>
+      <!-- End col-md-3 -->
+    </div>
+    <!-- / Container section -->
+  </div>
+</div>
+
+<div id="addAllSymptoms" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox">
+      <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3> <img src="assets/modules/img/create_file.png"> Add new Symptom to profile <span> Indicates required fields</span> </h3>
+          </div>
+          <div class="proBody" >                    
+            <section id="addStepThree" style="display: none;">
+              <div class="gray_table">
+                <h6> Which of your Conditions is this symptom related to? </h6>
+                <select class="form-control" [(ngModel)]="addsymptomcondition" (ngModelChange)="selectNewCondition($event)">
+                  <option value="" selected="true">--Select Condition--</option>
+                  <option *ngFor="let condition of conditionList" value="{{condition.condition_name.id}}"> {{condition.condition_name.name}} </option>
+                </select>
+                <div class="fs-12 text_red" *ngIf="formValidation == true && addsymptomcondition =='' && addsymptomDontknow == false">Condition cannot be blank.</div>
+
+                <div class="checkbox">
+                  <label class="square_radio">
+                    <input type="checkbox" name="currenttreat1" class="customRadio" ng-true-value="true"  ng-false-value="false"  [(ngModel)]="addsymptomDontknow" >
+                    <span>I DON'T KNOW</span>
+                  </label>
+                </div>
+                <div class="fs-12 text_red" *ngIf="formValidation == true && addsymptomDontknow ==false && addsymptomcondition == ''">Please select i dont know if you have  no condition.</div>
+              </div>
+              <div class="gray_table">
+                <h6> When did you first notice this symptom? </h6>
+                <my-date-picker name="mydate" [options]="myDatePickerOptions"
+              (dateChanged)="onDateChangeddiagnose($event)"  [(ngModel)]="selectedDate" [placeholder]="placeholder" ></my-date-picker>
+               <div class="fs-12 text_red" *ngIf="formValidation == true && selectDate ==''">Date cannot be blank.</div>
+              </div>
+              <div class="gray_table">
+                <h6> How would you rate the severity of your anxiety? </h6>
+                <div class="inline_block">
+                <button [ngClass]="{'active': selectedsevere=='none'}"  (click)="selectSeverity('none');">NONE</button>
+                <button [ngClass]="{'active': selectedsevere=='mild'}"  (click)="selectSeverity('mild');">MILD</button>
+                <button [ngClass]="{'active': selectedsevere=='moderate'}"  (click)="selectSeverity('moderate');">MODERATE</button>
+                <button [ngClass]="{'active': selectedsevere=='severe'}"  (click)="selectSeverity('severe');">SEVERE</button>
+                 <div class="fs-12 text_red" *ngIf="formValidation == true && selectedsevere ==''">Severity cannot be blank.</div>
+              </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="col-md-3 padd_remove">
+                    <strong class="alignLeft"> Visible to </strong>
+                  </div>
+                  <div class="col-md-9 padd_remove">
+                    <select class="form-control" [(ngModel)]="visibility" >
+                      <option value="all_users"> All Users</option>
+                      <option value="only_me">Only Me</option>
+                      <option value="followers">followers</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="footModal textAligned updateSymptoms">
+                <button id="addSympBtnThree" style="display: block;" class="btn btn-primary" (click)="addNewSymptom()"> SAVE, FINISH </button>
+                <button class="btn btn-default" data-dismiss="modal"> CANCEL </button>
+              </div>
+            </section>
+          </div>
+      </div>
+  </div>
+</div>

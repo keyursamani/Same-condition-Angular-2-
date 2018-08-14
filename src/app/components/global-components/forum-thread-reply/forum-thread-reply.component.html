@@ -1,0 +1,251 @@
+<div class="middle_section">
+  <div class="container">
+      <br>
+      <!-- Container section -->
+      <div class="row">
+          <!-- Begin col-md-7 -->
+          <div class="col-md-12">
+              <!-- Search Field -->
+              <div class="sc-container-shadow replies-container">
+
+                  <!-- tabs -->
+
+                  <!-- Section notification -->
+                  <div class="section-notification section-replies">
+                      <div class="list-notifications">
+                          <div class="individual-notification big-title">
+                              <div class="row">
+                                  <!--<div class="col-md-1 text-center"></div>-->
+                                  <div class="col-md-11">
+                                      <h5>{{threadTitle}}</h5>
+                                  </div>
+                                  <div class="col-md-1 text-right">
+                                      <a disabled="disabled"><span></span><span></span><span></span>
+                        <div class="options">
+                          <button data-toggle="modal" data-target="#remove-thread"  >Delete this thread</button>
+                          <button>Edit this thread</button>
+                        </div>
+                      </a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!--  thread header section -->
+                      <div class="list-notifications">
+                          <div class="individual-notification">
+                              <div class="row">
+                                  <div class="col-md-1 text-center">
+                                      <img src="{{threadUserPhoto}}">
+                                  </div>
+                                  <div class="col-md-11">
+                                      <h6>{{threadUserName }}</h6>
+                                      <p>01-03-2017 at 4:35 PM by</p>
+                                      <p>{{ threadDescription }}</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!--  thread header section  end-->
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-12 text-right">
+                          <div style="padding: 0 10px;">
+                              <a class="btn btn-secondary btn-custom-add" (click)="movetoBottom()">add a reply</a>
+                          </div>
+                      </div>
+                  </div>
+
+
+                  <!--  thread reply counter -->
+
+                  <div class="section-notification section-replies">
+                      <div class="replies-title">
+                          <div class="row">
+                              <div class="col-md-6">{{replycounter}} Replies</div>
+                              <div class="col-md-6 text-right"></div>
+                          </div>
+                      </div>
+                      <!--  thread reply counter end -->
+                      <!-- thread reply -->
+                      <div class="list-notifications" *ngFor="let threadCommentitem of threadCommentList">
+                          <div class="individual-notification white-reply">
+                              <div class="row">
+                                  <div class="col-md-1 text-center">
+                                      <img *ngIf="threadCommentitem.photo_url" src={{threadCommentitem.photo_url}}>
+                                      <img *ngIf="!threadCommentitem.photo_url" src="/assets/modules/images/no-image-found.png">
+                                  </div>
+                                  <div class="col-md-10">
+                                      <h6>{{threadCommentitem.commenter}}</h6>
+                                      <p>{{threadCommentitem.created_at |date: 'MM-dd-yyyy ' }} at {{threadCommentitem.created_at |date: ' HH:mm a'}} by</p>
+                                      <p>{{threadCommentitem.comment}}</p>
+                                  </div>
+                                  <div class="col-md-1 text-right" *ngIf="threadCommentitem.commenter_id==userId">
+                                    <a>
+                                      <span></span>
+                                      <span></span>
+                                      <span></span>
+                                      <div class="options">
+                                        <button data-toggle="modal" data-target="#remove-reply" (click)="DeleteThreadReply(threadCommentitem)" >Delete this reply</button>
+                                        <button (click)="editThreadReply(threadCommentitem)">Edit this reply</button>
+                                      </div>
+                                    </a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- thread reply end -->
+                  </div>
+
+                  <!-- end Section notification -->
+                  <div class="row">
+                      <div class="col-md-12 text-right">
+                          <div style="padding: 0 10px;">
+                              <a class="btn btn-secondary btn-custom-add" (click)="movetoBottom()">add a reply</a>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Reply added section -->
+                  <div class="section-notification section-replies" id="bottpmScreen" *ngIf="postReplyViewFlag">
+                      <div class="list-notifications">
+                          <div class="individual-notification add_reply-container">
+                              <div class="row">
+                                  <div class="col-md-1 text-center">
+                                      <img src="{{userProfilePicture}}">
+                                  </div>
+                                  <div class="col-md-10">
+                                      <div class="reply-panel">
+                                          <textarea rows="5" [(ngModel)]="addcommentmessgae"></textarea>
+                                          <div class="panel-bottom">
+                                              <div class="col-md-1">
+                                                  <span>Tags</span>
+                                              </div>
+
+                                              <div class="textarea" class="col-md-3">
+                                                  <input type="text" placeholder="{{placeHolderValue}}" [(ngModel)]="serachString" (ngModelChange)="sarchTagUsers()">
+                                                  <div class="select-options select-reply-tag in">
+                                                      <ul>
+                                                          <li *ngFor="let tagUser of tagUserList" (click)="addUser(tagUser)" class="pointer">
+                                                              <!-- <span><img src="assets/modules/images/notifications/mike.png" alt=""></span> -->
+                                                              <span></span> {{tagUser.first_name }} {{tagUser.last_name }}
+                                                          </li>
+                                                      </ul>
+                                                  </div>
+                                              </div>
+
+                                              <div class="textarea" class="col-md-8">
+                                                  <div>
+                                                      <div class="tags-wrap" *ngFor="let user of selectedserList">
+                                                          <div class="reply-tag">{{user.first_name }} {{user.last_name }}
+                                                              <button class="close-tag" (click)="removeTagUser(user)"><i class="icon icon-close"  ></i></button>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+
+                                          </div>
+                                      </div>
+                                      <div class="row">
+                                          <div class="col-md-6">
+                                              <a class="tags" (click)="tag_to_user()">TAG FRIENDS</a>
+                                          </div>
+                                          <div class="col-md-6 text-right" style="width:50%;padding-top:0;">
+                                              <button class="cancel" 
+                                              (click)="cancelPost()">CANCEL</button> 
+                                              <button (click)="postcomment()">POST REPLY</button>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-1 text-right">
+                                      <a (click)="movetoTop()"><i class="glyphicon glyphicon-menu-down"></i></a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                  </div>
+                  <!-- end Section notification Reply added -->
+                  <div class="section-notification section-replies" *ngIf="collapspostReplyViewFlag">
+                      <div class="list-notifications">
+                          <div class="individual-notification big-title">
+                              <div class="row">
+                                  <!--<div class="col-md-1 text-center"></div>-->
+                                  <div class="col-md-11">
+                                      <h5>{{threadTitle}}</h5>
+                                  </div>
+                                  <div class="col-md-1 text-right">
+                                      <a class="delete-r"><i class="glyphicon glyphicon-remove"  (click)="removeaddEditComment()"  ></i></a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="list-notifications" (click)="openEditMode()">
+                          <div class="individual-notification">
+                              <div class="row">
+                                  <div class="col-md-1 text-center">
+                                      <img src="{{userProfilePicture}}">
+                                  </div>
+                                  <div class="col-md-11">
+                                      <h6>{{userProfileFirstName}} {{userProfileLastName}}</h6>
+                                      <p>{{shortaddcommentmessgae}}</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                  </div>
+                  <!-- / tabs-->
+
+              </div>
+
+              <!-- Modal thread -->
+              <div class="modal fade" role="dialog" id="remove-thread">
+                  <div class="modal-dialog-thread">
+
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">×</button>
+                              <h4 class="modal-title">Are you sure?</h4>
+                          </div>
+                          <div class="modal-body text-center">
+                              <p>Are you sure you want to<br>delete this thread?</p>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">No, cancel</button> <button data-dismiss="modal" (click)="confirmDeleteThreadPressed()" class="true-delete">Yes, delete</button>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+              <!-- End Modal thread -->
+
+              <!-- Modal reply -->
+              <!-- Modal reply -->
+              <div class="modal fade" role="dialog" id="remove-reply" style="display: none;">
+                  <div class="modal-dialog-thread">
+
+                      <!-- Modal content-->
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">×</button>
+                              <h4 class="modal-title">Are you sure?</h4>
+                          </div>
+                          <div class="modal-body text-center">
+                              <p>Are you sure you want to<br>delete this post?</p>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">No, cancel</button> <button class="true-delete" (click)="confirmDeletePressed()" data-dismiss="modal">Yes, delete</button>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+              <!-- End Modal reply -->
+          </div>
+          <!-- end col-md-7 -->
+      </div>
+      <!-- / Container section -->
+  </div>
+</div>

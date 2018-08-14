@@ -1,0 +1,1108 @@
+  <div  class="tab-pane">
+          <div class="about_section">
+            <div class="row">
+              <div class="col-md-9 bg_color">
+                <div class="col-md-4 removePaddLeft">
+                  <div class="about_leftside">
+                    <div class="about">
+                      <h3> <span class="aboutIco"> <img src="assets/modules/img/icons/userGendar.png"> </span>  About Me </h3>
+                    </div>
+                    <ul class="nav nav-pills nav-stacked">
+                      <li class="active rightCeret"><a (click)="doctorVisitModal=false" href="#biostory" data-toggle="pill">My Bio & Story</a></li>
+                      <li><a (click)="doctorVisitModal=false" href="#interests" data-toggle="pill">My Interests</a></li>
+                      <li><a (click)="doctorVisitModal=false" href="#insurance" data-toggle="pill">My Insurance</a></li>
+                      <li><a (click)="doctorVisitModal=false" href="#team" data-toggle="pill">My Care Team</a></li>
+                      <li><a (click)="openFirstTime()" href="#visits" data-toggle="pill">My Doctor Visit Sheets</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="biostory">
+                        <div class="bio_story">
+                          <div class="row removeMargin">
+                            <section id="myBio" [style.display]="myBioBlock ? 'block' : 'none'">
+                              <h2> My Bio <span (click)="goBioEdit()" *ngIf="userRole=='patient'"> EDIT </span> </h2>
+                              <p class="break-word"> {{userbio}} </p>
+                            </section>
+                            <section id="myBioEdit" [style.display]="myBioBlock1 ? 'block' : 'none'">
+                              <h2> My Bio </h2>
+                              <textarea [(ngModel)]="userbio"  rows="3" placeholder="Description..." (keypress)="stopWritting()"></textarea>
+                              <h6> {{userbio.length}}/150 Characters </h6>
+                              <div class="bioEditBtn">
+                                <button (click)="goBio()" class="btn btn-default"> CANCEL </button>
+                                <button (click)="UpdateBio()" class="btn btn-primary"> SAVE </button>
+                              </div>
+                            </section>
+                          </div>
+                          <div class="row removeMargin">
+                            <section id="myBioStory" [style.display]="myBioStory ? 'block' : 'none'">
+                            <h2> My Story <span (click)="editstory()" *ngIf="userRole=='patient'"> EDIT </span> </h2>
+                            <p class="break-word"> {{myEditStory}} </p>
+                            </section>
+                             <section id="myBioStoryEdit" [style.display]="myBioStoryEdit ? 'block' : 'none'">
+                              <h2> My Story </h2>
+                              <textarea [(ngModel)]="myEditStory"  rows="3" placeholder="Description..."></textarea>
+                              <div class="bioEditBtn">
+                                <button style="color: #5E6B82;" (click)="goMystory()" class="btn btn-default"> CANCEL </button>
+                                <button (click)="UpdateBioStory()" class="btn btn-primary"> SAVE </button>
+                              </div>
+                            </section>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="interests">
+                        <div class="bio_story">
+                          <div class="row removeMargin">
+                            <section id="myInterest" [style.display]="myInterestBlock ? 'block' : 'none'">
+                              <h2> My Interests <span (click)="goInterestEdit()" *ngIf="userRole=='patient'"> EDIT </span> </h2>
+                              <div class="col-md-3 topSpace padd_remove" *ngFor="let myinterest of aboutData.user_interested_in" >
+                                  <div class="interest_box">
+                                    <img *ngIf="myinterest=='Donating'"  src="assets/modules/img/icons/donating.png">
+                                    <img *ngIf="myinterest=='Fundraising'" src="assets/modules/img/icons/fundaristion.png">
+                                    <img *ngIf="myinterest=='Volunteering'" src="assets/modules/img/icons/volunteering.png">
+                                    <img *ngIf="myinterest=='Reading'" src="assets/modules/img/icons/readBook.png">
+                                    <p> {{myinterest}} </p>
+                                  </div>
+                              </div>
+
+                            </section>
+                            <section id="myInterestEdit" [style.display]="myInterestBlock1 ? 'block' : 'none'">
+                              <h2> My Interests </h2>
+                              <h5> Select one or more interests to display on your profile </h5>
+                              <div class="col-md-3 topSpace padd_remove" *ngFor="let items of myInterestList;let i=index" >
+                                <input type="checkbox" id="{{i}}" ng-true-value="true" ng-false-value="false" [(ngModel)]="items.checked" >
+                                <label for="{{i}}">
+                                  <div class="interest_box">
+                                    <img *ngIf="items.interest=='Donating'"  src="assets/modules/img/icons/donating.png">
+                                    <img *ngIf="items.interest=='Fundraising'" src="assets/modules/img/icons/fundaristion.png">
+                                    <img *ngIf="items.interest=='Volunteering'" src="assets/modules/img/icons/volunteering.png">
+                                    <img *ngIf="items.interest=='Reading'" src="assets/modules/img/icons/readBook.png">
+                                    <p> {{items.interest}} </p>
+                                  </div>
+                                </label>
+                              </div>
+                              <div class="bioEditBtn topSpace">
+                                <button (click)="goInterest()" class="btn btn-default"> CANCEL </button>
+                                <button (click)="updateInterest()"    class="btn btn-primary"> SAVE </button>
+                              </div>
+                            </section>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="insurance">
+                        <div class="bio_story">
+                          <div class="row removeMargin">
+                            <section id="myInsurance" [style.display]="myInsuranceBlock ? 'block' : 'none'">
+                              <h2> My Insurance <span (click)="goInsuranceEdit()" *ngIf="userRole=='patient'"> EDIT </span> </h2>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <h5> This information will only be visible to you and  Researchers on SameCondition. </h5>
+                                </div>
+                                <div class="col-md-6 rightAlignIns" >
+                                  <p> {{userProfile.health_insurance}} </p>
+                                </div>
+                              </div>
+                            </section>
+                            <section id="myInsuranceEdit" [style.display]="myInsuranceBlock1 ? 'block' : 'none'">
+                              <h2> My Insurance </h2>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <h5> This information will only be visible to you and  Researchers on SameCondition. </h5>
+                                </div>
+                                <div class="col-md-6">
+                                  <select class="form-control" [(ngModel)]="health_insuranceDummy" >
+                                    <option value="">Select Health Insurance</option>
+                                    <option value="Private (through employer or union)">Private (through employer or union)</option>
+                                    <option value="Private (Individual Plan)">Private (Individual Plan) </option>
+                                    <option value="Medicare">Medicare</option>
+                                    <option value="Medicade (or other low-income government plan)">Medicade (or other low-income government plan) </option>
+                                    <option value="Veteran’s administration">Veteran's administration </option>
+                                    <option value="TRICARE (or other military health insurance)">TRICARE (or other military health insurance)</option>
+                                    <option value="Indian health insurance ">Indian health insurance</option>
+                                    <option value="No insurance">No insurance</option>
+                                    <option value="I prefer not to answer">I prefer not to answer</option>
+                                  </select>
+                                  <div class="bioEditBtn topSpace">
+                                    <button (click)="goInsurance()" class="btn btn-default"> CANCEL </button>
+                                    <button (click)="updateInsurance()" class="btn btn-primary"> SAVE </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </section>
+                          </div>
+                        </div>
+                    </div>
+                  
+                    <div class="tab-pane" id="team">
+                        <div class="bio_story">
+                          <div class="row removeMargin">
+                            <h2> My Care Team  </h2>
+                            <p> This list contains the caretakers who help me manage my account or manage the account on my part. </p>
+                            <button (click)="careTeamOpen()" data-toggle="modal" data-target="#careTeamModal" class="invite_btn" *ngIf="userRole=='patient'"> INVITE CARE TEAM MEMBER </button>
+                            <div class="tableSec">
+                              <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th>Name</th>
+                                      <th>Email</th>
+                                      <th>Status</th>
+                                      <th></th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let userList of inviteuserList" >
+                                      <td>{{userList.first_name}} {{userList.last_name}}</td>
+                                      <td>{{userList.email}}</td>
+                                      <td>
+                                        <span *ngIf="userList.invitation_accepted==true" >Careteam Member</span>
+                                        <img tooltip="INVITE SENT" *ngIf="userList.invitation_accepted!=true" class="pointer"  src="assets/modules/img/msg2.png">
+                                      </td>
+                                      <td> <button *ngIf="userList.invitation_accepted==true"  
+                                      class="btn clear_button" 
+                                      (click)="openDeleteConfirm(userList.id)">Remove</button> </td>
+                                    </tr>
+                                    <tr *ngIf="inviteuserList.length==0" >
+                                      <td ></td>
+                                      <td > <p class="alignRight">No Invite List</p></td>
+                                      <td ></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="visits">
+                        <div class="doctor_sheet">
+                          <h3> My Doctor Visit Sheets
+                            <ul>
+                              <li (click)="doctorCurrentTab()" [ngClass]="{'activate': activeDoctorSheet=='current'}" > MY CURRENT SHEET </li>
+                              <li (click)="doctorSavedTab()" [ngClass]="{'activate': activeDoctorSheet=='save'}"> MY SAVED SHEET </li>
+                            </ul>
+                          </h3>
+                          <section id="myCurrentSheets" [style.display]="mySavedSheet ? 'block' : 'none'">
+
+                            <div class="doctor_btn">
+                                <button (click)="saveSheetOpen()"> SAVE THIS SHEET </button>                              
+                              <button (click)="downLoadPdf();"> EXPORT PDF </button>
+                            </div>
+                          <section class="doc_penal" id="pdfdownload">
+
+                            <div class="doc_penal">
+                              <div class="blue_heading">
+                                <div class="col-md-6">
+                                  <h4> <i  *ngIf="showingFeelingList.show==true" (click)="showingFeelingList.show = !showingFeelingList.show" class="fa fa-caret-down fs-20 pointer"></i>
+                                    <i  *ngIf="showingFeelingList.show!=true" 
+                                    (click)="showingFeelingList.show = !showingFeelingList.show;" class="fa fa-caret-right fs-20 activeColor pointer"></i> My Feelings </h4>
+                                </div>
+                                <div class="col-md-6" *ngIf="isShowControls == true">
+                                  <div class="col-md-7 padd_remove">
+                                    <select class="form-control" [(ngModel)]="feeling_filter" (ngModelChange)="load_feelings()">
+                                      <option value="">--select option--</option>
+                                      <option value="3_months">Last 3 months</option>
+                                      <option value="6_months">Last 6 months</option>
+                                      <option value="1_year">Last 1 year</option>
+                                      <option value="2_years">Last 2 year</option>
+                                      <option value="since_joining">Since Joining</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-5 padd_remove">
+                                    <button 
+                                    [routerLinkActive]="['active']"
+                                    [routerLinkActiveOptions]="{exact: false}"
+                                    [routerLink]="['/app/dashboard/feeling']"
+                                    > Update info </button>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="feelSlider" [style.display]="showingFeelingList.show == true ? 'block' : 'none'">
+                                <div class="line_chart">
+                                  <div id="chartdivFeeling"></div>
+                                </div>
+                              </div>
+
+                              <div class="doctor_table" *ngIf="showingFeelingList.show==true">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th>Date</th>
+                                      <th>Feeling</th>
+                                      <th>Reason why you felt this way</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody *ngIf="showingFeelingList.length>0" >
+                                    <tr *ngFor="let feel of showingFeelingList" >
+                                      <td>{{feel.updated_at  | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}}</td>
+                                      <td>
+                                          <button class="feel_btn doc_blue noCursor" *ngIf="feel.feeling=='very_good'" > VERY GOOD </button>
+                                          <button class="feel_btn doc_orange noCursor" *ngIf="feel.feeling=='bad'">  BAD </button>
+                                          <button class="feel_btn doc_red noCursor" *ngIf="feel.feeling=='very_bad'">Very Bad </button>
+                                          <button class="feel_btn doc_yellow noCursor" *ngIf="feel.feeling=='neutral'"> NEUTRAL </button>
+                                          <button class="feel_btn doc_yellow noCursor" *ngIf="feel.feeling=='good'"> GOOD </button>
+                                        </td>
+                                      <td>{{feel.description}}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+
+                            <div class="doc_penal">
+                              <div class="blue_heading">
+                                <div class="col-md-6">
+                                  <h4> <i  *ngIf="showingqol_surveys.show==true" (click)="showingqol_surveys.show = !showingqol_surveys.show;" class="fa fa-caret-down fs-20 pointer"></i>
+                                    <i  *ngIf="showingqol_surveys.show!=true" 
+                                    (click)="showingqol_surveys.show = !showingqol_surveys.show;" class="fa fa-caret-right fs-20 activeColor pointer"></i> QOL Survey </h4>
+                                </div>
+                                <div class="col-md-6" *ngIf="isShowControls == true">
+                                  <div class="col-md-7 padd_remove">
+                                    <select class="form-control" [(ngModel)]="qol_survey_filter" (ngModelChange)="loadQollist();">
+                                      <option value="">--select option--</option>
+                                      <option value="3_months">Last 3 months</option>
+                                      <option value="6_months">Last 6 months</option>
+                                      <option value="1_year">Last 1 year</option>
+                                      <option value="2_years">Last 2 year</option>
+                                      <option value="everything">Since Joining</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-5 padd_remove">
+                                    <button 
+                                    [routerLinkActive]="['active']"
+                                    [routerLinkActiveOptions]="{exact: false}"
+                                    [routerLink]="['/app/dashboard/qolserveys']"
+                                    > Update info </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="feelSlider"
+                              [style.display]="showingqol_surveys.show == true ? 'block' : 'none'">
+                                  <qolchart></qolchart>
+                                </div>
+                              <div class="qol_survey_table" *ngIf="showingqol_surveys.show==true">
+                                  <div class="QOLTable">
+                                    <div class="QOLTableHead">
+                                      <div class="col-md-3 headDate">
+                                        <strong> Date </strong>
+                                      </div>
+                                      <div class="col-md-3 headDate">
+                                        <strong> Total Scores </strong>
+                                      </div>                                  
+                                    </div>
+                                    <div class="QOLTableBody" *ngIf="showingqol_surveys.length>0">
+                                      <div class="QOLTableRow QolOuter" *ngFor="let qol of showingqol_surveys" >
+                                        <div class="rowTableInside"  [ngClass]="{'activeDropdown':qol.show==true}">
+                                          <div class="col-md-3 bodyDate paddFirst">
+                                            <span> {{qol.score_date | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}} </span>
+                                          </div>
+                                          <div class="col-md-3 bodyDate">
+                                            <span>
+                                              Social: {{qol.scores.Social | totalScore}} <br/>
+                                              Mental: {{qol.scores.Mental | totalScore}} <br/>
+                                              Physical: {{qol.scores.Physical | totalScore}}
+                                            </span>
+                                          </div>
+                                          <div class="col-md-3 bodyDate padd_remove paddSelect" style="float: right;">   
+                                            <div class="col-md-1 padd_remove textAligned" style="float: right;">                                               
+                                                  <i  *ngIf="qol.show==true" (click)="qol.show = !qol.show" class="fa fa-caret-down fs-20"></i>
+                                                  <i  *ngIf="qol.show!=true" (click)="qol.show = !qol.show" class="fa fa-caret-right fs-20 activeColor"></i>                                                
+                                            </div>                    
+                                          </div>
+                                        </div>
+                    
+                                        <div class="sectionAlign" *ngIf="qol.show==true" >
+                                          <div class="qol_survey_ques">
+                                            <div class="qol_survey_social">
+                                              <p>Social: {{qol.scores.Social}}
+                                              <div class="qol_survey_social_ques"  *ngFor="let social of qol.quality_of_life_scores.Social;let i=index">
+                                                  <p>{{i+1}}. {{social.qol_score_question}}</p>
+                                                  <div class="inline_block">
+                                                    <button [ngClass]="{'active': social.score=='none'}"  >NONE OF THE TIME</button>
+                                                    <button [ngClass]="{'active': social.score=='a_little'}"  >A LITTLE OF THE TIME</button>
+                                                    <button [ngClass]="{'active': social.score=='some'}"  >SOME OF THE TIME</button>
+                                                    <button [ngClass]="{'active': social.score=='most'}"  >MOST OF THE TIME</button>
+                                                    <button [ngClass]="{'active': social.score=='all'}"  >ALL OF THE TIME</button>
+                                                  </div>
+                                              </div>
+                                              <p>Mental: {{qol.scores.Mental}}
+                                              <div class="qol_survey_social_ques"  *ngFor="let mental of qol.quality_of_life_scores.Mental;let i=index">
+                                                  <p>{{i+1}}. {{mental.qol_score_question}}</p>
+                                                  <div class="inline_block">
+                                                    <button [ngClass]="{'active': mental.score=='none'}"  >NONE OF THE TIME</button>
+                                                    <button [ngClass]="{'active': mental.score=='a_little'}"  >A LITTLE OF THE TIME</button>
+                                                    <button [ngClass]="{'active': mental.score=='some'}"  >SOME OF THE TIME</button>
+                                                    <button [ngClass]="{'active': mental.score=='most'}"  >MOST OF THE TIME</button>
+                                                    <button [ngClass]="{'active': mental.score=='all'}"  >ALL OF THE TIME</button>
+                                                  </div>
+                                              </div>
+                                              <p>Physical: {{qol.scores.Physical}}
+                                              <div class="qol_survey_social_ques"  *ngFor="let physical of qol.quality_of_life_scores.Physical;let i=index">
+                                                  <p>{{i+1}}. {{physical.qol_score_question}}</p>
+                                                  <div class="inline_block">
+                                                    <button [ngClass]="{'active': physical.score=='none'}"  >NONE OF THE TIME</button>
+                                                    <button [ngClass]="{'active': physical.score=='a_little'}"  >A LITTLE OF THE TIME</button>
+                                                    <button [ngClass]="{'active': physical.score=='some'}"  >SOME OF THE TIME</button>
+                                                    <button [ngClass]="{'active': physical.score=='most'}"  >MOST OF THE TIME</button>
+                                                    <button [ngClass]="{'active': physical.score=='all'}"  >ALL OF THE TIME</button>
+                                                  </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                    
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>                              
+                            </div>
+
+                            <div class="doc_penal" >
+                              <div class="blue_heading">
+                                <div class="col-md-6">
+                                  <h4> <i  *ngIf="showingtreatmentList.show==true" (click)="showingtreatmentList.show= !showingtreatmentList.show" class="fa fa-caret-down fs-20 pointer"></i>
+                                    <i  *ngIf="showingtreatmentList.show!=true" (click)="showingtreatmentList.show= !showingtreatmentList.show" class="fa fa-caret-right fs-20 activeColor pointer"></i> My Treatments </h4>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="col-md-7 padd_remove">
+                                    <select class="form-control"  [(ngModel)]="my_treatment_filter" (ngModelChange)="loadChartList();">
+                                      <option value="">--select option--</option>
+                                      <option value="3_months">Last 3 months</option>
+                                      <option value="6_months">Last 6 months</option>
+                                      <option value="1_year">Last 1 year</option>
+                                      <option value="2_years">Last 2 year</option>
+                                      <option value="since_joining">Since Joining</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-5 padd_remove">
+                                    <button 
+                                    [routerLinkActive]="['active']"
+                                    [routerLinkActiveOptions]="{exact: false}"
+                                    [routerLink]="['/app/dashboard/treatment']"> Update info </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="doctor_table" *ngIf="showingtreatmentList.show==true">
+                                  <table class="table">
+                                      <thead>
+                                        <tr>
+                                          <th>Treatment</th>
+                                          <th></th>
+                                        </tr>
+                                      </thead>
+                                  </table>
+                                  <div *ngIf="showingtreatmentList.length > 0">
+                                     <div class="treatment_collapse" *ngFor="let treatment of showingtreatmentList;let i=index;">
+                                        <div class="collapse_section"
+                                           [ngClass]="{'activeDropdown':treatment.show==true}">
+                                           <div class="row">
+                                              <div class="col-md-3" style="width: 80%;">
+                                                 <span> {{treatment.treatment_name.name}} <br/> Last updated: {{treatment.updated_at | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}} </span>
+                                              </div>  
+                                                 <div class="col-md-2 textAligned padd_remove"> 
+                                                    <span>
+                                                    <i *ngIf="treatment.show==true" (click)="treatment.show = !treatment.show" class="fa fa-caret-down fs-20"></i>
+                                                    <i *ngIf="treatment.show!=true" (click)="treatment.show = !treatment.show" class="fa fa-caret-right activeColor fs-20"></i>                
+                                                    </span>
+                                                 </div>      
+                                           </div>
+                                        </div>
+                                        <table style="width:100%" *ngIf="treatment.show==true">
+                                           <tr>
+                                              <td colspan="3" class="nPad">
+                                                 <div class="first_blur_block accordian_open">
+                                                    <div class="purpose_schedule">
+                                                       <div class="row">
+                                                          <div class="col-md-6">
+                                                             <p class="inline_block" style="font-family: 'Open Sans'" >Purpose </p>
+                                                             <span class="block_display fweight400" style="font-weight: normal; color: #4E6484;" >Tag your purpose for doing this treatment</span>
+                                                          <div>
+                                                            <div class="hospitalizeLabel" *ngFor="let purpose of treatment.my_treatment_purposes">
+                                                                {{purpose.purpose_name.name}}
+                                                                <button class="tagremoveIcon"> 
+                                                                    <i class="fa fa-times"></i> 
+                                                                  </button>     
+                                                            </div>
+                                                          </div>
+             
+                                                          </div>
+                                                          <div class="col-md-6">
+                                                             <p class="inline_block"  style="font-family: 'Open Sans'; width:80%;">Current dosage/schedule</p>
+                                                             <span class="block_display fweight400" class="block_display fweight400" style="font-weight: normal; color: #4E6484;">40mg, 2 times per day</span>
+                                                          </div>
+                                                       </div>
+                                                    </div> 
+                                                 </div>
+                                                 <div class="padLR30">
+                                                    <ul class="nav nav-tabs">
+                                                       <li class="active"><a data-toggle="tab" >DOSAGES / SCHEDULES</a></li>
+                                                    </ul>
+                                                 </div>
+                                                 <div class="tab-content">
+                                                    <div class="tab-pane fade in active">
+                                                       <div class="tableSec">
+                                                          <table class="table">
+                                                             <thead>
+                                                                <tr class="tr-bold">
+                                                                   <th>Updated on</th>
+                                                                   <th>Dosage / Schedule</th>  
+                                                                </tr>
+                                                             </thead>
+                                                             <tbody>
+                                                                <tr *ngFor="let dosage of treatment.my_treatment_dosages_schedules">
+                                                                   <td style="font-weight: normal; font-family: 'Open Sans';"> {{dosage.updated_at | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}} </td>
+                                                                     
+                                                                   <td style="font-weight: normal; font-family: 'Open Sans';">{{dosage.most_recent_schedule_number}}{{dosage.most_recent_dosage}} of Ablify
+                                                                      <br /> {{dosage.most_recent_dosage_amount}} times per day
+                                                                   </td>
+                                                                </tr>
+                                                             </tbody>
+                                                          </table>
+                                                       </div>
+                                                    </div>
+                                                 </div>
+                                              </td>
+                                           </tr>
+                                        </table>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                            
+
+                           <!--  </div> -->
+
+                            <div class="doc_penal">
+                              <div class="blue_heading">
+                                <div class="col-md-6">
+                                  <h4> <i  *ngIf="showingsymptomsList.show==true" (click)="showingsymptomsList.show= !showingsymptomsList.show" class="fa fa-caret-down fs-20 pointer"></i>
+                                    <i  *ngIf="showingsymptomsList.show!=true" 
+                                    (click)="showingsymptomsList.show= !showingsymptomsList.show" class="fa fa-caret-right fs-20 activeColor pointer"></i> My Symptoms </h4>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="col-md-7 padd_remove">
+                                    <select class="form-control"  [(ngModel)]="my_symptom_filter" (ngModelChange)="loadChartList()">
+                                      <option value="">--select option--</option>
+                                      <option value="3_months">Last 3 months</option>
+                                      <option value="6_months">Last 6 months</option>
+                                      <option value="1_year">Last 1 year</option>
+                                      <option value="2_years">Last 2 year</option>
+                                      <option value="since_joining">Since Joining</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-5 padd_remove">
+                                    <button 
+                                    [routerLinkActive]="['active']"
+                                    [routerLinkActiveOptions]="{exact: false}"
+                                    [routerLink]="['/app/dashboard/symptoms']"> Update info </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="doctor_table" *ngIf="showingsymptomsList.show==true">
+                                  <table class="table">
+                                      <thead>
+                                        <tr>
+                                          <th style="width: 30%;">Symptom</th>
+                                          <th style="width: 32%;">Related Conditions</th>
+                                          <th style="width: 25%;" colspan="2">Date of First Encounter</th>
+                                          <th></th>
+                                        </tr>
+                                      </thead>
+                                  </table>
+                                  <div *ngIf="showingsymptomsList.length > 0">
+                                     <div class="treatment_collapse" *ngFor="let symptoms of showingsymptomsList;let i=index;">
+                                        <div class="collapse_section"
+                                           [ngClass]="{'activeDropdown':symptoms.show==true}">
+                                           <div class="row">
+                                              <div class="col-md-3" style="width: 32%;">
+                                                 <span> {{symptoms.symptom_name.name}}</span>
+                                              </div>        
+                                              <div style="width: 33%;"  class="col-md-3 removePadding">                        
+                                                <strong *ngIf="symptoms.my_symptom_condition_available==true && symptoms.my_symptom_condition[0].releted_condition_charts[0]!=null">
+                                                    <span>{{symptoms.my_symptom_condition[0].releted_condition_charts[0].name}}</span>
+                                                </strong>
+                                                <strong *ngIf="symptoms.my_symptom_condition_available!=true || symptoms.my_symptom_condition[0].releted_condition_charts[0]==null">
+                                                    <span>I DON'T KNOW</span>
+                                                </strong>                                           
+                                              </div> 
+                                              <div style="width: 18%;" class="col-md-3 removePadding">
+                                                  <strong *ngIf="symptoms.my_symptom_condition_available==true && symptoms.my_symptom_condition[0] != undefined" >
+                                                      <span>{{symptoms.my_symptom_condition[0].first_notice_date | date : "MMMM dd, y"}}</span>
+                                                  </strong>
+                                                </div>
+
+                                                <div class="col-md-2 textAligned padd_remove" style="right: 3%;"> 
+                                                    <span>
+                                                    <i *ngIf="symptoms.show==true" (click)="symptoms.show = !symptoms.show" class="fa fa-caret-down fs-20"></i>
+                                                    <i *ngIf="symptoms.show!=true" (click)="symptoms.show = !symptoms.show" class="fa fa-caret-right activeColor fs-20"></i>                                                    
+                                                    </span>
+                                                 </div>                                              
+                                           </div>     
+                                          </div>                                   
+                                        <table style="width:100%" *ngIf="symptoms.show==true">
+                                            <div class="collapseInside">
+                                                <div class="symptoms_basics">
+                                                  <div class="row">
+                                                    <div class="col-md-6">
+                                                      <div class="symptoms_tags_first inline_block">
+                                                        <label class="block_display" style="margin: 0;">Tag  treatments you take for Mood Swings</label><br/>
+                                                        <div>                                                          
+                                                            <div class="symptomLabel" *ngFor="let item of symptoms.my_symptom_treatments;let i=index;" >
+                                                                {{item.treatment_name.name}}                                                                
+                                                            </div>                                                          
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                      <div class="symptoms_tags_second inline_block">
+                                                        <label class="block_display" style="margin: 0;">Tag treatments you gave for Mood Swings</label><br/>
+                                                        <div >                                                            
+                                                            <div class="symptomLabel" *ngFor="let item of symptoms.my_symptom_treatment_side_effects;let i=index;" >
+                                                                {{item.treatment_name.name}}                                                                  
+                                                            </div>                                                                                                                                                            
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div class="symptoms_status_table">                                                  
+                                                  <div class="tableSec">
+                                                    <table class="table">
+                                                      <thead>
+                                                        <tr>
+                                                          <th class="text_bold">Date</th>
+                                                          <th class="text_bold">Status</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr *ngFor="let severities of symptoms.my_symptom_severities" >
+                                                          <td> {{severities.severity_date}} </td>
+                                                          <td>
+                                                              <button class="symptompsBtn btnLiteGreen"  *ngIf="severities.severity=='mild'"> MILD </button>
+                                                              <button class="symptompsBtn btnLiteGreen neutralAbtSym" *ngIf="severities.severity=='moderate'"> MODERATE </button>
+                                                              <button class="symptompsBtn btnLiteGreen doc_redAbtSym" *ngIf="severities.severity=='severe'"> SEVERE </button>
+                                                          </td>                                                                                                                    
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>                          
+                                                </div>
+                                              </div>
+                                        </table>
+                                      </div>
+                                     </div>
+                                  </div>
+                            </div>
+
+                            <div class="doc_penal">
+                              <div class="blue_heading">
+                                <div class="col-md-6">
+                                  <h4> <i  *ngIf="showinghospitalization.show==true" (click)="showinghospitalization.show = !showinghospitalization.show" class="fa fa-caret-down fs-20 pointer"></i>
+                                    <i  *ngIf="showinghospitalization.show!=true" (click)="showinghospitalization.show = !showinghospitalization.show" class="fa fa-caret-right fs-20 activeColor pointer"></i> My Hospitalization </h4>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="col-md-7 padd_remove">
+                                    <select class="form-control" [(ngModel)]="my_hospitalization_filter" (ngModelChange)="loadChartList()">
+                                      <option value="">--select option--</option>
+                                      <option value="3_months">Last 3 months</option>
+                                      <option value="6_months">Last 6 months</option>
+                                      <option value="1_year">Last 1 year</option>
+                                      <option value="2_years">Last 2 year</option>
+                                      <option value="since_joining">Since Joining</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-5 padd_remove">
+                                    <button 
+                                    [routerLinkActive]="['active']"
+                                    [routerLinkActiveOptions]="{exact: false}"
+                                    [routerLink]="['/app/dashboard/hospitilization']"> Update info </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="doctor_table" *ngIf="showinghospitalization.show==true">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th>Reason</th>
+                                      <th>Date Admitted</th>
+                                      <th>Date Discharged</th>
+                                      <th>Notes</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody *ngIf="showinghospitalization.length > 0" >
+                                   <tr *ngFor="let hospital of showinghospitalization" >
+                                      <td>{{hospital.reason}}</td>
+                                      <td>{{hospital.updated_at  | amLocale:'en' | amDateFormat:'MMMM Do YYYY'}}</td>
+                                      <td>
+                                          <span *ngIf="hospital.discharged==true">{{hospital.date_of_discharged}}</span>
+                                          <span *ngIf="hospital.discharged!=true">  Not yet discharged</span>
+                                      </td>
+                                      <td>{{hospital.notes}} </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+
+                            <div class="doc_penal">
+                              <div class="blue_heading">
+                                <div class="col-md-6">
+                                  <h4> <i  *ngIf="showingweightList.show==true" (click)="showingweightList.show = !showingweightList.show" class="fa fa-caret-down fs-20 pointer"></i>
+                                    <i  *ngIf="showingweightList.show!=true" 
+                                    (click)="showingweightList.show = !showingweightList.show" class="fa fa-caret-right fs-20 activeColor pointer"></i> My Weight </h4>
+                                </div>
+                                <div class="col-md-6" *ngIf="isShowControls == true">
+                                  <div class="col-md-7 padd_remove">
+                                    <select class="form-control"  [(ngModel)]="my_weight_filter" (ngModelChange)="loadWeights()">
+                                      <option value="">--select option--</option>
+                                      <option value="3_months">Last 3 months</option>
+                                      <option value="6_months">Last 6 months</option>
+                                      <option value="1_year">Last 1 year</option>
+                                      <option value="2_years">Last 2 year</option>
+                                      <option value="since_joining">Since Joining</option>
+                                    </select>
+                                  </div>
+                                  <div class="col-md-5 padd_remove">
+                                    <button 
+                                    [routerLinkActive]="['active']"
+                                    [routerLinkActiveOptions]="{exact: false}"
+                                    [routerLink]="['/app/dashboard/weight']"
+                                    > Update info </button>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="feelSlider" [style.display]="showingweightList.show == true ? 'block' : 'none'">
+                                <div class="line_chart" style="margin-left: 200px;">
+                                  <ul class="legend">
+                                    <li *ngIf="isDisplayKGChart==true" (click)="display_lbs_graph()"><span class="superawesome"></span> KG</li>
+                                    <li *ngIf="isDisplayKGChart==false" (click)="display_kg_graph()"><span class="awesome"></span> LBS</li>
+                                  </ul>
+                                </div>
+                                <div class="line_chart">
+                                  <div id="chartdiv" [style.display]="isDisplayKGChart ? 'block' : 'none'"></div>
+                                  <div id="chartdivLbs" [style.display]="isDisplayKGChart ? 'none' : 'block'"></div>
+                                </div>
+                              </div>
+
+                              <div class="doctor_table" *ngIf="showingweightList.show==true">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th>Date</th>
+                                      <th>Weight</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody *ngIf="showingweightList.length>0" >
+                                    <tr *ngFor="let weight of showingweightList" >
+                                      <td>{{weight.weight_date | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}}</td>
+                                      <td> {{weight.weight_count}}{{weight.weight_type}}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+
+                          </section>
+
+                          </section>
+                          <section id="mySavedSheets" [style.display]="myCurrentSheet ? 'block' : 'none'">
+                            <div class="savedSearching">
+                              <div class="row">
+                                <div class="col-md-9 paddingRight">
+                                  <input type="text" [(ngModel)]="searchString" (ngModelChange) ="resetSheet()" class="form-control" placeholder="Search by name">
+                                  <div class="suggestions" *ngIf="mySearchSheet.length > 0">
+                                    <div *ngFor="let item of mySearchSheet" >
+                                      <p>{{item.name}}</p>
+                                    </div>
+                                  </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                  <button class="btn btn-primary" (click)="searchSheet();"> SEARCH </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="tableSec savedSheet" infinite-scroll
+                           [infiniteScrollDistance]="0.3"
+                           [infiniteScrollThrottle]="1300"
+                           (scrolled)="onScrollDown()">
+                              <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th>Sheet Name</th>
+                                    <th>Data Created</th>
+                                    <th></th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let sheet of mySavedSheetist" >
+                                    <td> {{sheet.name}}</td>
+                                    <td> {{sheet.created_at | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}} </td>
+                                    <td> <button class="btn btn-default" (click)="viewPdf()"> VIEW SHEET </button> </td>
+                                    <td title="Delete" class="pointer" 
+                                    (click)="deleteSaveSheetConfirm(sheet.id);"> <img class="deleteBtn" src="assets/modules/img/recycle.png"> </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </section>
+
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="advertis_sec">
+                    <div class="add_two">
+                      <img src="assets/modules/img/270x540.jpg">
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+<div id="saveSheetModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modalBox modalBoxExt">
+    <div class="modal-content">
+      <div class="proHead">
+          <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>                    
+        <strong><h3 class="txtHeaderSheet" style="text-align: center;"> Name your sheet </h3></strong>
+        <h6 style="text-align: center;">Give your sheet a name so that you can easily reference it.</h6>
+      </div>
+      <div class="mainBody">
+        <div class="teamCare">
+            <div class="row">
+              <div class="col-md-12 padd_remove">                          
+                <div class="col-md-11 paddingRight">
+                  <input [(ngModel)]="sheetName"  type="text" class="form-control" placeholder="Enter sheet Name">
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && sheetName =='' ">Sheet name cannot be blank.</div>
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && sheetName.length >100 ">Sheet Name is too long (maximum is 100 characters).</div>                     
+                </div>
+              </div>                        
+          </div>                             
+        </div>
+        <div class="footModal textAligned">
+            <button class="btn btn-default" data-dismiss="modal"> CANCEL </button>
+          <button class="btn btn-primary" (click)="saveSheetName();" > Save sheet </button>
+        </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div id="careTeamModal" class="modal fade in" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog modalBox modalBoxExt">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" (click)="prompt_cancel()" aria-label="Close">
+                <span aria-hidden="true"><img src="assets/modules/img/modal-close@2x.png" alt="close"></span>
+              </button>
+              <h3> <img src="assets/modules/img/msg1.PNG"> New Care Team Invite <span><span class="starLeft">*</span> Indicates required fields </span> </h3>
+            </div>
+            <div class="mainBody">
+              <div class="teamCare">
+                <div class="row">
+                  <div class="col-md-6 padd_remove">
+                    <div class="col-md-1 padd_remove"> <strong>To:</strong> </div>
+                    <div class="col-md-11 paddingRight">
+                      <input [(ngModel)]="inviteusername" maxlength="35" type="text" class="form-control" placeholder="Enter Name"> 
+                      <span *ngIf="inviteusername ==''" class="required-icon marginNameSpan"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 padd_remove">
+                    <input [(ngModel)]="inviteuseremail"  type="email" class="form-control" placeholder="Enter Email Address">
+                    <span *ngIf="inviteuseremail ==''" class="required-icon marginEmailSpan"></span>
+                  </div>
+                </div>
+              </div>
+              <p> <b>{{userProfile.first_name}} {{userProfile.last_name}}</b> has invited you to join his Care Team </p>
+              <textarea rows="10" placeholder="Description..." maxlength="5000" [(ngModel)]="inviteuserdescription" ></textarea>
+            </div>
+            <div class="footModal textAligned">
+              <button class="btn btn-default borderNone" (click)="prompt_cancel()"> CANCEL </button>
+              <button class="btn btn-primary" (click)="inviteUser();" > SAVE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="doctorVisitModal" class="modalOverlay">
+  <div class="modalBox">
+    <div class="modal-content">
+      <div class="proHead bottomSpace">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3> <img src="assets/modules/img/underscore.PNG"> Review my Health Data <span> <span class="starLeft">*</span>Indicates required fields </span> </h3>
+      </div>
+      <div class="doctorBody">
+        <p> Make sure your information is up to date before creating your sheet </p>
+        <div class="row">
+          <div  class="col-md-4">
+            <p><b> My Feelings Data </b></p>
+          </div>
+          <div  class="col-md-4">
+            <p><b> Last Updated On </b></p>
+          </div>
+        </div>
+        <div class="healthTable">
+          <div class="row">
+            
+            <div class="col-md-4">
+              <p> MY FEELINGS </p>
+            </div>
+            <div class="col-md-4">
+              <h3>
+                <span *ngIf="health_data.feelings!='N/A'" >
+                    {{health_data.feelings | date: 'MMM dd ,yyyy'}}
+                </span>
+                <span *ngIf="health_data.feelings=='N/A'" >
+                    {{health_data.feelings}}
+                </span>
+              </h3>
+            </div>
+            <div class="col-md-4 textAligned">
+              <button class="btn btn-primary" *ngIf="health_data.feelings=='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/feeling']" (click)="closePopUpModel()"  > START TRACKING </button>
+              <button class="btn btn-default" *ngIf="health_data.feelings!='N/A'" 
+              [routerLinkActive]="['active']" 
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/feeling']" (click)="closePopUpModel()"> UPDATE INFO </button>
+            </div>
+          </div>
+        </div>
+        <div class="healthTable">
+          <div class="row">
+            <div class="col-md-4">
+              <p> QOL SURVEYS </p>
+            </div>
+            <div class="col-md-4">
+              <h3>
+                <span *ngIf="health_data.qol_surveys!='N/A'" >
+                    {{health_data.qol_surveys | date: 'MMM dd ,yyyy'}}
+                </span>
+                <span *ngIf="health_data.qol_surveys=='N/A'" >
+                    {{health_data.qol_surveys}}
+                </span>
+              </h3>
+            </div>
+            <div class="col-md-4 textAligned">
+              <button class="btn btn-primary" *ngIf="health_data.qol_surveys=='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/qolserveys']" (click)="closePopUpModel()" > START TRACKING </button>
+              <button class="btn btn-default" *ngIf="health_data.qol_surveys!='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/qolserveys']" (click)="closePopUpModel()"  > UPDATE INFO </button>
+            </div>
+          </div>
+        </div>
+        <div class="healthTable">
+          <div class="row">
+            <div class="col-md-4">
+              <p> MY HOSPITALIZATIONS </p>
+            </div>
+            <div class="col-md-4">
+              <h3>
+                  <span *ngIf="health_data.my_hospitalizations!='N/A'" >
+                      {{health_data.my_hospitalizations | date: 'MMM dd ,yyyy'}}
+                  </span>
+                  <span *ngIf="health_data.my_hospitalizations=='N/A'" >
+                      {{health_data.my_hospitalizations}}
+                  </span>
+
+              </h3>
+            </div>
+            <div class="col-md-4 textAligned">
+              <button class="btn btn-primary" *ngIf="this.health_data.my_hospitalizations=='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/hospitilization']" (click)="closePopUpModel()" > START TRACKING </button>
+              <button class="btn btn-default" *ngIf="this.health_data.my_hospitalizations!='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/hospitilization']" (click)="closePopUpModel()" > UPDATE INFO </button>
+            </div>
+          </div>
+        </div>
+        <div class="healthTable">
+          <div class="row">
+            <div class="col-md-4">
+              <p> MY TREATMENTS </p>
+            </div>
+            <div class="col-md-4">
+              <h3>
+                <span *ngIf="health_data.my_treatments!='N/A'" >
+                      {{health_data.my_treatments | date: 'MMM dd ,yyyy'}}
+                </span>
+                <span *ngIf="health_data.my_treatments=='N/A'" >
+                    {{health_data.my_treatments}}
+                </span>
+
+
+              </h3>
+            </div>
+            <div class="col-md-4 textAligned">
+              <button class="btn btn-primary" *ngIf="health_data.my_treatments=='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/treatment']" (click)="closePopUpModel()" > START TRACKING </button>
+              <button class="btn btn-default" *ngIf="health_data.my_treatments!='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/treatment']" (click)="closePopUpModel()" > UPDATE INFO </button>
+            </div>
+          </div>
+        </div>
+        <div class="healthTable">
+          <div class="row">
+            <div class="col-md-4">
+              <p> MY SYMPTOMS </p>
+            </div>
+            <div class="col-md-4">
+              <h3>
+                    <span *ngIf="health_data.my_symptoms!='N/A'" >
+                          {{health_data.my_symptoms | date: 'MMM dd ,yyyy'}}
+                    </span>
+                    <span *ngIf="health_data.my_symptoms=='N/A'" >
+                        {{health_data.my_symptoms}}
+                    </span>
+              </h3>
+            </div>
+            <div class="col-md-4 textAligned">
+              <button class="btn btn-primary" *ngIf="health_data.my_symptoms=='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/symptoms']" (click)="closePopUpModel()"  > START TRACKING </button>
+              <button class="btn btn-default" *ngIf="health_data.my_symptoms!='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/symptoms']"  (click)="closePopUpModel()" > UPDATE INFO </button>
+            </div>
+          </div>
+        </div>
+        <div class="healthTable">
+          <div class="row">
+            <div class="col-md-4">
+              <p> MY WEIGHT </p>
+            </div>
+            <div class="col-md-4">
+              <h3>
+                  <span *ngIf="health_data.my_weights!='N/A'" >
+                        {{health_data.my_weights | date: 'MMM dd ,yyyy'}}
+                  </span>
+                  <span *ngIf="health_data.my_weights=='N/A'" >
+                      {{health_data.my_weights}}
+                  </span>
+
+              </h3>
+            </div>
+            <div class="col-md-4 textAligned">
+              <button class="btn btn-primary" *ngIf="health_data.my_weights=='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/weight']" (click)="closePopUpModel()" > START TRACKING </button>
+              <button class="btn btn-default" *ngIf="health_data.my_weights!='N/A'"
+              [routerLinkActive]="['active']"
+              [routerLinkActiveOptions]="{exact: false}"
+              [routerLink]="['/app/dashboard/weight']" (click)="closePopUpModel()" > UPDATE INFO </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footModal">
+        <button class="btn btn-primary addUpdate" data-dismiss="modal"> YES, I'M UPDATED! </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="deleteconfirmationModal" class="modalOverlay" [style.display]="deleteConfirm ? 'block' : 'none'">
+  <div class="modalBox delete-confirm-modal">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" (click)="closeDeleteConfirm()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="confirm-title"> Are you sure? </h3>
+      </div>
+      <div class="proBody confirm-description">
+        <p> Your care team member will be deleted if you choose to continue.</p>
+      </div>
+      <div class="footModal confirm-footer" style="padding: 15px 0">
+        <button (click)="closeDeleteConfirm()" class="btn btn-primary"> NO, KEEP CARE TEAM MEMBER </button>
+        <button (click)="deleteInvitedUser()" class="btn btn-default"> YES, DELETE </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="deleteSheetModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+      <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="alignRight"> Are you sure,You want to delete ? </h3>
+          </div>
+          <div class="footModal QOLfoot">
+            <button data-dismiss="modal" class="btn btn-primary"> NO </button>
+            <button (click)="deleteSaveSheet()" class="btn btn-default"> YES </button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div id="viewSheetModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modalBox modalBoxExt">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span>
+        </button>                    
+        <strong><h3 class="txtHeaderSheet" style="text-align: center;"> Your sheet name </h3></strong>
+      </div>
+      <div class="mainBody">
+        <div class="teamCare">
+          <div class="row">
+            <div class="col-md-12 padd_remove">                         
+              <div class="col-md-11 paddingRight">
+                <input [(ngModel)]="viewSheetName"  type="text" class="form-control" placeholder="Enter sheet Name" [disabled]="true">
+              </div>
+            </div>                        
+          </div>                             
+        </div>
+        <div class="footModal textAligned">
+          <button class="btn btn-default" data-dismiss="modal"> CANCEL </button>         
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="confirmationModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+      <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="alignRight"> Are you sure you want to close? </h3>
+          </div>
+          <div class="footModal QOLfoot">
+            <button class="btn btn-primary" data-dismiss="modal"> No, Cancel </button>
+            <button (click)="yesdelete(conformationOf)" class="btn btn-default"> Yes, Close </button>
+          </div>
+      </div>
+  </div>
+</div>

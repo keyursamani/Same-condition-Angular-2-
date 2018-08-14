@@ -1,0 +1,87 @@
+<div class="middle_section">
+  <div class="container">
+    <br>
+    <!-- Container section -->
+    <div class="row row-flex">
+      <!-- Begin col-md-8 -->
+      <div class="col-md-9">
+        <!-- Search Field -->
+        <div class="sc-container-shadow publications-container community-conditions">
+          <!-- Search Field -->
+          <div class="row row-title-box">
+            <div class="col-md-4">
+              <h2>Community Conditions</h2>
+            </div>
+            <div class="col-md-8" style="z-index: 2">
+              <div class="container-forms-tag container-forms-tag-fix">
+                <form class="search-form-sc" role="search">
+                  <h6>Search for Treatments</h6>
+
+                  <calendar [dateValue]="dateValue" (getDate)='getDate($event)'></calendar>
+
+                  <div class="input-group add-on">
+                    <div class="form-control-filter">
+                      <i class="fa fa-search"></i>
+                      <input class="form-control" placeholder="Enter the conditions you’re looking for" name="srch-term" id="srch-term" type="text" [(ngModel)]="search_word" 
+                      (ngModelChange)="list_conditions()">
+                      	<div class="suggestions" *ngIf="condition_list.length > 0">
+			              <div class="pointer" *ngFor="let condition of condition_list" (click)="select_condition(condition)">
+			                <p>{{condition.name}}</p>
+			              </div>
+			            </div>                      
+                    </div>
+                    <div class="input-group-btn">
+                      <button class="btn btn-default" type="submit" (click)="load_community_condition()">Search</button>
+                    </div>
+                  </div>
+                </form>
+              </div>              
+            </div>
+          </div>
+          <!-- End Search Field -->
+
+          <!-- Table results -->
+          <div class="row" style="z-index: 1">
+            <div class="col-md-12">
+              <table class="table-publications table-ext community-treatments-tbl">
+                <thead>
+                  <tr>
+                    <th>Condition</th>
+                    <th colspan="2">Number of patients </th>
+                  </tr>
+                </thead>
+                <tbody infinite-scroll [infiniteScrollDistance]="0.8" 
+                [infiniteScrollThrottle]="1300" (scrolled)="onScrollDown()">
+                  <tr *ngFor="let condition of community_condition_list">
+                    <td class="pointer" [routerLink] = "['/global/community-condition-detail', condition.id]">{{condition.name}}</td>
+                    <td>{{condition.patient_count}} patients</td>
+                    <td align="right" class="opt-col" *ngIf="condition.is_added_to_profile == false">
+                      <a href="" class="btn btn-secondary btn-xs btn-w-150">ADD TO MY PROFILE</a>
+                    </td>
+                    <td align="right" class="opt-col" *ngIf="condition.is_added_to_profile == true">
+                      <a href="" class="btn btn-secondary btn-xs btn-w-150" style="background: gray;">ADDED TO PROFILE</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- End Table results -->
+
+        </div>
+        <!-- End Search field -->
+
+      </div>
+      <!-- end col-md-8 -->
+      <!--<div class="col-md-1"></div>-->
+      <!-- Begin col-md-3 -->
+      <div class="col-md-3">
+        <img src="assets/modules/images/notifications/advertisement-1.png">
+        <p>&nbsp;</p>
+        <img src="assets/modules/images/notifications/advertisement-2.png">
+      </div>
+      <!-- End col-md-3 -->
+    </div>
+    <!-- / Container section -->
+  </div>
+</div>

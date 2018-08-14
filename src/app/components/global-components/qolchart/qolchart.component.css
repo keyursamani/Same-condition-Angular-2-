@@ -1,0 +1,15 @@
+.chartRow{
+	padding: 0 90px;
+}
+
+.chartDiv {
+  width : 100%;
+  height  : 150px;
+}
+
+.chartDivSmall {
+	height: 150px;
+}
+.chartRowSmall{
+	padding: 0 20px;
+}

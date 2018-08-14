@@ -1,0 +1,16 @@
+.list-notifications {
+  .individual-notification {
+    h6 {
+      i.user-status-sc {
+        display: inline-block;
+        position: relative;
+        width: 6px;
+        height: 6px;
+        background: #4a90e2;
+        border-radius: 6px;
+        margin-left: 2px;
+        top: -1px;
+      }
+    }
+  }
+}

@@ -1,0 +1,174 @@
+
+<div class="upper_section">
+
+  <div class="container">
+    <div class="edit">
+      <button> Edit Profile </button>
+    </div>
+    <div class="col-md-7 removePadding">
+
+      <div class="col-md-3 removePadding">
+          <div class="profile">
+              <img style="padding: 20px;" *ngIf="userProfile.photo_url=='' || userProfile.photo_url==null" src="assets/modules/img/Icon-(User)@3x.png">
+              <img *ngIf="userProfile.photo_url!='' || userProfile.photo_url!=null"  src="{{userProfile.photo_url}}" >
+          </div>
+      </div>
+      <div class="col-md-9 border removePadding">
+          <div class="profile_details">
+             <h2> {{userProfile.first_name}}, <span> {{userProfile.last_name}}</span> </h2>
+            <ul>
+              <li> <img src="assets/modules/img/setting.PNG"> {{userProfile.health_insurance}}, 2006 </li>
+              <li> <img src="assets/modules/img/masg4.PNG"> {{userProfile.following_count}}  Following </li>
+              <li> <img src="assets/modules/img/ico/8.png"> http://www.michaeljecobs.com </li>
+              <li> <img src="assets/modules/img/ico/11.png"> {{userProfile.follower_count}} Followers </li>
+            </ul>
+          </div>
+      </div>
+
+    </div>
+    <div class="col-md-5">
+      <div class="right_condition">
+        <h2> <img src="assets/modules/img/ico/14.png"> Conditions I'm interested in </h2>
+        <ul>
+          <li *ngFor="let condition of userProfile.my_all_conditions" > {{condition.name}} </li>
+          <li *ngFor="let condition of userProfile.my_all_conditions" > {{condition.name}} </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="middle_section">
+  <div class="container pro_container">
+
+    <div class="row">
+        <div class="col-md-3 paddingRight">
+            <div class="left_document">
+                <div class="doc_head">
+                    <h3> <img src="assets/modules/img/ketch.PNG"> My Documents </h3>
+                </div>
+                <div class="doc_menu">
+                    <ul>
+                        <li> Reasearcher pic.png </li>
+                        <li> Reasearcher document.pdf </li>
+                        <li> reasearcher document.pdf </li>
+                        <li> reasearcher document.pdf </li>
+                        <li> reasearcher document.pdf </li>
+                        <li> reasearcher document.pdf </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9 paddingLeft">
+            <div class="right_sec">
+                <h3> My Bio </h3>
+                <p> {{userProfile.bio}}</p>
+                <!--<p> It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text.</p>-->
+
+                <h3> My Publication <span (click)="profileAddModalOpen()"> ADD NEW </span> </h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Publication Title</th>
+                            <th>Status</th>
+                            <th>-</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>aliquam quaerat voluptatem</td>
+                            <td>Published</td>
+                            <td> <img (click)="profileEditModalOpen()" src="assets/modules/img/editBg.png"> Remove</td>
+                        </tr>
+                        <tr>
+                            <td>aliquam quaerat voluptatem</td>
+                            <td>Submitted</td>
+                            <td> <img (click)="profileEditModalOpen()" src="assets/modules/img/editBg.png"> Remove</td>
+                        </tr>
+                        <tr>
+                            <td>aliquam quaerat voluptatem</td>
+                            <td>Non Submitted</td>
+                            <td> <img (click)="profileEditModalOpen()" src="assets/modules/img/editBg.png"> Remove</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<div id="addProfileModal" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" (click)="profileAddModalClosed()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3> Add Publication <span> Indicates required fields </span> </h3>
+          </div>
+          <div class="treatmentBody">
+            <div class="gray_table">
+                <h6> Publication Title </h6>
+                <input type="text" class="form-control" placeholder="Enter publication title. (it will apear like this on your profile)">
+
+                <h6> Publication URL </h6>
+                <input type="text" class="form-control" placeholder="Add a URL to link to your publication">
+            </div>
+            <div class="connect_sec">
+                <div class="col-md-1">
+                    <input type="checkbox" id="checkbox-1-1" class="regular-checkbox" />
+                </div>
+                <div class="col-md-8">
+                    <h3> Submit to appear on the SameCondition research page </h3>
+                    <p> Lorem Ipsum is simply dummy text of the printing and  simply dummy text of the typesetting industry. </p>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+          </div>
+          <div class="footModal textAligned">
+            <button class="btn btn-primary"> ADD </button>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div id="editProfileModal" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" (click)="profileEditModalClosed()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3> Edit Publication <span> Indicates required fields </span> </h3>
+          </div>
+          <div class="treatmentBody">
+            <div class="gray_table">
+                <h6> Publication Title </h6>
+                <input type="text" class="form-control" placeholder="Oportere temporibus definationem ea duo.">
+
+                <h6> Publication URL </h6>
+                <input type="text" class="form-control" placeholder="www.websitewithpublication.com">
+            </div>
+            <div class="connect_sec">
+                <div class="col-md-1">
+                    <input type="checkbox" id="checkbox-1-1" class="regular-checkbox" />
+                </div>
+                <div class="col-md-8">
+                    <h3> Submit to appear on the SameCondition research page </h3>
+                    <p> Lorem Ipsum is simply dummy text of the printing and  simply dummy text of the typesetting industry. </p>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+          </div>
+          <div class="footModal textAligned">
+            <button class="btn btn-default"> CANCEL </button>
+            <button class="btn btn-primary"> SAVE </button>
+          </div>
+        </div>
+    </div>
+</div>

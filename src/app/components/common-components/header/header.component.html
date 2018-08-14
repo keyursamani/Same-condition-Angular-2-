@@ -1,0 +1,196 @@
+<div class="top_header">
+    <div class="container">
+        <div class="logo pointer" (click) = "goto_profile()">
+            <img src="assets/modules/img/logo-custom.png">
+        </div>
+        <section class="navSection">
+            <div class="profile_block userPro custom_width">
+                <ul class="nav right_nav ">
+                    <li class="dropdown">
+                        <!-- <a class="dropdown-toggle nPadBT" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" *ngIf="userProfilePhysRes.first_name !=''">
+                            <img class="userImage" *ngIf="!userProfilePhysRes.photo_url" src="assets/modules/img/Icon-(User)@3x.png">
+                            <img  class="userImage" *ngIf="userProfilePhysRes.photo_url"
+                            [src]="userProfilePhysRes.photo_url">
+                            {{userProfilePhysRes.first_name || ""}} {{userProfilePhysRes.last_name || ""}}
+                            <i class="fa fa-angle-down"></i>
+                        </a> -->
+                        <a class="dropdown-toggle nPadBT" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" *ngIf="userProfile.first_name !=''">
+                            <img class="userImage" *ngIf="!userProfile.photo_url" src="assets/modules/img/Icon-(User)@3x.png">
+                            <img  class="userImage" *ngIf="userProfile.photo_url" [src]="userProfile.photo_url">
+                            {{userProfile.first_name || ""}} {{userProfile.last_name || ""}}
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li *ngIf="userRole == 'patient' || userRole == 'care_member'"><a [routerLink]="['/app/dashboard/about']">My Profile</a></li>
+                            <li *ngIf="userRole == 'researcher' || userRole == 'physician'"><a [routerLink]="['/app/dashboard/researcher']">My Profile</a></li>
+                            <li [routerLink]="['/global/settings']"><a >Settings</a></li>
+                            <li><a (click)="logout()">Log Out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="reminders_block">
+                <ul class="nav right_nav">
+                    <li class="dropdown quick-not-rem addMenu" (mouseenter)="selectNotificationsTab()">
+                        <a aria-expanded="true" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            <img src="assets/modules/images/header/notifications@2x.png" width="14px">
+                            <br>
+                            <small>{{notificationsUnreadCount + remindersUnreadCount}}</small>
+                        </a>
+                        <div class="quick-menu">
+                            <div class="not-rem-quick">
+                                <div class="row">
+                                    <div class="col-md-12 text-right">
+                                    <a [routerLink]="['/global/settings']">Settings</a></div>
+                                    <br><br>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <div class="tabs-navigators-sc">
+                                            <ul class="animated_tab">
+                                                <li [class.active]="notificationsTabs.isNotificationsTabVisible">
+                                                    <a (click)="switchNotificationsTab(1)" href="#notifications-quick"  data-toggle="tab">Notifications
+                                                        <span>({{notificationsUnreadCount}})</span>
+                                                    </a>
+                                                </li>
+                                                <li [class.active]="notificationsTabs.isRemindersTabVisible">
+                                                    <a (click)="switchNotificationsTab(2)" href="#reminders-quick"  data-toggle="tab">Reminders
+                                                        <span>({{remindersUnreadCount}})</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <div class="tab-content clearfix">
+                                                <div class="tab-pane" id="notifications-quick" [class.active]="notificationsTabs.isNotificationsTabVisible">
+                                                    <div *ngIf="notifications && notifications.length === 0">
+                                                        <div class="row">
+                                                            <div class="col-md-12 text-center">
+                                                                <br>
+                                                                <p style="font-weight: normal">No unread notifications available.</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="notifications && notifications.length !== 0">
+                                                        <div class="notification-quick" *ngFor="let notification of notifications">
+                                                            <div class="row">
+                                                                <div class="col-md-2 img-cnt">
+                                                                    <img  *ngIf="notification.sender_details.photo_url==''" src="assets/modules/img/Icon-(User)@3x.png">
+                                                                    <img *ngIf="notification.sender_details.photo_url!=''" [src]="notification.sender_details.photo_url">
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <h5>{{notification.sender_details.first_name}} {{notification.sender_details.last_name}} <i class="user-status-sc"></i></h5>
+                                                                    <p>{{notification.title}}</p>
+                                                                </div>
+                                                                <div class="col-md-10 col-md-offset-2 time-n-r">
+                                                                    <p>{{ notification.created_at | amCalendar:{sameElse:'MMM Mo, YYYY'} }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane" id="reminders-quick" [class.active]="notificationsTabs.isRemindersTabVisible">
+                                                    <div *ngIf="reminders && reminders.length === 0">
+                                                        <div class="row">
+                                                            <div class="col-md-12 text-center">
+                                                                <p style="font-weight: normal">No unread reminders available</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="reminders && reminders.length !== 0">
+                                                        <div class="notification-quick" *ngFor="let reminder of reminders">
+                                                            <div class="row">
+                                                                <div class="col-md-2 img-cnt">
+                                                                    <img src="assets/modules/images/header/reminders.png">
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <h5>{{reminder.reminder_type}} Reminder <i class="user-status-sc"></i></h5>
+                                                                    <p>{{reminder.description}}</p>
+                                                                </div>
+                                                                <div class="col-md-10 time-n-r col-md-offset-2">
+                                                                    <p>{{reminder.created_at | amCalendar:{sameElse:'MMM Do, YYYY'} }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <a [routerLink]="['/app/notifications']">View all Notifications & Reminders</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="profile_block">
+              <ul class="nav right_nav">
+                <li class="dropdown addMenu quick-not-rem">
+                  <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                    <img src="assets/modules/images/header/messages@2x.png" width="16px"><br><small class="no-news">{{msgUnreadCount}}</small>
+                  </a>
+                  <div _ngcontent-c2="" class="quick-menu messages-menu">
+                    <div class="not-rem-quick">
+                        <div class="clearfix" id="notifications-quick">
+                            <div class="notification-quick" *ngFor="let message of messages">
+                              <div class="row">
+                                <div class="col-md-2 img-cnt">
+                                  <img src="assets/modules/images/no-image-found.png">
+                                </div>
+                                <div class="col-md-7 text-left">
+                                  <h5>{{message.sender_details.first_name}} {{message.sender_details.last_name}} <i class="user-status-sc"></i></h5>
+                                  <p>{{message.body}}</p>
+                                </div>
+                                <div class="col-md-3 time-n-r">
+                                  <p>{{message.created_at | date: 'hh:mm a'}}</p>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12 text-center">
+                            <!-- <a [routerLink]="['/global/message']">Go to Messages</a> -->
+                            <a>Go to Messages</a>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <!-- end new menu items -->
+            <div class="nav_section">
+                <ul>
+                    <li><a [routerLink]="['/global/community-feed']" [ngClass]="{'active':getactiveFeed()}">COMMUNITY FEED</a></li>
+                    <li><a [routerLink]="['/global/connect']" [ngClass]="{'active':getactiveConnect()}" >CONNECT</a></li>
+                    <li><a [routerLink]="['/global/community-condition']" [ngClass]="{'active':getactive1()}">CONDITIONS</a></li>
+                    <li><a [routerLink]="['/global/community-treatment']" [ngClass]="{'active':getactive()}">TREATMENTS</a></li>
+                    <li><a [routerLink]="['/global/community-symptoms']" [ngClass]="{'active':getactiveSymptoms()}">SYMPTOMS</a></li>
+                    <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    MORE <i class="fa fa-angle-down"></i>
+                  </a>
+                  <ul class="dropdown-menu spcl_drop_dwn">
+                    <li [routerLink]="['/global/publications']"><a >Research</a></li>
+                    <li [routerLink]="['/global/forum']"><a >Forums</a></li>
+                    <li [routerLink]="['/global/faq']"><a >FAQs</a></li>
+                    <li [routerLink]="['/global/clinical-trials']"><a >Find Clinical Trials</a></li>
+                    <li [routerLink]="['/global/charity-events']"><a >Find Charity Events</a></li>
+                  </ul>
+                </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>

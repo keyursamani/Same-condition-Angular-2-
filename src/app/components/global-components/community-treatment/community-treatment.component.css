@@ -1,0 +1,608 @@
+.fs-12{
+	font-size: 12px;
+}
+
+.text_red{
+	color: red;
+}
+.nav_section li a :active{
+color: #ffffff;
+}
+/* cyrillic-ext */
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWJ0bbck.woff2) format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  }
+  /* cyrillic */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFUZ0bbck.woff2) format('woff2');
+    unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  }
+  /* greek-ext */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWZ0bbck.woff2) format('woff2');
+    unicode-range: U+1F00-1FFF;
+  }
+  /* greek */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFVp0bbck.woff2) format('woff2');
+    unicode-range: U+0370-03FF;
+  }
+  /* vietnamese */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFWp0bbck.woff2) format('woff2');
+    unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+  }
+  /* latin-ext */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFW50bbck.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* latin */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v15/mem8YaGs126MiZpBA-UFVZ0b.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* cyrillic-ext */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UNirkOX-hpOqc.woff2) format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  }
+  /* cyrillic */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UNirkOVuhpOqc.woff2) format('woff2');
+    unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  }
+  /* greek-ext */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UNirkOXuhpOqc.woff2) format('woff2');
+    unicode-range: U+1F00-1FFF;
+  }
+  /* greek */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UNirkOUehpOqc.woff2) format('woff2');
+    unicode-range: U+0370-03FF;
+  }
+  /* vietnamese */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UNirkOXehpOqc.woff2) format('woff2');
+    unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+  }
+  /* latin-ext */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UNirkOXOhpOqc.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* latin */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Open Sans SemiBold'), local('OpenSans-SemiBold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UNirkOUuhp.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* cyrillic-ext */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Open Sans Bold'), local('OpenSans-Bold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UN7rgOX-hpOqc.woff2) format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+  }
+  /* cyrillic */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Open Sans Bold'), local('OpenSans-Bold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UN7rgOVuhpOqc.woff2) format('woff2');
+    unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  }
+  /* greek-ext */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Open Sans Bold'), local('OpenSans-Bold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UN7rgOXuhpOqc.woff2) format('woff2');
+    unicode-range: U+1F00-1FFF;
+  }
+  /* greek */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Open Sans Bold'), local('OpenSans-Bold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UN7rgOUehpOqc.woff2) format('woff2');
+    unicode-range: U+0370-03FF;
+  }
+  /* vietnamese */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Open Sans Bold'), local('OpenSans-Bold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UN7rgOXehpOqc.woff2) format('woff2');
+    unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+  }
+  /* latin-ext */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Open Sans Bold'), local('OpenSans-Bold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UN7rgOXOhpOqc.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* latin */
+  @font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Open Sans Bold'), local('OpenSans-Bold'), url(https://fonts.gstatic.com/s/opensans/v15/mem5YaGs126MiZpBA-UN7rgOUuhp.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+/* ================================ Modal Box Css ======================== */
+
+.modalOverlay{
+  position: fixed;
+  display: none;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+
+.modalBox{
+  width: 50%;
+  height: 50%;
+  padding: 10px;
+  z-index: 999999;
+  border-radius: 4px;
+  position: absolute;        
+  top: 50%;
+  left: 50%;
+  right: 0;
+  transform: translate(-50%, -50%);        
+}
+
+.modal-content{
+padding: 22px 30px;  
+overflow: auto;
+}
+
+.proHead{
+width: 100%;
+background: none;
+padding: 10px 0px;
+}
+
+.proHead img{
+width: 25px;
+margin-right: 5px;
+position: relative;
+top: -2px;
+}
+
+.proHead h3{
+font-size: 14px;
+text-align: left;
+margin: 0px;
+color: #16325C;  
+letter-spacing: 0;
+font-family: "Open Sans";
+}
+
+.proBody{
+width: 100%;
+background: #FCFDFF;
+padding: 10px 0px;
+}
+
+.proBody h6{
+font-size: 13px;
+font-weight: bold;
+text-align: left;
+margin: 10px 0px;
+}
+
+.proBody button{
+font-size: 11px;
+background: none;
+outline: none;
+padding: 6px 10px;
+font-weight: bold;
+}
+
+.detailsPro{
+width: 100%;
+padding: 10px 0px;
+border-top: 1px solid #f1f1f1;
+margin: 0px;
+}
+
+.alignRight{
+text-align: center !important;
+}
+
+.btnBorder button{
+border: none;
+}
+
+
+.proSmallModal{
+width: 30%;
+}
+
+.squereBox{
+width: 170px;
+height: 170px;
+vertical-align: middle;
+overflow: hidden
+}
+
+.squereBox img{
+width: 100%;
+height: 100%;
+display: block;
+margin: auto;
+}
+
+#fileselector {
+  margin: 10px;
+}
+#upload-file-selector {
+  display:none;
+}
+
+#fileselector1 {
+  margin: 10px;
+}
+#upload-file-selector1 {
+  display:none;
+}
+.margin-correction {
+  margin-right: 10px;
+}
+
+.selectBtn{
+width: 100%;
+margin: 7px 0px;
+padding: 8px 0px;
+line-height: 20px;
+font-size: 13px;
+}
+
+.fileTwoBtn{
+width: 100%;
+background: none;
+padding: 10px 0px;
+text-align: right;
+margin-top: 15px;
+}
+
+.fileTwoBtn button{
+width: 48%;
+}
+
+.fileTwoBtn .btn-primary{
+background: #337ab7;
+}
+
+.proFoot{
+width: 100%;
+background: none;
+padding: 10px 0px;
+border-top: 1px solid #f1f1f1;
+padding-top: 20px;
+}
+
+.proFoot p{
+text-align: center;
+color: #333;
+margin: 0px;
+}
+
+.bodyPic{
+width: 40px;
+height: 40px;
+margin: auto;
+overflow: hidden;
+border-radius: 50%;
+}
+
+.bodyPic img{
+width: 100%;
+height: 100%;
+display: block;
+margin: auto;
+}
+
+.likeDiv{
+background: none;
+}
+
+.likeDiv h4{
+text-align: left;
+margin: 10px 0px;
+font-size: 17px;
+}
+
+.likeDiv button{
+width: 100%;
+margin: 5px 0px;
+}
+
+.likeDiv button.btn-primary{
+background: #337ab7;
+}
+.checkedSection{
+  width: 100%;
+  background: none;
+  padding: 0px 15px;
+  display: inline-block;
+}
+
+.checkedSection label{
+    display: inline-block;
+    padding: 4px 11px;
+    font-family: Arial;
+    font-size: 11px;
+    opacity: 1.0;
+    color: #6b6868;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.checkedSection .checkbox label {
+  color: #544d4d;
+  opacity: 1;
+  font-weight: bold;
+  line-height: 20px;
+  font-size: 12px;
+}
+
+.checkedSection .checkbox input[type="checkbox"]{
+display: block !important;
+}
+
+/* =========================== Radio Button css =========================== */
+
+.radio label:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.radio .cr {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #a9a9a9;
+  border-radius: .25em;
+  width: 1.3em;
+  height: 1.3em;
+  float: left;
+  margin-right: .5em;
+}
+
+.radio .cr {
+  border-radius: 50%;
+}
+
+.radio .cr .cr-icon {
+  position: absolute;
+  font-size: 1em;
+  line-height: 0;
+  top: 51%;
+  left: 15%;
+}
+
+.radio .cr .cr-icon {
+  margin-left: -0.1em;
+}
+
+.radio label input[type="radio"] {
+  display: none;
+}
+
+.radio label input[type="radio"] + .cr > .cr-icon {
+  transform: scale(3) rotateZ(-20deg);
+  opacity: 0;
+  transition: all .3s ease-in;
+}
+
+.radio label input[type="radio"]:checked + .cr > .cr-icon {
+  transform: scale(1) rotateZ(0deg);
+  opacity: 1;
+}
+
+.glyphicon-ok-sign:before{
+color: #5667aa;
+}
+
+/* ========================= Radio Button css ======================== */
+
+/* Custom Radio Box */
+label.square_radio {
+  display: inline-block;
+  margin-right: 10px;
+  position: relative;
+}
+label.square_radio span {
+  display: block;
+  padding-left: 20px;
+  position: relative;
+  font-size: 11px;
+  line-height: 15px;
+}
+label.square_radio span:before,
+label.square_radio span:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+label.square_radio span:before {
+  display: block;
+  border-radius: 4px;
+  background-color: #5667AA;
+  height: 13px;
+  width: 13px;
+}
+label.square_radio span:after {
+    display: block;
+  border: solid white;
+  border-width: 2px 2px 0 0;
+  display: none;
+  height: 5px;
+  left: 3px;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(135deg);
+  width: 7px;
+  top: 3px;
+}
+label.square_radio .customRadio {
+  display: block;
+  height: 13px;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 13px;
+}
+
+label.square_radio input:checked + span:after {
+  display: block;
+}
+
+.treatmentBody{
+  width: 100%;
+  background: none;
+  padding: 10px 0px;
+  float: left;
+}
+
+.treatmentBody p{
+    font-size: 13px;
+    text-align: left;
+    margin: 10px 0px 0px;    
+    font-family: "Open Sans";
+    color: #5E6B82;
+    letter-spacing: 0;
+}
+.treatmentBody h6{
+  color: #16325C;
+  text-align: left;
+  margin: 5px 0;
+  font-size: 12px;  
+  letter-spacing: 0;
+  font-family: "Open Sans";
+}
+.treatmentBody .checkbox{
+  padding: 0px 20px;
+}
+
+.treatmentBody .checkbox label{
+  font-size: 11px;
+  opacity: 1;
+  cursor: pointer;
+  color: #777171;
+  font-weight: bold;
+  padding: 5px 11px;
+  width: 100%;
+}
+
+.treatmentBody .checkbox input{
+  display: block !important;
+}
+.treatmentBody{
+  padding: 5px 20px;
+}
+
+.footModal{
+  width: 100%;
+  background: none;
+  padding: 6px 0px;
+  text-align: center;
+  float: left;
+  margin-top: 15px;
+}
+
+.footModal button{
+  margin: 0px 5px;
+  font-size: 11px;
+  font-weight: bold;
+  outline: none;
+  padding: 6px 25px;
+}
+.footModal strong{
+  margin: 7px 0px;
+  display: block;
+  text-align: left;
+}
+.footModal{
+  /* padding: 15px 20px; */
+  background: #F8FAFD;
+  border-top: 1px solid #eaeaea;
+}
+
+.footModal .btn-default{
+  background: none;
+  margin: 0px;
+  font-size: 11px;
+}
+.textAligned {
+  text-align: right !important;
+}
+.grayMargin{
+  margin: 3px 0px 5px;
+}
+
+.gray_table{
+  width: 100%;
+  background: #FCFDFF;
+  padding: 10px 0px;
+  float: none;
+  display: inline-block;
+  border-top: 1px solid #ececec;
+  border-bottom: 1px solid #ececec;
+  margin: 5px 0px 5px;
+}

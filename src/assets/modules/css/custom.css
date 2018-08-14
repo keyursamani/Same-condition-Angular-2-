@@ -1,0 +1,445 @@
+@font-face {
+    font-family: "Open Sans";
+    src: url("../../../assets/modules/fonts/open-sans.regular.ttf");
+}
+
+@font-face {
+    font-family: 'Open Sans Semibold';
+    src: url("../../../assets/modules/fonts/open-sans.semibold.ttf");
+}
+
+@font-face {
+    font-family: 'Open Sans Bold';
+    src: url("../../../assets/modules/fonts/open-sans.bold.ttf");
+}
+
+@font-face {
+    font-family: 'Open Sans Light';
+    src: url("../../../assets/modules/fonts/open-sans.light.ttf");
+}
+
+body{
+  background-color: #f6f9fd;  
+}
+
+.container{
+  width: 1170px;
+  margin: auto;
+}
+.hidetop_header{
+  display: none !important;
+}
+
+.selctPicker input{
+  width: 100% !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.ngx-datepicker-position-bottom-right{
+  z-index: 999 !important;
+}
+
+.removePadding{
+  padding: 0px !important;
+}
+
+.removePaddLeft{
+  padding-left: 0px !important;
+}
+
+.removeMargin{
+  margin: 0px !important;
+}
+
+.form-control{
+  /*height: auto;*/
+  font-size: 12px;
+}
+
+/* =================== Add New Css ==================== */
+
+.nav-pills>li{
+  outline: none;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover{
+  outline: none;
+}
+
+a{
+  text-decoration: none;
+  cursor: pointer;
+}
+
+b{
+  font-family: 'Open Sans Bold';
+}
+
+.btn{
+  font-size: 11px;
+  outline: none !important;
+  font-family: 'Open Sans Semibold';
+  height: 30px;
+
+}
+
+.btn:focus, .btn:hover{
+  box-shadow: none !important;
+}
+
+.paddingLeft{
+  padding-left: 0px !important;
+}
+
+.paddingRight{
+  padding-right: 0px !important;
+}
+
+button.close{
+  outline: none;
+  position: relative;
+  top: -1px;
+  font-size: 27px;
+  opacity: 1;
+  margin-left: 5px;
+  color: #AAAAAA;
+}
+
+.btn-primary{
+  background: #5667AA !important;
+  color: #fff !important;
+  height: 30px;
+}
+
+table th, table td{
+  max-width: 160px;
+  word-wrap: break-word;
+  min-width: 75px;
+}
+
+.ngx-datepicker-container .ngx-datepicker-input{
+  font-size: 12px !important;
+}
+
+.ngx-datepicker-container .ngx-datepicker-calendar-container{
+  top: 0;
+  left: 35px;
+}
+
+.ngx-datepicker-container{
+    position: initial !important;
+}
+
+.ngx-datepicker-container .ngx-datepicker-calendar-container .main-calendar-container .main-calendar-days .day-unit, .ngx-datepicker-container .ngx-datepicker-calendar-container .main-calendar-container .main-calendar-days .year-unit, .ngx-datepicker-container .ngx-datepicker-calendar-container .main-calendar-container .main-calendar-years .day-unit, .ngx-datepicker-container .ngx-datepicker-calendar-container .main-calendar-container .main-calendar-years .year-unit{
+  height: 30px !important;
+}
+
+.ngx-datepicker-container .ngx-datepicker-calendar-container{
+  width: 240px !important;
+  left: 20px !important;
+}
+
+.mydp .icon-mydpcalendar, .mydp .icon-mydpremove{
+  font-size: 14px !important;
+}
+
+/*.mydp .mydpicon{
+  display: none !important;
+}*/
+
+a{
+  text-decoration: none !important;
+}
+
+.textAligned .btn-default{
+    padding: 6px 0px !important;
+    margin: 0px 3px !important;
+    background: none !important;
+    border: none !important;
+    color: #505c8c !important;
+}
+
+.loader {
+  border: 1px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  width: 51px;
+  height: 51px;
+  animation: spin .8s linear infinite;
+  position: absolute;
+  z-index: 999999999999;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.hideModal{
+  width: 100%;
+  background: #fff;
+  padding: 30px 0px;
+  float: left;
+  text-align: center;
+}
+
+.hideModal h5{
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 10px 0px;
+}
+
+.hideModal .btn-primary{
+  display: block;
+  margin: 30px auto 0px;
+}
+
+select.form-control{
+  color: #4E6484;
+  -moz-appearance: none;
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Caret_down_font_awesome.svg/200px-Caret_down_font_awesome.svg.png);
+  background-size: 15px;
+  background-repeat: no-repeat;
+  -webkit-appearance: none;
+  background-position: 95% 9px;
+  padding-right: 28px;
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th{
+  color: #536887;
+  font-family: 'Open Sans';
+  font-weight: 100;
+}
+
+.btnpickerenabled{
+  background-image: url(http://localhost:4200/assets/modules/img/calendar.PNG) !important;
+  background-repeat: no-repeat !important;
+  background-position: 2px 7px !important;
+  padding-top: 10px;
+}
+
+/*.mydp .mydpicon{
+  display: none;
+}*/
+
+.mydp .selection{  
+  font-size: 11px;
+}
+
+.mydp .selection,
+.mydp .selbtngroup,
+.mydp input.selection,.mydp input.selection::placeholder {
+  height: 30px !important;
+  color: #5E6B82;
+  font-size: 13px !important;
+  font-family: "Open Sans";  
+}
+.mydp .icon-mydpcalendar:before {
+  display: none;
+}
+.mydp .btnpickerenabled{
+  background-image: url(/assets/modules/img/calendar@2x.png) !important;
+  background-size: 13px auto !important;
+  background-position: center !important;  
+  height: 50% !important;
+}
+
+.mydp, .mydp .headertodaybtn{
+  border: none !important;
+}
+.mydp .btnclear {
+  display: none !important;
+}
+.mydp .btnpicker {
+  margin-top: 5px !important;
+}
+.date-picker-wrapper {
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+}
+p{
+  letter-spacing: 0.5px;
+}
+
+.loader_outer{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  z-index: 99999;
+}
+
+.loader {
+  border: 1px solid #f3f3f3 ;
+  border-top: 2px solid #3498db ;
+  border-radius: 50%;
+  width: 51px;
+  height: 51px;
+  animation: spin .8s linear infinite;
+  position: absolute;
+  z-index: 99999;
+  left: 0;
+  right: 0;
+  margin: auto;
+  bottom: 0;
+  top: 0;
+}
+
+h3, h4, h5, h6, h2, h1{
+  letter-spacing: 0.5px;
+}
+
+.proSmallModal .proBody p{
+  font-size: 13px !important;
+  color: #5e6684 !important;
+}
+.sub-description {
+  color: #616771;	
+  font-family: "Open Sans";	
+  font-size: 13px;	
+  line-height: 21px;
+  font-weight: normal;  
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.sm-bold {
+  font-size: 11px;
+  font-family: "Open Sans";
+  font-weight: 600;
+  color: #2A426C;
+}
+.lg-bold {
+  font-size: 15px;
+  font-family: "Open Sans";
+  font-weight: 600;
+  color: #2A426C;
+  margin-top: 3px;
+}
+
+select::-ms-expand {
+  display: none;
+}
+/* Custom Radio Box */
+label.square_radio {
+  display: inline-block;
+  margin-right: 10px;
+  position: relative;
+}
+label.square_radio span {
+  display: block;
+  padding-left: 20px;
+  position: relative;
+  font-size: 11px;
+  line-height: 15px;
+}
+label.square_radio span:before,
+label.square_radio span:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+label.square_radio span:before {
+  display: block;
+  border-radius: 4px;
+  background-color: #EEEFF6;
+  height: 13px;
+  width: 13px;
+}
+label.square_radio input:checked ~ span:before{
+background-color: #5667AA;
+
+}
+label.square_radio span:after {
+    display: block;
+  border: solid white;
+  border-width: 2px 2px 0 0;
+  display: none;
+  height: 5px;
+  left: 3px;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(135deg);
+  width: 7px;
+  top: 3px;
+}
+label.square_radio .customRadio {
+  display: block;
+  height: 13px;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 13px;
+}
+
+label.square_radio input:checked + span:after {
+  display: block;
+}
+.checkbox-detail {
+  color: #2A426C;
+  font-family: "Open Sans";
+  font-size: 11px;
+  font-weight: 600;
+}
+.delete-confirm-modal {
+  width: 370px !important;
+  padding: 0 !important;  
+}
+.delete-confirm-modal .confirm-title {
+  text-align: center !important;
+  letter-spacing: 0 !important;
+  color: #16325C !important;
+  font-family: "Open Sans" !important;
+  font-size: 14px !important;
+  display: block !important;
+}
+.delete-confirm-modal .confirm-description {
+  color: #5E6B82 !important;
+  font-size: 13px !important;
+  padding: 0 30px !important;
+  margin-top: 10px !important;
+  letter-spacing: 0 !important;
+  line-height: 20px !important;
+  text-align: center !important; 
+}
+.delete-confirm-modal .confirm-footer {
+  background: #fff !important;
+  border: none !important;
+  margin-top: 0 !important;
+  /*padding: 0px 0px 30px 0px !important;*/
+}
+.delete-confirm-modal .confirm-footer .btn-cancel {
+  height: 30px;
+  width: 170px;
+  border-radius: 4px;
+  background-color: #5667AA;
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 5px;
+}
+.delete-confirm-modal .confirm-footer .btn-delete {
+  height: 30px;
+  width: 100px;
+  border: 1px solid #E5E9F1;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  color: #5E6B82;
+  font-size: 11px;
+  font-weight: 600;
+}
+input[type=range]::-moz-range-track {
+  background-color: transparent !important;
+}
+textarea {
+  border:  1px solid #ccc !important;
+}

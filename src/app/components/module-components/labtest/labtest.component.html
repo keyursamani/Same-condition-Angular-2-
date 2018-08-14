@@ -1,0 +1,460 @@
+<div class="tab-pane ">
+  <div class="condition_sec">
+    <div class="row">
+        <div class="col-md-9">
+          <div class="row bg_color">
+              <div class="myCondition">
+                <h2> My Lab & Tests </h2>
+                <div class="sub-description"> You may enter the results of your lab tests and other health related tests, investigations. You may enter as many results as you may want. </div>
+                <div *ngIf="NoLab" class="hideModal">
+                    <h5> You have not added any lab test to your profile. </h5>
+                    <h5> Click the button below to get started </h5>
+                    <button class="btn btn-primary" (click)="labsTestAddProfileOpen()"> ADD NEW LAB/TEST TO PROFILE </button>
+                </div>
+                <div *ngIf="!NoLab" class="addCondition">
+                  <div class="row removeMargin">
+                    <div class="col-md-3 paddingLeft">
+                      <h6> I want to see </h6>
+                       <select class="form-control" [(ngModel)]="labFilter"  (ngModelChange)="labTestfilter($event)">
+                          <option value="3_months">Last 3 months</option>
+                          <option value="6_months">Last 6 months</option>
+                          <option value="1_year">Last 1 year</option>
+                          <option value="2_years">Last 2 year</option>
+                          <option value="since_joining">Since Joining</option>
+                          <option value="everything">All labs and tests</option>
+
+                        </select>
+                    </div>
+                    <div class="col-md-9 paddingRight">
+                      <div>
+                        <button class="btn btn-primary" (click)="labsTestAddProfileOpen()"> ADD NEW LAB/TEST TO PROFILE </button>
+                      </div>
+                    </div>
+                    <div class="search-results" infinite-scroll
+                      [infiniteScrollDistance]="0.3"
+                      [infiniteScrollThrottle]="1300"
+                      (scrolled)="onScrollDown()">
+                      <div class="tableSec">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th class="thead"><b># of Result Entries</b></th>
+                              <th class="thead"><b>Name of lab or test</b></th>
+                              <th class="thead"><b>Latest Results</b></th>
+                              <th class="thead"><b>Date/Time of Latest Results</b></th>
+                              <th class="tableCollapseBtn"></th>
+                            </tr>
+                          </thead>
+                        </table>
+                        <div *ngFor="let labs of labTestlist; let i=index;">
+                          <div class="tableBlock custom_under_border"  [ngClass]="{'activeDropDown':labs.show==true}" >
+                            <div class="row">
+                              <div class="col-md-3 thead-body">
+                                <strong class="pleft5">{{i+1}}</strong>
+                              </div>
+                              <div class="col-md-3 thead-body">
+                                <strong>{{labs.labs_tests_name}} </strong>
+                              </div>
+                              <div class="col-md-3 thead-body">
+                                <strong><b>{{labs.latest_result}}</b></strong>
+                              </div>
+                              <div class="col-md-4 thead-body">
+                                <strong *ngIf="labs.latest_result_date!='' && labs.latest_result_time!=''" >
+                                      {{labs.latest_result_date | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}}
+                                      {{setTime(labs.latest_result_time)}}
+                                  </strong>
+                              </div>
+                              <div class="col-md-2 tableCollapseBtn">
+                                <!-- <div class="col-md-9">
+                                  <button  [ngClass]="{'activeButton':labs.show==true}" (click)="deleteLab(labs.id);"> <img src="assets/modules/img/recycle.png"> </button>
+                                </div>
+                                <div class="col-md-3">
+                                  <td>
+                                      <button  [ngClass]="{'activeButton':labs.show==true}" class="btn btn-primary dropDownbutton"  (click)="openAccordian(labs);">
+                                        <i class="fa fa-caret-down"  *ngIf="labs.show==true"></i>
+                                        <i class="fa fa-caret-right"  *ngIf="labs.show!=true"></i>
+                                      </button>
+                                  </td>
+                                </div> -->
+                                <div class="col-md-8 padd_remove">
+                                  <button  class="clear_button" (click)="openDeleteConfirm(labs.id);" title="Delete">
+                                    <img  *ngIf="labs.show!=true" src="assets/modules/img/recycle.png">
+                                    <img  *ngIf="labs.show==true" src="assets/modules/img/recycleWhite.png">
+                                  </button>
+                                </div>
+                                <div class="col-md-4 padd_remove" title="Expand">
+                                  <button  class="clear_button" (click)="openAccordian(labs);">
+                                    <i  *ngIf="labs.show==true" class="fa fa-caret-down fs-20"></i>
+                                    <i  *ngIf="labs.show!=true" class="fa fa-caret-right activeColor fs-20"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="blueLebsBlock" *ngIf="labs.show==true" >
+                            <div class="newResult" >
+                              <button class="btn btn-primary resultBtn" (click)="addLabsTestOpen(labs)"> ADD NEW RESULTS </button>
+                              <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th><b>Date/Time of Result</b></th>
+                                    <th><b>Result</b></th>
+                                    <th><b>Visible To</b></th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let labresult of labs.labs_test_results" >
+                                    <td> {{labresult.result_date | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}}
+                                      {{setTime(labresult.result_time)}}
+                                      </td>
+                                    <td> {{labresult.result}} </td>
+                                    <td>
+                                      <select class="form-control" [(ngModel)]="labresult.visibility" >
+                                          <option value="all_users">All Users</option>
+                                          <option value="only_me">Only Me</option>
+                                          <option value="followers">Followers</option>
+                                      </select>
+                                    </td>
+                                    <td>
+                                      <button (click)="openDeleteResultConfirm(labs.id,labresult.id);"> <img src="assets/modules/img/recycle.png" title="Delete"> </button>
+                                      <button (click)="editLabsTestOpen(labresult)"> <img  src="assets/modules/img/edit_1.png" title="Edit"> </button>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="advertis_sec">
+              <div class="add_two">
+                <img src="assets/modules/img/270x540.jpg">
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+ </div>
+
+<div id="labsTestAddModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox">
+        <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" data-toggle="modal" data-target="#confirmationModal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3> <img src="assets/modules/img/ico/condition1.png"> Add New {{select_lab_test_name}} Results <span style="font-family:'Open Sans'"><span class="starLeft">*</span> Indicates required fields </span> </h3>
+          </div>
+          <!--<div class="hospitalisedBody">-->
+          <div class="treatmentBody">
+            <div class="gray_table grayMargin">
+              <h6> When did you get your {{select_lab_test_name}} results?<span class="required-label"></span> </h6>
+                <section class="hospitalSec">
+                  <calendar
+                  [dateValue]="addResulttestDate"
+                  [isDisplaySaveBtn]="true"
+                  (getDate)='onDateChanged1($event)'></calendar>
+                </section>
+                <h6> What was the time of your latest results?(optional) </h6>
+                <div class="row treatStart">
+                  <div class="col-md-3 padd_remove">
+                    <input  class="form-control"
+                    [(ngModel)]="addResultlabTime" type="time" />
+                  </div>
+                  <!-- <div class="col-md-2 padd_remove">
+                    <select class="form-control" [(ngModel)]="labTimeZone" >
+                      <option value="pm" selected="true"> PM </option>
+                      <option value="am"> AM </option>
+                    </select>
+                  </div> -->
+                </div>
+             <!--    <div class="fs-12 text_red" *ngIf="formValidation == true && addResultlabTime =='' ">Lab/test time cannot be blank.</div> -->
+              </div>
+              <div class="gray_table grayMargin">
+                <h6> What were the results of your lab/test?<span class="required-label"></span> </h6>
+                <input type="text" class="form-control" placeholder="Enter results" [(ngModel)]="addResultlabResult">
+                <div class="fs-12 text_red" *ngIf="formValidation == true && addResultlabResult =='' ">Lab result cannot be blank.</div>
+              </div>
+            </div>
+            <div class="footModal textAligned">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="col-md-3 padd_remove">
+                    <strong> Visible to</strong>
+                  </div>
+                  <div class="col-md-9 padd_remove">
+                    <select style="font-family: 'Open Sans';font-size: 11px;color: #4E6484;" class="form-control"  [(ngModel)]="addResultlabVisibility">
+                      <option value="all_users">All Users</option>
+                      <option value="only_me">Only Me</option>
+                      <option value="followers">Followers</option>
+                    </select>
+                  </div>
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && addResultlabVisibility =='' ">Visibility cannot be blank.</div>
+                </div>
+                <div class="col-md-4 textAligned">
+                  <button class="btn btn-default borderNone" data-dismiss="modal"> CANCEL </button>
+                  <button class="btn btn-primary" (click)="addNewresultLab()"> SAVE </button>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="labsTestEditModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#confirmationModal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3> <img src="assets/modules/img/ico/condition1.png"> Edit  Results <span><span class="starLeft">*</span> Indicates required fields </span> </h3>
+      </div>
+      <div class="hospitalisedBody">
+        <div class="savedSearching">
+          <h6> When did you get your latest {{select_lab_test_name}} lab/test results?
+          <span class="asteriskcolor">*</span> </h6>
+
+          <section class="hospitalSec">
+            <!-- <ng-datepicker class="form-control selctPicker"  [(ngModel)]="editResulttestDate" [options]="options"></ng-datepicker> -->
+            <calendar
+            [dateValue]="editResulttestDate"
+            [isDisplaySaveBtn]="true"
+            [myLeft]="460"
+            (getDate)='onEditDateChanged($event)'></calendar>
+          </section>
+
+          <h6> What was the time  of your latest result? (optional) </h6>
+          <section class="hospitalSec">
+            <div class="col-md-4 padd_remove">
+              <input type="time" class="form-control" placeholder="Select time" [(ngModel)]="editResultlabTime">
+            </div>
+           <!--  <div class="col-md-3 padd_remove">
+
+            </div> -->
+             <!-- <div class="col-md-2 padd_remove">
+              <select class="form-control" [(ngModel)]="labEditTimeZone">
+                <option value="pm" selected="true"> PM </option>
+                <option value="am"> AM </option>
+              </select>
+            </div> -->
+          </section>
+          <div class="fs-12 text_red" *ngIf="formValidation == true && editResultlabTime =='' ">Lab/test date cannot be blank.</div>
+        </div>
+        <p> What were the results of your lab/test? <span class="asteriskcolor">*</span> </p>
+        <input type="text" class="form-control" placeholder="ENTER RESULT" [(ngModel)]="editResultlabResult" >
+        <div class="fs-12 text_red" *ngIf="formValidation == true && editResultlabResult =='' ">Lab result cannot be blank.</div>
+      </div>
+      <div class="footModal">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="col-md-3 padd_remove">
+              <strong> Visible to </strong>
+            </div>
+            <div class="col-md-9 padd_remove">
+              <select class="form-control"  [(ngModel)]="editResultlabVisibility">
+                  <option value="all_users">All Users</option>
+                  <option value="only_me">Only Me</option>
+                  <option value="followers">Followers</option>
+              </select>
+            </div>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && editResultlabVisibility =='' ">Visibility cannot be blank.</div>
+          </div>
+          <div class="col-md-6 textAligned">
+            <button class="btn btn-default borderNone" data-dismiss="modal"> CANCEL </button>
+            <button class="btn btn-primary" (click)="updateLabResult();"> SAVE </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="labTestAddModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#confirmationModal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3> <img src="assets/modules/img/ico/condition1.png"> Add new Lab/Test to profile </h3>
+      </div>
+      <section id="labStep1" style="display: block;">
+        <div class="treatmentBody">
+          <div class="gray_table grayMargin"selectTabTag>
+            <h6> Search for Lab/Test to add to your profile </h6>
+            <input style="color: #5E6B82; font-family: 'Open Sans'; font-size: 13px; font-weight: normal;"
+            [(ngModel)]="labSearchname"
+            (ngModelChange)="searchLabs($event)" type="text" class="form-control" placeholder="Search for Lab/Test name">
+            <div class="suggestions "  *ngIf="searchLabList.length > 0 && searchtLabString==true">
+                <div class="pointer" *ngFor="let item of searchLabList" (click)="selectTabTag(item)" >
+                  <p >{{item.name}}</p>
+                </div>
+            </div>
+            <div *ngIf="searchLabList.length ==0 && searchList==true">
+                <div class="form-control topRadius">
+                  <b> No Results</b>
+                </div>
+                <div class="form-control bottomRadius pointer"
+                  (click)="goLabTestStep2Field()">
+                   <b> Click to add an unlisted lab <i class="fa fa-plus"></i> </b>
+                </div>
+              </div>
+          </div>
+          <div class="fs-12 text_red" *ngIf="formValidation == true && seletedLabDetail =='' ">Lab name cannot be blank.</div>
+        </div>
+        <div *ngIf="showbutton" class="footModal textAligned">
+          <button class="btn btn-default borderNone" data-toggle="modal" data-target="#confirmationModal"> CANCEL </button>
+          <button class="btn btn-primary" (click)="addLabs()"> SAVE, NEXT </button>
+        </div>
+      </section>
+      <section id="labStep2" style="display: none;">
+        <div class="treatmentBody">
+          <div class="gray_table grayMargin">
+            <h6> My Lab/Test is not listed, add my Lab/Test </h6>
+            <input [(ngModel)]="addlabName"  type="text" class="form-control" placeholder="Enter name of Lab/Test">
+            <strong (click)="goLabTestStep1Field()"> BACK TO SEARCH </strong>
+          </div>
+           <div class="fs-12 text_red" *ngIf="formValidation == true && addlabName =='' ">Lab name cannot be blank.</div>
+        </div>
+        <div class="footModal textAligned">
+          <button class="btn btn-default borderNone" (click)="labsTestResultClosed();"> CANCEL </button>
+          <button class="btn btn-primary" (click)="customAddLab()"> SAVE, NEXT </button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div id="labTestResultModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#confirmationModal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3> <img src="assets/modules/img/ico/condition1.png"> Create new {{labSearchname}} Labs/Test Results<span style="margin-top: 8px;" class="label-color"> <span class="starLeft">*</span> Indicates required fields </span> </h3>
+      </div>
+      <div class="treatmentBody">
+        <div class="gray_table grayMargin">
+          <h6> When did you get your {{labSearchname}} lab/test results? <span class="asteriskcolor">*</span> </h6>
+          <section class="hospitalSec margBT10">
+            <calendar
+            [dateValue]="testDate"
+            [isDisplaySaveBtn]="true"
+            [myLeft]="450"
+            (getDate)='onDateChanged($event)'></calendar>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && (testDate =='' || testDate == undefined) ">Lab/Test results cannot be blank.</div>
+          </section>
+          <h6 class="clrbth "> What was the time of your first result? (optional)</h6>
+          <div class="row treatStart">
+            <div class="col-md-3 padd_remove">
+              <input type="time" class="form-control"
+              [(ngModel)]="labTime">
+            </div>
+            <!-- <div class="col-md-2 padd_remove" style="position: absolute;left: 205px;">
+             <select class="form-control" [(ngModel)]="labEditTimeZone">
+                <option value="pm" selected="true"> PM </option>
+                <option value="am"> AM </option>
+              </select>
+            </div> -->
+          </div>
+        </div>
+        <div class="gray_table grayMargin">
+          <h6> What were the results of your lab/test? <span class="asteriskcolor">*</span> </h6>
+          <input type="text" class="form-control text_result" placeholder="ENTER YOUR RESULTS" [(ngModel)]="labResult">
+          <div class="fs-12 text_red" *ngIf="formValidation == true && labResult =='' ">Lab/Test results cannot be blank.</div>
+        </div>
+      </div>
+      <div class="footModal textAligned">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="col-md-3 padd_remove">
+              <strong> Visible to </strong>
+            </div>
+            <div class="col-md-7 padd_remove">
+              <select style="font-family: 'Open Sans';font-size: 11px;color: #4E6484;" class="form-control"  [(ngModel)]="labVisibility">
+                <option value="all_users">All Users</option>
+                <option value="only_me">Only Me</option>
+                <option value="followers">Followers</option>
+              </select>
+              <div class="fs-12 text_red" *ngIf="formValidation == true && labVisibility =='' ">Visibility cannot be blank.</div>
+            </div>
+          </div>
+          <div class="col-md-4 textAligned">
+            <button class="btn btn-default borderNone" (click)="labsTestResultClosed();"> CANCEL </button>
+            <button class="btn btn-primary" (click)="addResult()"> SAVE </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="confirmationModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="alignRight"> Are you sure you want to close? </h3>
+      </div>
+      <div class="footModal QOLfoot">
+        <button data-dismiss="modal" class="btn btn-primary"> No, Cancel </button>
+        <button (click)="confirmClosed()" class="btn btn-default"> Yes, Close </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="deleteconfirmationModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+    <div class="modal-content small-modal-content text-center">
+      <div class="proHead">
+        <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="title"> Are you sure? </div>
+      </div>
+      <div class="sub-modal-description">
+        <div>Your labs & tests will be deleted if you choose</div>
+        <div>to continue.</div>
+      </div>
+      <div class="btn-container">
+        <button class="btn btn-primary keep-btn" data-dismiss="modal"> NO, KEEP LABS & TESTS </button>
+        <button (click)="deleteResult()" class="btn btn-default delete-btn"> YES, DELETE </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="deleteLab" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+    <div class="modal-content small-modal-content text-center">
+      <div class="proHead">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="title"> Are you sure? </div>
+      </div>
+      <div class="sub-modal-description">
+        <div>Your labs & tests will be deleted if you choose</div>
+          <div>to continue.</div>
+        </div>
+        <div class="btn-container">
+          <button class="btn btn-primary keep-btn" data-dismiss="modal"> NO, KEEP LABS & TESTS </button>
+          <button (click)="deleteLab()" class="btn btn-default delete-btn"> YES, DELETE </button>
+        </div>
+      </div>
+  </div>
+</div>
+

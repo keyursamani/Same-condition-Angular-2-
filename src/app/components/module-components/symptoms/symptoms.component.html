@@ -1,0 +1,797 @@
+<div class="row">
+  <div class="col-md-9">
+    <div class="symptomps_tab_info">
+        <h3 class="symptoms_head">My Symptoms</h3>
+        <div class="sub-description">This section contains details of my treatments and medications: current and the past.</div>
+        <div class="hideModal">
+          <h5> You have not added any symptoms to your profile. </h5>
+          <h5> Click the button below to get started </h5>
+          <button class="btn btn-primary"> ADD NEW SYMPTOM </button>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="symptoms_drowpdown inline_block">
+              <label>Sort by</label>
+              <select class="form-control" [(ngModel)]="sortBy"  (ngModelChange)="sortBysymptom($event)">
+                <option value="newest_to_oldest"> Date-Newest to oldest</option>
+                <option value="oldest_to_newest">Date-Oldest to newest</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-9">
+            <div class="symptoms_add inline_block margT15">
+              <button class="btn" *ngIf="symptomStatus =='current'" (click)="updateSymptomsOpen()" [disabled]="symptomIsTracklist.length ==0&&symptomStatus =='current'">update all symptoms</button>
+              <button class="btn" *ngIf="symptomStatus =='stop'" [disabled]='true'>update all symptoms</button>
+              <button class="btn margL10" (click)="addSymptomsOpen()">add new symptom</button>
+            </div>
+          </div>
+        </div>
+        <div class="symptomps_detail">
+          <!--<div class="symptomps_detail">-->
+            <div class="tab_bar " [ngClass]="{'activeClass':symptomStatus=='current'}" (click)="filterSymptom('current');">SYMPTOMS I’M CURRENTLY TRACKING </div>
+            <div class="tab_bar" [ngClass]="{'activeClass':symptomStatus!='current'}" (click)="filterSymptom('stop');"> SYMPTOMS I’VE STOPPED TRACKING </div>
+
+          <!--<div >-->
+          <!--<ul class="nav nav-pills">
+            <li class="active"><a data-toggle="pill" href="#current">SYMPTOMS I’M CURRENTLY TRACKING</a></li>
+            <li><a data-toggle="pill" href="#stopped">SYMPTOMS I’VE STOPPED TRACKING</a></li>
+          </ul>-->
+          <div class="tab-content">
+            <div *ngIf="symptomStatus=='current'"  >
+
+                <table class="symptoms_detail_table" width="100%">
+                  <thead>
+                    <tr>
+                      <th width="12%"># of entries</th>
+                      <th width="18%">Symptoms</th>
+                      <th width="21%">Related Conditions</th>
+                      <th width="24%">Date of First Encounter</th>
+                      <th width="12%">&nbsp;</th>
+                    </tr>
+                  </thead>
+                </table>
+                <div  infinite-scroll [infiniteScrollDistance]="0.8" [infiniteScrollThrottle]="1300" (scrolled)="onScrollDownsIsTrack()">
+                  <div class="treatment_collapse" *ngFor="let symptomIstrack of symptomIsTracklist; let i=index; ">
+                    <div class="collapse_section  display_block_inline"  [ngClass]="{'activate':symptomIstrack.show==true}" >
+                      <div class="row symptomsRow">
+                        <div style="width: 15%;" class="col-md-3 removePadding">
+                          <strong>{{i+1}}</strong>
+                        </div>
+                        <div style="width: 22%;"  class="col-md-3 removePadding">
+                          <strong>{{symptomIstrack.symptom_name.name}}</strong>
+                        </div>
+                        <div style="width: 25%;"  class="col-md-3 removePadding">
+                          <!--{{symptomIstrack.my_symptom_condition.first_notice_date}}-->
+                          <strong *ngIf="symptomIstrack.my_symptom_condition_available==true && symptomIstrack.my_symptom_condition[0].releted_condition_charts[0]!=null">
+                            {{symptomIstrack.my_symptom_condition[0].releted_condition_charts[0].name}}
+                           </strong>
+                           <strong *ngIf="symptomIstrack.my_symptom_condition_available==true && symptomIstrack.my_symptom_condition[0].releted_condition_charts[0]==null">
+                              I DON'T KNOW
+                             </strong>
+                        </div>
+                        <div style="width: 24%;" class="col-md-3 removePadding">
+                           <strong *ngIf="symptomIstrack.my_symptom_condition_available==true && symptomIstrack.my_symptom_condition[0] != undefined" >{{symptomIstrack.my_symptom_condition[0].first_notice_date | date : "MMMM dd, y"}}</strong>
+                        </div>
+                        <div class="col-md-3 removePadding rowWidth1 textAligned">
+                          <span (click)="deleteSymptomsOpen(symptomIstrack)">
+                            <img *ngIf="symptomIstrack.show!=true" src="assets/modules/img/recycle.png" title="Delete">
+                            <img *ngIf="symptomIstrack.show==true" src="assets/modules/img/recycleWhite.png" title="Delete">
+                          </span>
+
+                        <span class="margL20">
+                          <button  class="clearDropDownbtn" (click)="accordiansymptomIsTrack(symptomIstrack);">
+                              <!-- <i *ngIf="symptomIstrack.show==true" (click)="accordiansymptomIsTrack(symptomIstrack);" class="fa fa-caret-down fs-20"></i>
+                              <i *ngIf="symptomIstrack.show!=true" class="fa fa-caret-right activeColor fs-20" (click)="accordiansymptomIsTrack(symptomIstrack);"></i> -->
+                          <i  *ngIf="symptomIstrack.show==true" class="fa fa-caret-down fs-20"></i>
+                          <i  *ngIf="symptomIstrack.show!=true" class="fa fa-caret-right fs-20 activeColor"></i>
+                        </button>
+                        </span>
+                        </div>
+                      </div>
+                    </div>
+                    <table style="width:100%" *ngIf="symptomIstrack.show==true">
+                    <div class="collapseInside">
+                      <div class="symptoms_basics">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="symptoms_tags_first inline_block">
+                              <label class="block_display" style="margin: 0;">Tag  treatments you take for Mood Swings</label><br/>
+                              <div >
+                                <div>
+                                  <div class="symptomLabel" *ngFor="let item of symptomIstrack.my_symptom_treatments;let i=index;" >
+                                      {{item.treatment_name.name}}
+                                      <button class="symptomremoveIcon" (click)="removeTreatmentProfile(item.my_symptom_id,item.treatment_id);"> <i class="fa fa-times "></i> </button>
+                                  </div>
+                                  <button style="margin: 0;" (click)="moodSwingOpen(symptomIstrack.id,'treatment')"><i class="fa fa-plus"></i></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="symptoms_tags_second inline_block">
+                              <label class="block_display" style="margin: 0;">Tag treatments you gave for Mood Swings</label><br/>
+                              <div >
+                                  <div>
+                                    <div class="symptomLabel" *ngFor="let item of symptomIstrack.my_symptom_treatment_side_effects;let i=index;" >
+                                        {{item.treatment_name.name}}
+                                        <button class="symptomremoveIcon" (click)="removeSideeffectTreatment(item.my_symptom_id,item.treatment_id);"> <i class="fa fa-times "></i> </button>
+                                    </div>
+                                    <button style="margin: 0" (click)="moodSwingOpen(symptomIstrack.id,'sideeffect')"><i class="fa fa-plus"></i></button>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="start_tracking">
+                          <label for="" class="block_display">Have you stopped experiencing this symptom?</label><br/>
+                          <button (click)="stopTrackingConfirm(symptomIstrack.id,'stop')">STOP TRACKING</button>
+                        </div>
+                      </div>
+                      <div class="symptoms_status_table">
+                        <div class="symptomps_calender">
+                            <div class="row">
+                              <div class="col-md-8"></div>
+                              <div class="col-md-4">
+                                <div class="calendarField">
+                                   <ng-datepicker class="form-control selctPicker" [(ngModel)]="birthDate"
+                                   [options]="options"
+                                   (ngModelChange)="get_symptoms_tracklist_by_date()"
+                                   style="margin-top: 0px;"></ng-datepicker>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row"style="text-align: -webkit-center" >
+                              <div class="tableSec sympCalendar" *ngIf="my_symptom_severities.length>0">
+                                <i class="fa fa-caret-left ceretsPosition" (click)="previousDate()" ></i>
+                                <div class="tableCalendar" style="width: 92.5%;padding:0px" >
+                                  <section style="width:1000px;text-align: left;">
+                                    <div class="col1" *ngFor="let severe of my_symptom_severities" style="background: white" >
+                                      <div class="col1Up" style="background: white" > {{displayDay(severe.severity_date)}} <br/> {{displayDate(severe.severity_date)}}<br/> {{displayYear(severe.severity_date)}}</div>
+
+                                      <hr style="margin-bottom: 13px;margin-top:0px" *ngIf="severe.severity=='none'" >
+
+                                      <hr style="margin-bottom: 13px;margin-top:0px " *ngIf="severe.severity=='mild'" >
+
+                                      <hr style="margin-bottom: 13px;margin-top:0px" *ngIf="severe.severity=='moderate'" >
+
+                                      <hr style="margin-bottom: 13px;margin-top:0px" *ngIf="severe.severity=='severe'" >
+
+                                      <hr  *ngIf="severe.severity==''" style="margin-bottom: 10px;margin-top:0px" >
+
+                                      <div style="background: white;margin-bottom: 10px">
+
+                                        <button class="symptompsBtn btnNone noCursor"    *ngIf="severe.severity=='none'">  </button>
+
+                                        <button class="symptompsBtn btnLiteGreen noCursor"  *ngIf="severe.severity=='mild'"> MILD </button>
+
+                                        <button class="symptompsBtn btnLiteGreen neutral noCursor" *ngIf="severe.severity=='moderate'"> MODERATE </button>
+
+                                        <button class="symptompsBtn btnLiteGreen doc_red noCursor" *ngIf="severe.severity=='severe'"> SEVERE </button>
+
+                                        <button class="symptompsBtn   doc_none" style="background: transparent !important; color: #6373AE !important; font-size: 20px; " *ngIf="severe.severity==''" (click)="add_severity_confirm(severe.severity_date)"> + </button>
+
+                                      </div>
+                                    </div>
+
+                                  </section>
+                                </div>
+                                <i class="fa fa-caret-right ceretsPosition" (click)="nextDate()" ></i>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="tableSec">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th class="text_bold">Date</th>
+                                <th class="text_bold">Status</th>
+                                <th class="text_bold">Visible To</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody *ngIf="my_symptom_severities.length>0">
+                              <tr *ngFor="let severities of my_symptom_severities; let k = index;">
+                                <td *ngIf="severities.id > 0"> {{severities.severity_date}}</td>
+                                <td *ngIf="severities.is_visible==false && severities.id > 0">
+                                    <button class="symptompsBtn btnLiteGreen noCursor"  *ngIf="severities.severity=='mild'"> MILD </button>
+                                    <button class="symptompsBtn btnLiteGreen neutral noCursor" *ngIf="severities.severity=='moderate'"> MODERATE </button>
+                                    <button class="symptompsBtn btnLiteGreen doc_red noCursor" *ngIf="severities.severity=='severe'"> SEVERE </button>
+                                </td>
+
+                                <td *ngIf="severities.is_visible==true && severities.id > 0">
+                                  <select [(ngModel)]="severities.severity">
+                                    <option value="">--select sevirity--</option>
+                                    <option value="none">NONE</option>
+                                    <option value="mild">MILD</option>
+                                    <option value="moderate">MODERATE</option>
+                                    <option value="severe">SEVERE</option>
+                                  </select>
+                                </td>
+
+                                <td *ngIf="severities.id > 0">
+                                  <select class="form-control"
+                                  [(ngModel)]="severities.visibility"
+                                  (ngModelChange)="sevirity_edit_visibility($event, severities.my_symptom_id,severities.id)">
+                                    <option value="all_users"> All Users</option>
+                                    <option value="only_me">Only Me</option>
+                                    <option value="followers">followers</option>
+                                  </select>
+                                </td>
+
+                                <td *ngIf="severities.is_visible==false && severities.id > 0">
+                                  <button title="Delete" (click)="remove_symptoms_sevirity_confirm(severities.my_symptom_id,severities.id)"> <img src="assets/modules/img/recycle.png"> </button>
+                                  <button title="Edit" (click)="setSevirity(severities)"> <img src="assets/modules/img/edit_1.png"> </button>
+                                </td>
+
+                                <td *ngIf="severities.is_visible==true && severities.id > 0">
+                                  <button title="Save"
+                                  (click)="update_sevirity(severities.my_symptom_id,severities.id, severities.severity)"> SAVE </button>
+                                  <button title="Cancel"
+                                  (click)="severities.is_visible=false"> CANCEL </button>
+                                </td>
+                              </tr>
+                            </tbody>
+                            <tbody *ngIf="my_symptom_severities.length==0">
+                              <tr>
+                                <td>#</td>
+                                <td>#</td>
+                                <td>#</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                      </div>
+                    </div>
+                    </table>
+                  </div>
+                </div>
+            </div>
+
+            <div  *ngIf="symptomStatus!='current'"  >
+                <table class="symptoms_detail_table" width="100%">
+                  <thead>
+                    <tr>
+                      <th width="12%"># of entries</th>
+                      <th width="18%">Symptoms</th>
+                      <th width="21%">Related Conditions</th>
+                      <th width="24%">Date of First Encounter</th>
+                      <th width="12%">&nbsp;</th>
+                    </tr>
+                  </thead>
+                </table>
+                <div infinite-scroll [infiniteScrollDistance]="0.8" [infiniteScrollThrottle]="1300" (scrolled)="onScrollDownsUnTrack()">
+                  <div class="treatment_collapse"  *ngFor="let symptomUntrack of symptomUnTracklist; let i=index">
+                    <div class="collapse_section  display_block_inline" [ngClass]="{'activate':symptomUntrack.show==true}" >
+                      <div class="row symptomsRow">
+                        <div  style="width: 15%;"  class="col-md-3 removePadding">
+                          <strong>{{i+1}}</strong>
+                        </div>
+                        <div style="width: 20%;"  class="col-md-3 removePadding">
+                          <strong>{{symptomUntrack.symptom_name.name}}</strong>
+                        </div>
+
+                        <div style="width: 28%;"  class="col-md-3 removePadding">
+                          <strong *ngIf="symptomUntrack.my_symptom_condition_available==true && symptomUntrack.my_symptom_condition[0].releted_condition_charts[0]!=null">{{symptomUntrack.my_symptom_condition[0].releted_condition_charts[0].name}}</strong>
+                          <strong *ngIf="symptomUntrack.my_symptom_condition_available!=true || symptomUntrack.my_symptom_condition[0].releted_condition_charts[0]==null">I DON'T KNOW</strong>
+                        </div>
+                        <div style="width: 24%;"  class="col-md-3 removePadding">
+                          <strong *ngIf="symptomUntrack.my_symptom_condition_available==true" >{{symptomUntrack.my_symptom_condition[0].first_notice_date | date : "MMMM dd, y"}}</strong>
+                        </div>
+                        <div class="col-md-3 removePadding rowWidth1 textAligned">
+                          <span class="margL20">
+                            <span (click)="deleteSymptomsOpen(symptomUntrack)">
+                                <img title="Delete" *ngIf="symptomUntrack.show!=true" src="assets/modules/img/recycle.png">
+                                <img title="Delete" *ngIf="symptomUntrack.show==true" src="assets/modules/img/recycleWhite.png">
+                              </span>
+                              <button  class="clearDropDownbtn" (click)="accordiansymptomUnTrack(symptomUntrack);">
+                              <i  *ngIf="symptomUntrack.show==true" class="fa fa-caret-down fs-20"></i>
+                              <i  *ngIf="symptomUntrack.show!=true" class="fa fa-caret-right fs-20 activeColor"></i>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="collapseInside"  *ngIf="symptomUntrack.show==true">
+                      <div class="symptoms_basics">
+                         <div class="row">
+                          <div class="col-md-6">
+                            <div class="symptoms_tags_first inline_block">
+                              <label class="block_display">Tag treatments you take for Mood Swings</label><br/>
+                              <div >
+                                <div>
+                                  <div class="symptomLabel" *ngFor="let item of symptomUntrack.my_symptom_treatments;let i=index;" >
+                                      {{item.treatment_name.name}}
+                                      <button class="symptomremoveIcon" (click)="removeTreatmentProfile(item.my_symptom_id,item.treatment_id);"> <i class="fa fa-times "></i> </button>
+                                  </div>
+                                  <button style="margin: 0;" (click)="moodSwingOpen(symptomUntrack.id,'treatment')"><i class="fa fa-plus"></i></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="symptoms_tags_second inline_block">
+                              <label class="block_display">Tag treatments you gave for Mood Swings</label><br/>
+                              <div >
+                                  <div>
+                                    <div class="symptomLabel" *ngFor="let item of symptomUntrack.my_symptom_treatment_side_effects;let i=index;" >
+                                        {{item.treatment_name.name}}
+                                        <button class="symptomremoveIcon" (click)="removeSideeffectTreatment(item.my_symptom_id,item.treatment_id);"> <i class="fa fa-times "></i> </button>
+                                    </div>
+                                    <button style="margin: 0;" (click)="moodSwingOpen(symptomUntrack.id,'sideeffect')"><i class="fa fa-plus"></i></button>
+                                  </div>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="start_tracking">
+                          <label for="" class="block_display">Have you started experiencing this symptom again?</label><br/>
+                          <button (click)="stopTrackingConfirm(symptomUntrack.id, 'start')">START TRACKING</button>
+                        </div>
+                      </div>
+                      <div class="symptoms_status_table">
+                        <div class="symptomps_calender">
+                            <div class="row">
+                              <div class="col-md-8"></div>
+                              <div class="col-md-4">
+                                <div class="calendarField">
+                                  <!-- <input type="text" class="form-control" [(ngModel)]="severity_date" disabled="disabled">
+                                  <img src="assets/modules/img/calendar.PNG"> -->
+                                  <ng-datepicker class="form-control selctPicker" [(ngModel)]="birthDate"
+                                   [options]="options"
+                                   (ngModelChange)="get_symptoms_tracklist_by_date()"
+                                   style="margin-top: 0px;"></ng-datepicker>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="tableSec sympCalendar" *ngIf="my_symptom_severities.length>0">
+                                <i class="fa fa-caret-left ceretsPosition"></i>
+                                <div class="tableCalendar"  >
+                                  <section style="width:1000px;text-align: left;">
+                                    <div class="col1" *ngFor="let severe of my_symptom_severities">
+                                      <div class="col1Up"> {{displayDay(severe.severity_date)}} <br/> {{displayDate(severe.severity_date)}} <br/>
+                                      {{displayYear(severe.severity_date)}}</div>
+                                      <hr>
+                                      <div>
+                                        <button class="symptompsBtn btnNone noCursor"  *ngIf="severe.severity=='none'">  </button>
+                                        <button class="symptompsBtn  btnLiteGreen noCursor"  *ngIf="severe.severity=='mild'"> MILD </button>
+                                       <button class="symptompsBtn  btnLiteGreen neutral noCursor" *ngIf="severe.severity=='moderate'"> MODERATE </button>
+                                       <button class="symptompsBtn  btnLiteGreen doc_red noCursor" *ngIf="severe.severity=='severe'"> SEVERE </button>
+                                       <button class="symptompsBtn  btnLiteGreen doc_none" style="background: transparent !important; color: #6373AE !important; font-size: 20px; "*ngIf="severe.severity==''" (click)="add_severity_confirm(severe.severity_date)"> + </button>
+
+                                      </div>
+                                    </div>
+
+                                  </section>
+                                </div>
+                                <i class="fa fa-caret-right ceretsPosition"></i>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="tableSec">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th class="text_bold">Date</th>
+                                <th class="text_bold">Status</th>
+                                <th class="text_bold">Visible To</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let severities of my_symptom_severities" >
+                                <td *ngIf="severities.id>0"> {{severities.severity_date}} </td>
+                                <td *ngIf="severities.is_visible==false && severities.id>0">
+
+                                    <button class="symptompsBtn btnLiteGreen noCursor"  *ngIf="severities.severity=='mild'"> MILD </button>
+                                    <button class="symptompsBtn btnLiteGreen neutral noCursor" *ngIf="severities.severity=='moderate'"> MODERATE </button>
+                                    <button class="symptompsBtn btnLiteGreen doc_red noCursor" *ngIf="severities.severity=='severe'"> SEVERE </button>
+                                </td>
+
+                                <td *ngIf="severities.is_visible==true && severities.id>0">
+                                  <select [(ngModel)]="severities.severity">
+                                    <option value="">--select sevirity--</option>
+                                    <option value="none">NONE</option>
+                                    <option value="mild">MILD</option>
+                                    <option value="moderate">MODERATE</option>
+                                    <option value="severe">SEVERE</option>
+                                  </select>
+                                </td>
+
+                                <td *ngIf="severities.id>0">
+                                  <select class="form-control"
+                                  [(ngModel)]="severities.visibility"
+                                  (ngModelChange)="sevirity_edit_visibility($event, severities.my_symptom_id,severities.id)" >
+                                    <option value="all_users"> All Users</option>
+                                    <option value="only_me">Only Me</option>
+                                    <option value="followers">followers</option>
+                                  </select>
+                                </td>
+                                <td *ngIf="severities.is_visible==false && severities.id>0">
+                                  <button title="Delete" (click)="remove_symptoms_sevirity_confirm(severities.my_symptom_id,severities.id)"> <img src="assets/modules/img/recycle.png"> </button>
+                                  <!-- <button title="Edit" (click)="setSevirity(severities)"> <img src="assets/modules/img/edit_1.png"> </button> -->
+                                </td>
+                                <!-- <td *ngIf="severities.is_visible==true && severities.id>0">
+                                  <button title="Save"
+                                  (click)="update_sevirity(severities.my_symptom_id,severities.id, severities.severity)"> SAVE </button>
+                                  <button title="Cancel"
+                                  (click)="severities.is_visible=false"> CANCEL </button>
+                                </td> -->
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+  </div>
+  <div class="col-md-3">
+    <div class="advertis_sec">
+        <div class="add_two">
+          <img src="assets/modules/img/270x540.jpg">
+        </div>
+      </div>
+  </div>
+</div>
+
+<div id="deleteSymptomsOpen" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox delete-confirm-modal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="confirm-title"> Are you sure? </h3>
+            </div>
+            <div class="proBody" >
+              <p class="confirm-description"> {{selected_symptom}} will be permanently deleted from your profile if you choose to continue. </p>
+            </div>
+            <br>
+            <div class="footModal confirm-footer" style="padding: 0px 0px 30px 0px !important;">
+              <button class="btn btn-primary" data-dismiss="modal" style="width: 170px;"> NO, CANCEL </button>
+              <button class="btn btn-default" (click)="deleteSymptom();" style="width: 100px;"> YES, DELETE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="moodSwingModel" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox proSmallModal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="alignRight"> Tag Treatments </h3>
+            </div>
+            <div class="proBody" >
+              <p *ngIf="selectedAddoption == 'treatment'">Tag treatment you take for your Mood Swings </p>
+              <p *ngIf="selectedAddoption == 'sideeffect'"> Tag treatment you gave for Mood Swings </p>
+              <div class="symptomsField">
+                <input type="text" class="form-control" [(ngModel)]="treatmentSearchname" (ngModelChange)="searchTreatment($event)">
+                <i class="fa fa-hashtag"></i>
+                <i class="fa fa-times" (click)="clearTreatment();"></i>
+                <div class="fs-12 text_red" *ngIf="formValidation == true && treatmentInfo =='' ">Treatment cannot be blank.</div>
+              </div>
+                <div class="suggestions input-custom"  *ngIf="treatmentList.length > 0 && searchtTreatmentString==true">
+                    <div class="pointer" *ngFor="let item of treatmentList" (click)="selectTreatment(item)" >
+                        <p >{{item.name}}</p>
+                    </div>
+                </div>
+                <div  class="alignRight margintop10"  *ngIf="treatmentList.length ==0 && searchtTreatmentString==true">
+                    <div class=" form-control input-custom">
+                      <b> No Results</b>
+                    </div>
+                </div>
+
+            </div>
+            <div class="footModal">
+               <button *ngIf="selectedAddoption=='treatment'"  class="btn btn-primary" (click)="tagTreatmentProfile()"> Add to profile </button>
+              <button *ngIf="selectedAddoption=='sideeffect'"  class="btn btn-primary" (click)="tagSideeffectProfile()"> Add to profile </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="updateAllSymptoms" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3> <img src="assets/modules/img/create_file.png"> Update my Symptoms </h3>
+            </div>
+            <div class="proBody" >
+              <section>
+
+                <p class="alignRight"  *ngIf="symptomStatus=='current'"> <span *ngIf="symptomIsTracklist.length>0" > {{updateSymptomCount+1}}</span> <span *ngIf="symptomIsTracklist.length==0" > {{updateSymptomCount}}</span>  of {{symptomIsTracklist.length}} </p>
+                <p class="alignRight"  *ngIf="symptomStatus!='current'"> <span *ngIf="symptomUnTracklist.length>0" > {{updateSymptomCount+1}}</span> <span *ngIf="symptomUnTracklist.length==0" > {{updateSymptomCount}}</span>  of {{symptomUnTracklist.length}} </p>
+
+                <div class="gray_table">
+
+                  <!-- <h6 *ngIf="symptomIsTracklist.length>0 && symptomStatus=='current'"> How would you rate the severity of your {{symptomIsTracklist[updateSymptomCount].symptom_name.name}}? </h6>
+
+
+                  <h6 *ngIf="symptomUnTracklist.length>0 && symptomStatus!='current'"> How would you rate the severity of your {{symptomUnTracklist[updateSymptomCount].symptom_name.name}}? </h6> -->
+
+                  <h6 *ngIf="symptomIsTracklist.length>0 && symptomStatus=='current'"> How would you rate the severity of your {{symptom_name}}? </h6>
+
+                  <h6 *ngIf="symptomUnTracklist.length>0 && symptomStatus!='current'"> How would you rate the severity of your {{symptom_name}}? </h6>
+
+                   <div class="inline_block">
+                      <button [ngClass]="{'active': selectedupdateSeverity=='none'}"   (click)="selectUpdateSeverity('none');">NONE</button>
+                      <button [ngClass]="{'active': selectedupdateSeverity=='mild'}"   (click)="selectUpdateSeverity('mild');">MILD</button>
+                      <button [ngClass]="{'active': selectedupdateSeverity=='moderate'}" (click)="selectUpdateSeverity('moderate');">MODERATE</button>
+                      <button [ngClass]="{'active': selectedupdateSeverity=='severe'}"   (click)="selectUpdateSeverity('severe');">SEVERE</button>
+                    </div>
+                    <div class="fs-12 text_red" *ngIf="formValidation == true && chooseSevirity ==''">Please select rate of severity.</div>
+                  <div class="checkbox">
+                    <label class="square_radio">
+                      <input type="checkbox" name="currenttreat1"
+                      class="customRadio"
+                      [value]="false"
+                      [(ngModel)]="stopSymptomTracking" >
+                      <span class="checkbox-detail">I WANT TO STOP TRACKING THIS SYMPTOM</span>
+                    </label>
+                  </div>
+                </div>
+              </section>
+            </div>
+            <div class="footModal textAligned updateSymptoms">
+              <button  class="btn btn-save-next" (click)="updateSelectSymptoms(true)" *ngIf="symptomIsTracklist.length != updateSymptomCount+1"> SAVE, NEXT </button>
+              <button  class="btn btn-save-next" (click)="updateSelectSymptoms(false)" *ngIf="symptomIsTracklist.length == updateSymptomCount+1"> SAVE, FINISH </button>
+              <button class="btn btn-default" data-dismiss="modal"> CANCEL </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="addAllSymptoms" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" aria-label="Close" (click)="addSymptomsClosed()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3> <img src="assets/modules/img/create_file.png"> Add new Symptom to profile <span *ngIf="is_next_step"> <span  class="asteriskcolor pull-left">*</span><span style="margin-left: -5px;">Indicates required fields</span></span>  </h3>
+            </div>
+            <div class="proBody" >
+              <section id="addStepOne" style="display: block;">
+                <div class="gray_table">
+                  <h6> Search for Symptom to add to your profile </h6>
+                  <input type="text" class="form-control input-custom"
+                  placeholder="Search for Symptom name"
+                  [(ngModel)]="SymptomsSearchname"
+                  (ngModelChange)="searchSymptoms($event)">
+                   <div class="fs-12 text_red" *ngIf="formValidation == true && selectSymptomsInfo =='' ">Symptoms cannot be blank.</div>
+                    <div class="suggestions input-custom"  *ngIf="symptomsList.length > 0 && searchtSymptomsString==true">
+                        <div class="pointer" *ngFor="let item of symptomsList" (click)="selectSymptoms(item)" >
+                            <p >{{item.name}}</p>
+                        </div>
+                    </div>
+                    <div  class="alignRight margintop10"  *ngIf="symptomsList.length ==0 && searchtSymptomsString==true">
+                      <div class=" form-control input-custom">
+                        <b> No Results</b>
+                      </div>
+                      <div class=" form-control input-custom pointer" (click)="addnewSymptomsTwo()()">
+                        <b>  <i class="fa fa-plus"></i>  Click to add an  unlisted Symptom +</b>
+                      </div>
+                    </div>
+                </div>
+                <div class="footModal textAligned updateSymptoms">
+                  <button class="btn btn-save-next" (click)="addSymptomsThree()"> SAVE, NEXT </button>
+                  <button class="btn btn-default" (click)="addSymptomsClosed()"> CANCEL </button>
+                </div>
+              </section>
+              <section id="addStepTwo" style="display: none;">
+                <div class="gray_table">
+                  <h6> My Symptom is not listed, add my Symptom </h6>
+                  <input type="text" [(ngModel)]="newSymptomsName" class="form-control" placeholder="Enter name of Symptom">
+                  <strong (click)="goSymptomsSteptwo()"> BACK TO SEARCH </strong>
+                </div>
+                <div class="footModal textAligned updateSymptoms">
+                  <button id="addSympBtnTwo" style="display: block;" class="btn btn-save-next" (click)="addnewSymptomsTwo()"> SAVE, NEXT </button>
+                  <button class="btn btn-default"  (click)="addSymptomsClosed()"> CANCEL </button>
+                </div>
+              </section>
+              <section id="addStepThree" style="display: none;">
+                <div class="gray_table">
+                  <h6> Which of your Conditions is this symptom related to? </h6>
+                  <select class="form-control input-custom" [(ngModel)]="addsymptomcondition" (ngModelChange)="selectNewCondition($event)">
+                    <option value="" selected="true">--Select Condition--</option>
+                    <option *ngFor="let condition of conditionList" value="{{condition.id}}"> {{condition.name}} </option>
+                  </select>
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && addsymptomcondition =='' && addsymptomDontknow == false">Condition cannot be blank.</div>
+
+                  <div class="checkbox">
+                    <label class="square_radio">
+                      <input type="checkbox" name="currenttreat1" class="customRadio" ng-true-value="true"  ng-false-value="false"  [(ngModel)]="addsymptomDontknow"
+                      (ngModelChange)="clearCondition()" >
+                      <span class="checkbox-detail">I DON'T KNOW</span>
+                    </label>
+                  </div>
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && addsymptomDontknow ==false && addsymptomcondition == ''">Please select i dont know if you have  no condition.</div>
+                </div>
+                <div class="gray_table">
+                  <h6> When did you first notice this symptom? <span  class="asteriskcolor">*</span></h6>
+                <!--   <my-date-picker name="mydate" [options]="myDatePickerOptions"
+                (dateChanged)="onDateChangeddiagnose($event)"  [(ngModel)]="selectedDate" [placeholder]="datePlaceholder" ></my-date-picker> -->
+                <calendar
+                [dateValue]="selectedDate"
+                [isDisplaySaveBtn]="true"
+                [myLeft]="451"
+                (getDate)='onDateChangeddiagnose($event)'></calendar>
+                <br />
+                <div class="fs-12 text_red" *ngIf="formValidation == true && selectedDate ==''">Date cannot be blank.</div>
+                </div>
+                <div class="gray_table">
+                  <h6> How would you rate the severity of your anxiety?<span  class="asteriskcolor">*</span> </h6>
+                  <div class="inline_block">
+                  <button [ngClass]="{'active': selectedsevere=='none'}"  (click)="selectSeverity('none');">NONE</button>
+                  <button [ngClass]="{'active': selectedsevere=='mild'}"  (click)="selectSeverity('mild');">MILD</button>
+                  <button [ngClass]="{'active': selectedsevere=='moderate'}"  (click)="selectSeverity('moderate');">MODERATE</button>
+                  <button [ngClass]="{'active': selectedsevere=='severe'}"  (click)="selectSeverity('severe');">SEVERE</button>
+                   <div class="fs-12 text_red" *ngIf="formValidation == true && selectedsevere ==''">Severity cannot be blank.</div>
+                </div>
+                </div>
+                <div class="footModal textAligned updateSymptoms" style="display: flex;">
+                    <div class="">
+                      <strong class="alignLeft visible-to"> Visible to </strong>
+                    </div>
+                    <div style="width: 265px;">
+                        <select class="form-control select-user-wrapper" [(ngModel)]="visibility" >
+                          <option value="all_users"> All Users</option>
+                          <option value="only_me">Only Me</option>
+                          <option value="followers">followers</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-default" (click)="addSymptomsClosed()"> CANCEL </button>
+                    <button id="addSympBtnThree" style="display: block;" class="btn btn-save-next" (click)="addNewSymptom()"> SAVE, FINISH </button>
+                </div>
+              </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="deleteTreatmentConfirm" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox proSmallModal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" (click)="closeDeleteConfirm()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="alignRight"> Are you sure? </h3>
+            </div>
+            <div class="proBody alignRight">
+              <p> You want to delete ? </p>
+            </div>
+            <div class="footModal QOLfoot">
+              <button (click)="closeDeleteTreatment()" class="btn btn-primary"> NO </button>
+              <button (click)="deleteLab()" class="btn btn-default"> YES </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="stopTrackingConfirm" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="alignRight"> Are you sure? </h3>
+      </div>
+      <div class="proBody alignRight">
+        <p> You want to {{trackingType}} tracking ? </p>
+      </div>
+      <div class="footModal QOLfoot">
+        <button data-dismiss="modal" class="btn btn-primary"> NO </button>
+        <button (click)="stopTracking()" class="btn btn-default"> YES </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="removesymptomssevirityConfirm" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="alignRight"> Are you sure? </h3>
+      </div>
+      <div class="proBody alignRight">
+        <p> You want to remove sevirity ? </p>
+      </div>
+      <div class="footModal QOLfoot">
+        <button data-dismiss="modal" class="btn btn-primary"> NO </button>
+        <button (click)="remove_symptoms_sevirity()" class="btn btn-default"> YES </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="addAdditionalSymptoms" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3> <img src="assets/modules/img/create_file.png"> Add new Mood Swings rating</h3>
+
+            </div>
+            <div class="proBody" >
+
+              <section id="addStepThree">
+
+                <div class="gray_table">
+                  <h6> Select the date this rating applied to did you first notice this symptom? <span  class="asteriskcolor">*</span></h6>
+                  <!-- <my-date-picker name="mydate"
+                    [options]="myDatePickerOptions"
+                    [(ngModel)]="severity_date"
+                    [placeholder]="datePlaceholder"
+                    (dateChanged)="onDateChangeddiagnose($event)">
+                  </my-date-picker> -->
+                  <input type="text" class="form-control" [(ngModel)]="severity_date" disabled="disabled">
+                </div>
+                <div class="gray_table">
+                  <h6> How would you rate the severity of your anxiety?</h6>
+                  <div class="inline_block">
+                  <button [ngClass]="{'active': selectedsevere=='none'}"  (click)="selectSeverity('none');">NONE</button>
+                  <button [ngClass]="{'active': selectedsevere=='mild'}"  (click)="selectSeverity('mild');">MILD</button>
+                  <button [ngClass]="{'active': selectedsevere=='moderate'}"  (click)="selectSeverity('moderate');">MODERATE</button>
+                  <button [ngClass]="{'active': selectedsevere=='severe'}"  (click)="selectSeverity('severe');">SEVERE</button>
+                   <div class="fs-12 text_red" *ngIf="formValidation == true && selectedsevere ==''">Severity cannot be blank.</div>
+                </div>
+                </div>
+                <div class="footModal textAligned updateSymptoms" style="display: flex;">
+                    <div class="">
+                      <strong class="alignLeft visible-to"> Visible to </strong>
+                    </div>
+                    <div style="width: 265px;">
+                        <select class="form-control select-user-wrapper"
+                        [(ngModel)]="visibility" >
+                          <option value="all_users"> All Users</option>
+                          <option value="only_me">Only Me</option>
+                          <option value="followers">followers</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-default" data-dismiss="modal"> CANCEL </button>
+                    <button id="addSympBtnThree" style="display: block;" class="btn btn-save-next" (click)="add_severity()"> SAVE, FINISH </button>
+                </div>
+              </section>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmationModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+      <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" (click)="noHide()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="alignRight"> Are you sure you want to close? </h3>
+          </div>
+          <div class="footModal QOLfoot">
+            <button (click)="noHide()" class="btn btn-primary"> No, Cancel </button>
+            <button (click)="yesdelete()" class="btn btn-default"> Yes, Close </button>
+          </div>
+      </div>
+  </div>
+</div>

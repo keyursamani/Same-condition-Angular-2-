@@ -1,0 +1,52 @@
+.suggestions{
+  background: #fff;
+  height: 175px;
+  overflow: auto;
+  border: 1px solid #d8d8d8;
+  border-radius: 5px;
+  padding-left: 15px;
+}
+
+.hospitalizeLabel{
+    background: #A2C2EC;
+    color: #fff;
+    display: inline-block;
+    border-radius: 5px;
+    position: relative;
+    padding-left: 13px;
+    margin: 2px;
+    font-size: 12px;
+    margin-bottom: 20px;
+    font-family: 'Open Sans Semibold';
+}
+
+.tagremoveIcon{
+    background: #7CA9E4;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 0px 5px 5px 0px;
+    margin-left: 5px;
+}
+
+.tagremoveIcon .fa-times{
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  font-size: 12px;
+}
+
+.pointer{
+  cursor: pointer;
+}
+
+.tag-search{
+  margin-bottom: 10px;
+}
+
+.fs-12{
+  font-size: 12px;
+}
+
+.text_red{
+  color: red;
+}

@@ -1,0 +1,640 @@
+<div class="tab-pane">
+  <div class="condition_sec">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="row bg_color removeMargin">
+          <div class="myCondition">
+            <h2> My Conditions </h2>
+            <div class="sub-description"> This list contains details of my condition with its timeline. </div>
+            <div *ngIf="NoCondition" class="hideModal">
+              <h5> You have not added any condition to your profile. </h5>
+              <h5> Click the button below to get started </h5>
+              <button (click)="addConditionsOpen();" class="btn btn-primary"> ADD NEW CONDITION </button>
+            </div>
+            <div *ngIf="!NoCondition" class="addCondition">
+              <div class="row">
+                <div class="col-md-3">
+                  <h6> I want to see </h6>
+                  <select class="form-control custom-dropdown" [(ngModel)]="conditionfilter" (ngModelChange)="myConditionFilter($event)">
+                      <option value="">All of my conditions</option>
+                    <option *ngFor="let con of myConditionFilterList" value="{{con.id}}">{{con.name}}</option>
+                  </select>
+                </div>
+                <div class="col-md-9">
+                  <button class="btn btn-primary addConditionBtn" (click)="addConditionsOpen()"> ADD NEW CONDITION </button>
+                </div>
+              </div>
+              <div class="search-results" infinite-scroll [infiniteScrollDistance]="0.8" [infiniteScrollThrottle]="1300" (scrolled)="onScrollDown()">
+                <div class="tableSec">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Condition</th>
+                        <th>Date Diagnosed</th>
+                        <th> Date of First Symptom </th>
+                        <th style="padding-left: 9px;">Visible To</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let mycondition of showMycondition">
+                        <td class="pointer text-color" [routerLink] = "['/global/community-condition-detail', mycondition.condition_name.id]">{{mycondition.condition_name.name}}</td>
+                        <td class="text-color"> <span  class="no-cursor" *ngIf="mycondition.my_conditions_journey">{{(mycondition.my_conditions_journey.diagnosis_date | amDateFormat:'MMMM Do, YYYY') || 'I have not been diagnosed yet'}} </span>
+                        </td>
+                        <td class="text-color">
+                          <span class="no-cursor" *ngIf="mycondition.my_conditions_journey"> {{(mycondition.my_conditions_journey.date_of_first_symptom | amDateFormat:'MMMM Do, YYYY') || 'I didn t notice any'}} </span>
+                        </td>
+                        <td class="text-color">
+                          <select
+                          class="form-control addConditionSelect"
+                          id="select_visibility_{{mycondition.id}}"
+                          (change)="conditionVisibility($event.target.value,mycondition.my_conditions_journey.my_condition_id);">
+                            <option value="all_users">All users</option>
+                            <option value="followers">Followers</option>
+                            <option value="only_me">Only Me</option>
+                          </select>
+                        </td>
+                        <td class="text-color">
+                          <img class="img-delete" (click)="deleteConditionOpen(mycondition)" src="assets/modules/img/recycle.png">
+                          <button (click)="EditConditionsnew(mycondition)" title="Edit"> <img src="assets/modules/img/edit_1.png"></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="NoConditionTimeLine" class="row">
+          <div class="condition_timeline">
+            <div class="timeline_heading">
+              <h3> My Conditions Timeline </h3>
+            </div>
+            <div class="timeContent">
+              <div class="timeline">
+
+                <div *ngFor="let timelineCon of showMyconditiontimeline;let i = index">
+
+                  <!--DATE OF FIRST SYMPTOMS-->
+
+                  <div class="containered right" >
+                    <div class="content">
+
+                      <div class="storyHead">
+                        <h4> {{timelineCon.my_conditions_journey.date_of_first_symptom | amDateFormat:'MMMM Do, YYYY'}} </h4>
+                      </div>
+
+                      <div class="storyBody">
+
+                        <div class="storyLines">
+                          <p> {{userProfile.first_name}} first notice symptoms relating to <b class="pointer" [routerLink] = "['/global/community-condition-detail', timelineCon.my_conditions_journey.condition_name.id]">{{timelineCon.my_conditions_journey.condition_name.name}}</b></p>
+                        </div>
+
+
+                        <div class="storyLines" *ngIf="timelineCon.my_conditions_journey.my_conditions_journey_experiences.length>0">
+
+                          <div class="row" *ngFor="let experience of timelineCon.my_conditions_journey.my_conditions_journey_experiences">
+
+                            <div *ngIf="experience.experience_key == 'date_of_first_symptom'">
+
+                            <div class="col-md-8">
+                              <p>What can others learn from your experience?</p>
+                            </div>
+                            <div class="col-md-4 textAligned" *ngIf="experience.open!=true">
+                              <button class="btn btn-default"
+                              (click)="goStoryConditionEdit(experience);dummy_data=experience.experience"> EDIT STORY </button>
+                            </div>
+                            <div class="col-md-4 textAligned" *ngIf="experience.open==true" style="font-weight: bold; font-size: 12px;">
+                              {{dummy_data.length}} / 300
+                            </div>
+                            <div class="col-md-12" *ngIf="experience.open!=true">
+                              <h5 style="word-break: break-all;"> {{experience.experience}} </h5>
+                            </div>
+
+                            <section *ngIf="experience.open==true">
+                              <div class="col-md-12">
+                                <textarea rows="5" maxlength="300" style="overflow-y: scroll" placeholder="Description" [(ngModel)]="dummy_data"></textarea>
+                                <div class="bioEditBtn">
+                                  <button class="btn btn-default" (click)="goStoryConditionEdit(experience);formValidation=false;dummy_data='';"> Cancel </button>
+                                  <button (click)="updateStoryCondition(experience,timelineCon.my_conditions_journey.my_condition_id);experience.experience=dummy_data" class="btn btn-primary"> Save </button>
+                                </div>
+                                <div class="fs-12 text_red" *ngIf="formValidation == true && experience.experience =='' ">Experience cannot be blank.</div>
+                              </div>
+                            </section>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="storyLines" *ngIf="timelineCon.my_conditions_journey.my_conditions_journey_experiences.length==0">
+                          <div class="row">
+                            <div class="col-md-8">
+                              <p>What can others learn from your experience?</p>
+                            </div>
+                            <div class="col-md-4 textAligned" *ngIf=!set_new_experience>
+                              <button class="btn btn-primary" (click)="openNewExperience('date_of_first_symptom_', i)">ADD STORY
+                              </button>
+                            </div>
+                            <div class="col-md-4 textAligned" *ngIf=set_new_experience style= "font-weight: bold; font-size: 12px;">
+                              {{addNewExperience.length}} / 300
+                            </div>
+                            <section id="date_of_first_symptom_{{i}}" style="display: none;">
+                              <div class="col-md-12">
+                                <textarea rows="5" maxlength="300" style="overflow-y: scroll" placeholder="Description" [(ngModel)]="addNewExperience"></textarea>
+                                <div class="bioEditBtn">
+                                  <button class="btn btn-default" (click)="closeNewExperience('date_of_first_symptom_', i)">Cancel</button>
+                                  <button class="btn btn-primary" (click)="addStoryCondition('date_of_first_symptom',timelineCon.my_conditions_journey.my_condition_id)">Save</button>
+                                </div>
+                                <div class="fs-12 text_red" *ngIf="formValidation == true && addNewExperience =='' ">Experience cannot be blank.</div>
+                              </div>
+                            </section>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="storyFoot">
+                        <div class="row">
+                          <div class="col-md-2 padd_remove">
+                            <label> Visible to </label>
+                          </div>
+                          <div class="col-md-4 removePadding">
+
+                          <select
+                            id="symptoms_{{timelineCon.my_conditions_journey.id}}"
+                            class="form-control"
+                            (change)="conditionVisibility($event.target.value,timelineCon.my_conditions_journey.my_condition_id);">
+                              <option value="all_users">All users</option>
+                              <option value="followers">Followers</option>
+                              <option value="only_me">Only Me</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--DATE OF DIAGNOSTIC-->
+                  <!--RMS: please take care before doing anything with this because its too much complicated-->
+
+
+                  <div class="containered right" *ngIf="timelineCon.my_conditions_journey.diagnosis_date">
+                    <div class="content">
+
+                      <div class="storyHead">
+                        <h4> {{timelineCon.my_conditions_journey.diagnosis_date | amDateFormat:'MMMM Do, YYYY'}} </h4>
+                      </div>
+
+                      <div class="storyBody">
+
+                        <div class="storyLines">
+                          <p> {{userProfile.first_name}} was diagnosed with <b> {{timelineCon.my_conditions_journey.condition_name.name}} </b> by {{timelineCon.my_conditions_journey.healthcare_provider_diagnosed}}</p>
+                        </div>
+
+                        <div class="storyLines" *ngIf="timelineCon.my_conditions_journey.my_conditions_journey_experiences?.length > 1 && timelineCon.my_conditions_journey.my_conditions_journey_experiences[1].experience_key != 'date_of_first_symptom'">
+
+                          <div class="row" *ngFor="let experience of timelineCon.my_conditions_journey.my_conditions_journey_experiences">
+
+                          <div *ngIf="experience.experience_key == 'diagnosis_date'">
+
+                            <div class="col-md-8">
+                              <p>What can others learn from your experience?</p>
+                            </div>
+                            <div class="col-md-4 textAligned">
+                              <button class="btn btn-default"
+                              (click)="goStoryConditionEdit(experience)"> EDIT STORY </button>
+                            </div>
+                            <div class="col-md-12" *ngIf="experience.open!=true">
+                              <h5> {{experience.experience}} </h5>
+                            </div>
+
+                            <section *ngIf="experience.open==true">
+                              <div class="col-md-12">
+                                <textarea rows="5" maxlength="300" style="overflow-y: scroll" placeholder="Description" [(ngModel)]="experience.experience"></textarea>
+                                <div class="bioEditBtn">
+                                  <button class="btn btn-default" (click)="goStoryConditionEdit(experience)"> Cancel </button>
+                                  <button (click)="updateStoryCondition(experience,timelineCon.my_conditions_journey.my_condition_id)" class="btn btn-primary"> Save </button>
+                                </div>
+                              </div>
+                            </section>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="storyLines" *ngIf="timelineCon.my_conditions_journey.my_conditions_journey_experiences?.length > 0 && timelineCon.my_conditions_journey.my_conditions_journey_experiences[0].experience_key != 'date_of_first_symptom'">
+
+                          <div class="row" *ngFor="let experience of timelineCon.my_conditions_journey.my_conditions_journey_experiences">
+
+                          <div *ngIf="experience.experience_key == 'diagnosis_date'">
+
+                            <div class="col-md-8">
+                              <p>What can others learn from your experience?</p>
+                            </div>
+                            <div class="col-md-4 textAligned">
+                              <button class="btn btn-default"
+                              (click)="goStoryConditionEdit(experience)"> EDIT STORY </button>
+                            </div>
+                            <div class="col-md-12" *ngIf="experience.open!=true">
+                              <h5> {{experience.experience}} </h5>
+                            </div>
+
+                            <section *ngIf="experience.open==true">
+                              <div class="col-md-12">
+                                <textarea rows="5" placeholder="Description" maxlength="300" style="overflow-y: scroll" [(ngModel)]="experience.experience"></textarea>
+                                <div class="bioEditBtn">
+                                  <button class="btn btn-default" (click)="goStoryConditionEdit(experience)"> Cancel </button>
+                                  <button (click)="updateStoryCondition(experience,timelineCon.my_conditions_journey.my_condition_id)" class="btn btn-primary"> Save </button>
+                                </div>
+                              </div>
+                            </section>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="storyLines" *ngIf="timelineCon.my_conditions_journey.my_conditions_journey_experiences?.length == 1 && timelineCon.my_conditions_journey.my_conditions_journey_experiences[0].experience_key == 'date_of_first_symptom'">
+
+                          <div class="row">
+                            <div class="col-md-8">
+                              <p>What can others learn from your experience?</p>
+                            </div>
+                            <div class="col-md-4 textAligned">
+                              <button class="btn btn-primary" (click)="openNewExperience('diagnosis_date_', i)">ADD STORY
+                              </button>
+                            </div>
+                            <section id="diagnosis_date_{{i}}" style="display: none;">
+                              <div class="col-md-12">
+                                <textarea rows="5" placeholder="Description" maxlength="300" style="overflow-y: scroll" [(ngModel)]="addNewExperience"></textarea>
+                                <div class="bioEditBtn">
+                                  <button class="btn btn-default" (click)="closeNewExperience('diagnosis_date_', i)">Cancel</button>
+                                  <button class="btn btn-primary" (click)="addStoryCondition('diagnosis_date',timelineCon.my_conditions_journey.my_condition_id)">Save</button>
+                                </div>
+                                <div class="fs-12 text_red" *ngIf="formValidation == true && addNewExperience =='' ">Experience cannot be blank.</div>
+                              </div>
+                            </section>
+                          </div>
+                        </div>
+
+                        <div class="storyLines" *ngIf="timelineCon.my_conditions_journey.my_conditions_journey_experiences?.length==0">
+
+                          <div class="row">
+                            <div class="col-md-8">
+                              <p>What can others learn from your experience?</p>
+                            </div>
+                            <div class="col-md-4 textAligned">
+                              <button class="btn btn-primary" (click)="openNewExperience('diagnosis_date_', i)">ADD STORY
+                              </button>
+                            </div>
+                            <section id="diagnosis_date_{{i}}" style="display: none;">
+                              <div class="col-md-12">
+                                <textarea rows="5" maxlength="300" style="overflow-y: scroll" placeholder="Description" [(ngModel)]="addNewExperience"></textarea>
+                                <div class="bioEditBtn">
+                                  <button class="btn btn-default" (click)="closeNewExperience('diagnosis_date_', i)">Cancel</button>
+                                  <button class="btn btn-primary" (click)="addStoryCondition('diagnosis_date',timelineCon.my_conditions_journey.my_condition_id)">Save</button>
+                                </div>
+                                <div class="fs-12 text_red" *ngIf="formValidation == true && addNewExperience =='' ">Experience cannot be blank.</div>
+                              </div>
+                            </section>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="storyFoot">
+                        <div class="row">
+                          <div class="col-md-2 padd_remove">
+                            <label> Visible to </label>
+                          </div>
+                          <div class="col-md-4 removePadding">
+
+                            <select
+                            id="diagnostic_{{timelineCon.my_conditions_journey.id}}"
+                            class="form-control"
+                            (change)="conditionVisibility(timelineCon.my_conditions_journey.visibility,timelineCon.my_conditions_journey.my_condition_id);">
+                              <option value="all_users">All users</option>
+                              <option value="followers">Followers</option>
+                              <option value="only_me">Only Me</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="advertis_sec">
+          <div class="add_two">
+            <img src="assets/modules/img/270x540.jpg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="deleteConditionModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        <h3 class="alignRight"> Are you sure? </h3>
+      </div>
+      <div class="proBody" *ngIf="deleteConditionInfo!=''">
+        <p> {{deleteConditionInfo.condition_name.name}} will be deleted from your profile if you choose to continue. </p>
+      </div>
+      <div class="footModal">
+        <button class="btn btn-primary btn-keep-post" data-dismiss="modal"> NO, KEEP EDITING </button>
+        <button class="btn btn-default btn-delete" (click)="deleteMycondition();"> YES, DELETE </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="addConditionModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" (click)="addConditionsClosed()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 *ngIf="!editMyconditionStatus"> <img src="assets/modules/img/ico/condition1.png"> Add New Condition to Profile <span *ngIf="blank=='true'" style="color:red;"> Please enter a condition name to continue </span> </h3>
+      </div>
+      <section id="searchCondition" style="display:block;">
+        <div class="conditionBody">
+          <div class="gray_table">
+            <h6 class="condition_txt_color"> Search for condition to
+              <span *ngIf="!editMyconditionStatus">add</span>
+              <span *ngIf="editMyconditionStatus">edit</span> to your profile </h6>
+            <input *ngIf="!editMyconditionStatus" [(ngModel)]="searchConditionString" (ngModelChange)="searchMycondition($event)" type="text" [ngClass]="{'borderRed' :blank=='true'}" class="form-control" placeholder="Search for a Condition name">
+            <input *ngIf="editMyconditionStatus" disabled  [(ngModel)]="searchConditionString" (ngModelChange)="searchMycondition($event)" type="text" class="form-control" placeholder="Search for a Condition name">
+            <div class="suggestions " *ngIf="searchConditionList.length > 0 && searchString==false">
+              <div class="pointer" *ngFor="let item of searchConditionList"
+              (click)="selectMycondition(item)">
+                <p>{{item.name}}</p>
+              </div>
+            </div>
+            <div class="margintop10" *ngIf="searchConditionList.length ==0 && searchList==true">
+              <div class="form-control topRadius">
+                <b class="condition_txt_color"> NO RESULTS </b>
+              </div>
+              <div class="form-control bottomRadius pointer" (click)="goAddConditionManually()">
+                <b class="condition_txt_color"> <i class="fa fa-plus"></i> Click to add an  unlisted condition </b>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footModal textAligned">
+          <button (click)="addConditionsClosed()" class="btn btn-default"> FINISH LATER </button>
+          <button class="btn btn-primary" (click)="conditionStep1Open()">
+            <span *ngIf="!editMyconditionStatus">ADD DETAILS NOW</span>
+            <span *ngIf="editMyconditionStatus">EDIT DETAILS NOW</span>
+          </button>
+        </div>
+      </section>
+      <section id="enterNameCondition" style="display:none;">
+        <div class="conditionBody">
+          <div class="gray_table">
+            <h6> My condition is not listed, add my condition </h6>
+            <input type="text" [(ngModel)]="addNewcondition" class="form-control" placeholder="Enter name of Condition">
+            <div class="fs-12 text_red" *ngIf="formValidation == true && addNewcondition =='' ">Condition name cannot be blank.</div>
+            <strong (click)="goSearchAddCondition()" class="pointer"> BACK TO SEARCH </strong>
+          </div>
+        </div>
+        <div class="footModal textAligned">
+          <button (click)="addConditionsClosed()" class="btn btn-default"> FINISH LATER </button>
+          <button class="btn btn-primary" (click)="addMynewCondition()">
+            <span *ngIf="!editMyconditionStatus">ADD DETAILS NOW</span>
+            <span *ngIf="editMyconditionStatus">EDIT DETAILS NOW</span>
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div id="conditionStep1Modal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox">
+    <div class="modal-content minHeight">
+      <div class="proHead">
+        <button type="button" class="close" (click)="conditionStep1Closed()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+
+        <h3 *ngIf="!editMyconditionStatus"> <img src="assets/modules/img/ico/condition1.png"> Add {{searchConditionString}} to your Profile <span> <span class="starLeft">*</span> Indicates required fields </span> </h3>
+        <h3 *ngIf="editMyconditionStatus"> <img src="assets/modules/img/ico/condition1.png"> Edit {{searchConditionString}} to your Profile <span> <span class="starLeft">*</span> Indicates required fields </span> </h3>
+      </div>
+      <div class="proBody">
+        <div class="stepImg">
+          <img src="assets/modules/img/step1.png" style="width: 100%;">
+        </div>
+        <div class="gray_table grayMargin">
+          <h6> What was the date of your first symptom?<span class="asteriskcolor"> *</span> </h6>
+
+          <div class="inputLabel">
+            <calendar [dateValue]="symptoms_date1"
+            [isDisplaySaveBtn]="true"
+            (getDate)='onDateChanged($event)'></calendar>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && symptoms_date1 =='' && didnotNotice == false ">Symptoms date cannot be blank.</div>
+          </div>
+          <div class="inputLabel"></div>
+          <div class="checkbox" style="position: inherit;">
+            <label class="square_radio">
+              <input type="checkbox" name="currenttreat1" class="customRadio" [value]="true" [(ngModel)]="didnotNotice"
+              (ngModelChange)="clear_date()">
+              <span class="checkbox-detail">I didn't notice any</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="footModal textAligned">
+        <button (click)="conditionStep1ClosedFL()" class="btn btn-default"> FINISH LATER </button>
+        <button class="btn btn-primary btn-save-next" style="width:30%;" (click)="conditionStep2Open()"> SAVE, NEXT </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="conditionStep2Modal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" (click)="conditionStep2Closed()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        <h3 *ngIf="!editMyconditionStatus"> <img src="assets/modules/img/ico/condition1.png"> Add {{searchConditionString}} to your Profile <span><span class="starLeft">*</span> Indicates required fields </span> </h3>
+        <h3 *ngIf="editMyconditionStatus"> <img src="assets/modules/img/ico/condition1.png"> Edit {{searchConditionString}} to your Profile <span><span class="starLeft">*</span> Indicates required fields </span> </h3>
+      </div>
+      <section id="diagnosed_yes" style="display:block;">
+        <div class="proBody">
+          <div class="stepImg">
+            <img src="assets/modules/img/step2.png" style="width: 100%;">
+          </div>
+          <p class="alignLeft"> Have you been diagnosed by a health care provider with {{searchConditionString}}? <span class="asteriskcolor"> *</span></p>
+          <div class="checkedSection">
+            <div class="radio">
+              <label class="square_radio">
+                <input type="radio" name="diagnose" [value]="true" [ngModel]="been_diagnosed" (ngModelChange)="updateDiagnoseSelection($event)">
+                <span> YES </span>
+              </label>
+            </div>
+            <div class="radio">
+              <label class="square_radio">
+                <input type="radio" name="diagnose" [value]="false" [(ngModel)]="been_diagnosed"  (ngModelChange)="updateDiagnoseSelection($event)">
+                <span> I HAVEN'T BEEN DIAGNOSED, BUT I THINK I HAVE IT </span>
+              </label>
+            </div>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && been_diagnosed ==undefined ">Please select any one option.</div>
+
+          </div>
+          <div *ngIf="been_diagnosed">
+          <div class="gray_table grayMargin">
+            <h6> What type of health care provider diagnosed with your {{searchConditionString}}?<span class="asteriskcolor">*</span> </h6>
+            <input type="text" class="form-control" [(ngModel)]="diagnosedDescription" placeholder="Enter the type of healthcare provider that diagnosed you">
+            <div class="fs-12 text_red" *ngIf="formValidation == true && diagnosedDescription =='' ">Please enter the type of health care provider that diagnosed you.</div>
+          </div>
+          <div class="gray_table grayMargin">
+            <h6> When were you first diagnosed with {{searchConditionString}}? <span class="asteriskcolor"> *</span></h6>
+            <div class="inputLabel">
+              <calendar [dateValue]="diagnosis_date2"
+              [isDisplaySaveBtn]="true"
+              [myLeft]="435"
+              (getDate)='onDateChangeddiagnose($event)'></calendar>
+              <div class="fs-12 text_red" *ngIf="formValidation == true && diagnosis_date2 =='' ">Diagnosed date cannot be blank.</div>
+            </div>
+
+          </div>
+          <div class="gray_table grayMargin">
+            <h6> How many healthcare providers did you see before you got a diagnosis? <span class="asteriskcolor">*</span></h6>
+            <div class="row">
+                <div class="col-md-4 padd_remove" style="margin-left: 10px;">
+                  <input type="text" min="1" class="form-control" placeholder="Enter Number"
+                  maxlength="3" minlength="1"
+                  [(ngModel)]="symptoms_manyprovider"
+                  (keypress)="checkNumber($event)">
+                </div>
+                <div class="col-md-6 radio" style="margin-top: 5px;">
+                  <label class="square_radio">
+                    <input type="checkbox" [(ngModel)]="is_symptoms_manyprovider" (ngModelChange)="symptoms_manyprovider = ''">
+                    <span> NONE</span>
+                  </label>
+                </div>
+            </div>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && symptoms_manyprovider =='' && !is_symptoms_manyprovider ">Please enter how many healthcare providers or select none.</div>
+          </div>
+          <p class="alignLeft"> Did You get a second opinion on your diagnosis? <span class="asteriskcolor"> *</span></p>
+          <div class="checkedSection">
+            <div class="radio">
+              <label class="square_radio">
+                <input type="radio" ng-control="options"  [value]="'true'"
+                (ngModelChange)="onSelectionChange('true')"
+                [(ngModel)]="symptoms_second_opinion">
+                <span> YES </span>
+              </label>
+
+            </div>
+            <div class="radio">
+              <label class="square_radio">
+                <input type="radio" ng-control="options"
+                [value]="'false'"
+                (ngModelChange)="onSelectionChange('false')"
+                [(ngModel)]="symptoms_second_opinion">
+                <span> NO </span>
+              </label>
+            </div>
+            <div class="radio">
+              <label class="square_radio">
+                <input type="radio" ng-control="options"
+                [value]="'dontknow'"
+                [(ngModel)]="symptoms_second_opinion"
+                (ngModelChange)="onSelectionChange('dontknow')">
+                <span> I DON'T KNOW </span>
+              </label>
+            </div>
+            <div class="fs-12 text_red" *ngIf="formValidation == true && symptoms_second_opinion ==undefined ">Please select any one option from second opinion on your diagnosis.</div>
+          </div>
+          </div>
+
+        </div>
+        <div class="footModal textAligned">
+          <button (click)="conditionStep2ClosedFL()" class="btn btn-default"> FINISH LATER </button>
+          <button class="btn btn-primary" style="width:30%;" (click)="conditionStep4Open()"> SAVE, NEXT </button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div id="conditionStep3Modal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox">
+    <div class="modal-content">
+      <div class="proHead">
+        <button type="button" class="close" (click)="conditionStep3Close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 *ngIf="editMyconditionStatus"> <img src="assets/modules/img/ico/condition1.png"> Edit {{searchConditionString}} to your Profile <span> <span class="starLeft">*</span> Indicates required fields </span> </h3>
+        <h3 *ngIf="!editMyconditionStatus"> <img src="assets/modules/img/ico/condition1.png"> Add {{searchConditionString}} to your Profile <span> <span class="starLeft">*</span> Indicates required fields </span> </h3>
+      </div>
+      <div class="proBody">
+        <div class="stepImg">
+          <img src="assets/modules/img/step3.png" style="width: 100%;">
+        </div>
+        <p class="alignLeft"> Have any of your biologicial parents, siblings, or children ever had this disease? <span class="asteriskcolor"> *</span>  </p>
+        <div class="checkedSection">
+          <div class="radio">
+            <label class="square_radio">
+              <input type="radio" name="disease" [value]="'true'" (ngModelChange)="onSelectionChange1('true')" [(ngModel)]="had_this_disease">
+              <span> YES </span>
+            </label>
+          </div>
+          <div class="radio">
+            <label class="square_radio">
+              <input type="radio" name="disease" [value]="'false'" (ngModelChange)="onSelectionChange1('false')" [(ngModel)]="had_this_disease">
+              <span> NO </span>
+            </label>
+          </div>
+          <div class="radio">
+            <label class="square_radio">
+              <input type="radio" name="disease" [value]="'dontknow'" (ngModelChange)="onSelectionChange1('')" [(ngModel)]="had_this_disease">
+              <span> I DON'T KNOW </span>
+            </label>
+            <div>
+              <div class="fs-12 text_red" *ngIf="formValidationoption == true">Please select any one option.</div>
+            </div>
+          </div>
+          <div class="footModal textAligned">
+            <button (click)="conditionStep3CloseFL()" class="btn btn-default"> FINISH LATER </button>
+            <button class="btn btn-primary" style="width:30%;" (click)="conditionStep3Closed()"> SAVE, NEXT </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="confirmationModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+  <div class="modalBox proSmallModal">
+      <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close spcl_class_close" (click)="noHide(conformationOf)" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="alignRight"> Are you sure you want to close? </h3>
+          </div>
+          <div class="footModal QOLfoot">
+            <button (click)="noHide(conformationOf)" class="btn btn-primary"> No, Cancel </button>
+            <button (click)="yesdelete(conformationOf)" class="btn btn-default"> Yes, Close </button>
+          </div>
+      </div>
+  </div>
+</div>

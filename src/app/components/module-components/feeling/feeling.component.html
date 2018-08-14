@@ -1,0 +1,282 @@
+<div class="tab-pane">
+  <div class="condition_sec">
+    <div class="row">
+
+      <div class="col-md-9">
+        <div class="row bg_color removeMargin">
+          <div class="myCondition">
+            <h2> My Feelings </h2>
+            <div class="sub-description"> Based upon the feelings, here is a snap shot of my emotional status for the day. </div>
+            <div *ngIf="Nofeeling" class="hideModal">
+                <h5> You have not added any feeling to your profile. </h5>
+                <h5> Click the button below to get started </h5>
+                <button (click)="addFeelingOpen()" class="btn btn-primary"> ADD NEW FEELING </button>
+            </div>
+
+            <div  class="addCondition">
+              <div class="row" *ngIf="!Nofeeling" >
+                <div class="col-md-3">
+                  <h6> I want to see </h6>
+                  <select class="form-control" [(ngModel)]="feelingFilter"  (ngModelChange)="feelfilter($event)">
+                    <option value="3_months">Last 3 months</option>
+                    <option value="6_months">Last 6 months</option>
+                    <option value="1_year">Last 1 year</option>
+                    <option value="2_years">Last 2 year</option>
+                    <option value="everything">Since Joining</option>
+                  </select>
+                </div>
+                <div class="col-md-9 alignRight">
+                  <button class="btn btn-primary" (click)="addFeelingOpen()"> CREATE NEW FEELINGS POST </button>
+                  <button class="btn btn-primary" [routerLink]="['/global/settings']"> SET EMAIL REMINDERS </button>
+                </div>
+              </div>
+              <!-- <canvas baseChart
+              style="height: 200px;width:100%;background:rgba(128, 128, 128, 0)"
+              [colors]="lineChartColors"
+              [data]="lineChartData"
+              [labels]="lineChartLabels"
+              [options]="options"
+              [chartType]="lineChartType"></canvas> -->
+              <div id="chartdiv" [style.display]="Nofeeling == false ? 'block' : 'none'"></div>
+              <div class="search-results">
+                <div class="tableSec">
+                  <table class="table margT-20">
+                    <thead class="table-head">
+                      <tr>
+                        <th>Date</th>
+                        <th>Feelings</th>
+                        <th>Reason you felt this way</th>
+                        <th>Visible To</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let feel of feelingList; let i = index;" >
+                        <td> {{feel.created_at | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}}</td>
+                        <td>
+                          <button class="feel_btn doc_blue noCursor" *ngIf="feel.feeling=='very_good'" > VERY GOOD </button>
+                          <button class="feel_btn doc_orange noCursor" *ngIf="feel.feeling=='bad'">  BAD </button>
+                          <button class="feel_btn doc_red noCursor" *ngIf="feel.feeling=='very_bad'">VERY BAD</button>
+                          <button class="feel_btn light_yellow noCursor" *ngIf="feel.feeling=='neutral'"> NEUTRAL </button>
+                          <button class="feel_btn doc_yellow noCursor" *ngIf="feel.feeling=='good'"> GOOD </button>
+
+
+                        </td>
+                        <td id="td_viewMore_{{i}}">{{displayText(feel.description)}}
+                          <a id="viewMore_{{i}}"
+                          *ngIf="feel.description.length>30"
+                          style="color: #4E6484; font-weight: bold;"
+                          (click)="toggleButton(i, true, 'viewMore_')">
+                            View More
+                          </a>
+                        </td>
+                        <td id="td_viewLess_{{i}}" style="display: none;">
+                          {{feel.description}}
+                          <a id="viewLess_{{i}}"
+                            *ngIf="feel.description.length>30"
+                            style="color: #4E6484; font-weight: bold;"
+                            (click)="toggleButton(i, false, 'viewLess_')">View Less
+                          </a>
+                        </td>
+                        <td>
+                          <select class="form-control"
+                          [(ngModel)]="feel.visibility"
+                          (ngModelChange)="setVisibility($event, feel.id)" >
+                            <option value="all_users"> All users </option>
+                            <option value="followers"> Followers </option>
+                            <option value="only_me"> Only Me </option>
+                          </select>
+                        </td>
+                        <td>
+                          <button class="recycledeleteFeelingOpenBtn" (click)="deleteFeelingOpen(feel)"> <img  style="background: #fff;" src="assets/modules/img/recycle.png"> </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="advertis_sec">
+            <div class="add_two">
+              <img src="assets/modules/img/270x540.jpg">
+            </div>
+          </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<div id="deleteFeelingModal" class="modalOverlay">
+    <div class="modalBox delete-confirm-modal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="confirm-title"> Are you sure? </h3>
+            </div>
+            <div class="proBody" *ngIf="deleteConditionInfo!=''" >
+             <p class="confirm-description"> Your "My Feelings" post will be deleted if you choose to continue. </p>
+              <!--<p *ngIf="deleteFeelinginfo.description==''"> Your "My Feelings" post will be deleted if you choose to continue. </p>
+              <p *ngIf="deleteFeelinginfo.description!=''"> Your "{{deleteFeelinginfo.description}}" post will be deleted if you choose to continue. </p>-->
+            </div>
+            <div class="footModal confirm-footer">
+              <button class="btn btn-primary" data-dismiss="modal" style="width: 170px;"> NO, KEEP POST </button>
+              <button class="btn btn-default" style="width: 100px;" (click)="deleteFeeling();"> YES, DELETE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="addFeelingModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox">
+        <div class="modal-content">
+          <div class="proHead">
+            <button type="button" class="close" (click)="addFeelingClosed()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3> <img src="assets/modules/img/ico/condition1.png"> Create New Feelings Entry </h3>
+          </div>
+          <div class="treatmentBody">
+            <p> Select how you are feeling </p>
+            <div class="feelSlider">
+              <div class="buttonOuter" [style.margin-left.%]="selectFeeling">
+                <!--[style.width.px]="selectFeeling"-->
+                <div class="btnWithArrow">
+                  <strong></strong>
+                  <button class="feelSliderBtn">
+                    <span *ngIf="selectFeeling>=0 && selectFeeling<1" > None</span>
+                    <span *ngIf="selectFeeling>=1 && selectFeeling<=20" > Very Bad</span>
+                    <span *ngIf="selectFeeling>20 && selectFeeling<=40" >  Bad</span>
+                    <span *ngIf="selectFeeling>40 && selectFeeling<=60" >  Neutral</span>
+                    <span *ngIf="selectFeeling>60 && selectFeeling<=80" >  Good</span>
+                    <span *ngIf="selectFeeling>80 && selectFeeling<=100" > Very  good</span>
+                  </button>
+                </div>
+              </div>
+              <input [(ngModel)]="selectFeeling" (ngModelChange)="selectMyFeelinglabel($event)"   type="range" min="1" max="100" value="50" class="slider" id="myRange">
+              <div class="fs-12 text_red" *ngIf="formValidation == true && selectFeeling ==0 ">Please  select  how you are feeling.
+              </div>
+            </div>
+
+          <div class="gray_table removeMargin bottomSpace">
+            <div class="inputLabel">
+              <input [(ngModel)]="tagsSearchname" (ngModelChange)="searchTags($event)" type="text" class="form-control" placeholder="TAG A CONDITION, TREATMENT OR SYMPTOM">
+              <i class="fa fa-hashtag pointer"></i>
+              <i (click)="closeprediction()" class="fa fa-times pointer"></i>
+            </div>
+            <!-- <div class="fs-12 text_red" *ngIf="formValidation == true && feelingTagList.length <=0 ">Tags cannot be blank.</div> -->
+
+            <div *ngIf="showSuggest">
+              <div class="suggestions "  *ngIf="searchTagList.length > 0 && searchtTagString==true">
+                <div class="pointer" *ngFor="let item of searchTagList" (click)="selectFeelingTag(item)" >
+                  <p >{{item.name}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div *ngIf="feelingTagList.length > 0">
+              <div class="hospitalizeLabel" *ngFor="let item of feelingTagList;let i=index;" >
+                  {{item.name}}
+                  <button class="tagremoveIcon" (click)="removeFeelingTag(i);"> <i class="fa fa-times "></i> </button>
+              </div>
+            </div>
+          <p> Enter reasons why you feeling this way (optional) </p>
+          <textarea rows="3" placeholder="Add reasons..." [(ngModel)]="feelingreason" ></textarea>
+
+          <div class="tagFriend">
+              <label class="btn btn-primary camra" for="upload-file-selector">
+                  <input id="upload-file-selector" type="file" (change)="selectChangeImage($event);">
+                  <img src="assets/modules/img/camera.png">
+              </label>
+              <div *ngIf="!showserabar" (click)="showTagssearch()" class="tagfriendbtn pointer"> TAG A FRIEND </div>
+          </div>
+
+          <div *ngIf="selectedFile.length > 0">
+            <div class="hospitalizeLabel" *ngFor="let item of selectedFile;let i=index;" >
+                {{item.name}}
+                <button class="tagremoveIcon" (click)="removeAttachment(i);"> <i class="fa fa-times "></i> </button>
+            </div>
+          </div>
+
+          <div class="hideField" *ngIf="showserabar">
+            <div class="tagFriend tagInput">
+              <div class="inputLabel">
+                <input [(ngModel)]="tagsFriendname" (ngModelChange)="searchTagfriend($event)"  type="text" class="form-control" placeholder="Who do you want to tag?">
+                <i (click)="showbutton()" class="fa fa-times"></i>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="friendTagList.length > 0">
+            <div class="hospitalizeLabel" *ngFor="let item of friendTagList;let i=index;" >
+                {{item.first_name}} {{item.last_name}}
+                <button class="tagremoveIcon" (click)="removeFriendTag(i);"> <i class="fa fa-times "></i> </button>
+            </div>
+          </div>
+
+          <div *ngIf="showserabar">
+            <div class="suggestions "  *ngIf="searchFriendTagList.length > 0 && searchtFriendTagString==true">
+                <div class="pointer" *ngFor="let item of searchFriendTagList" (click)="addFriendTag(item)" >
+                    <p>
+                      <img style="background: #3f638c" *ngIf="item.photo_url==''" src="assets/modules/img/profile.png">
+                      <img *ngIf="item.photo_url!=''" src="{{item.photo_url}}">
+                      {{item.first_name}} {{item.last_name}}
+                    </p>
+                </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="footModal textAligned">
+          <div class="row">
+            <div class="col-md-6" style="width: 60%;">
+              <div class="col-md-3 removePadding">
+                <strong style="color: #4E6484; font-size: 12px;"> Visible to </strong>
+              </div>
+              <div class="col-md-9 removePadding">
+                <select class="form-control"
+                [(ngModel)]="feelingvisibility">
+                  <option value="all_users"> All users </option>
+                  <option value="followers"> Followers </option>
+                  <option value="only_me"> Only Me </option>
+                </select>
+              </div>
+              <div class="fs-12 text_red" *ngIf="formValidation == true && feelingvisibility =='' ">Visibility cannot be blank.</div>
+            </div>
+            <div class="col-md-6" style="width: 40%;">
+              <button class="btn btn-default borderNone"  (click)="addFeelingClosed();"> CANCEL </button>
+              <button class="btn btn-primary" (click)="addNewFeeling();"> SAVE </button>
+            </div>
+          </div>
+        </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="confirmationModalFeeling" class="modalOverlay">
+    <div class="modalBox proSmallModal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" (click)="noHide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="alignRight"> Are you sure you want to close? </h3>
+            </div>
+            <div class="footModal QOLfoot">
+              <button (click)="noHide()" class="btn btn-primary"> No, Cancel </button>
+              <button (click)="yesdelete()" class="btn btn-default"> Yes, Close </button>
+            </div>
+        </div>
+    </div>
+</div>

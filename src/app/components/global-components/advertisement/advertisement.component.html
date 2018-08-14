@@ -1,0 +1,123 @@
+<div class="middle_section">
+	<div class="container">
+    <br>
+	    <!-- Container section -->
+	    <div class="row">
+	      <!-- Begin col-md-12 -->
+	      <div class="col-md-12">
+
+	        <div class="sc-ua-container">
+
+	          <div class="sc-container-shadow" style="min-height:800px;">
+	            
+	            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#sc_form_modal" (click)="onModalOpen()">Open Request to advertise modal</button>
+	            <!-- Modal -->
+	            <div id="sc_form_modal" class="modal fade dark-blue-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+	              <div class="modal-dialog">
+
+	                <!-- Modal content-->
+	                <div class="modal-content">
+	                  <div class="modal-body">
+	                    <h5>Request to Advertise on SameCondition</h5>
+	                    <p>Let us know what you would like to advertise on SameCondition.<br>A team member will review your request and email you shortly.</p>
+	                    <div class="row">
+	                      <div class="col-md-12">
+	                        <form>
+	                          <div class="row">
+	                            <div class="col-md-6" style="padding-right:5px;">
+	                              <div class="form-group">
+	                                <label for="sc_name">Your Name *</label>
+	                                <input type="text" class="form-control" placeholder="First name" [(ngModel)]="advertisement.first_name" name="first_name">
+	                                <div class="fs-12 text_red" *ngIf="formValidation == true && advertisement.first_name =='' ">First name cannot be blank.</div>
+	                              </div>
+	                            </div>
+	                            <div class="col-md-6" style="padding-left:5px;">
+	                              <div class="form-group">
+	                                <label for="sc_lname">&nbsp;</label>
+	                                <input type="text" class="form-control" placeholder="Last name"  [(ngModel)]="advertisement.last_name" name="last_name">
+	                                <div class="fs-12 text_red" *ngIf="formValidation == true && advertisement.last_name =='' ">Last name cannot be blank.</div>
+	                              </div>
+	                            </div>
+	                          </div>
+	                          <div class="row">
+	                            <div class="col-md-12">
+	                                <div class="form-group">
+	                                  <label for="sc_email">Your Email *</label>
+	                                  <input type="email" class="form-control" placeholder="Enter your email"  [(ngModel)]="advertisement.email" name="email">
+	                                  <div class="fs-12 text_red" *ngIf="formValidation == true && advertisement.email =='' ">Email cannot be blank.</div>
+	                                  <div class="fs-12 text_red" *ngIf="formValidation == true && advertisement.email !='' ">Please provide valid email address.</div>
+	                                </div>
+	                            </div>
+	                          </div>
+	                          <div class="row">
+	                            <div class="col-md-12">
+	                                <div class="form-group">
+	                                  <label for="sc_company">Company or Organization you are advertising for *</label>
+	                                  <input type="text" class="form-control" placeholder="Enter title" 
+	                                  [(ngModel)]="advertisement.business_name" name="business_name">
+	                                  <div class="fs-12 text_red" *ngIf="formValidation == true && advertisement.business_name =='' ">Business name cannot be blank.</div>
+	                                </div>
+	                            </div>
+	                          </div>
+	                          <div class="row">
+	                            <div class="col-md-12">
+	                                <div class="form-group">
+	                                  <label for="sc_dsc">Please enter a detailed description about your advertisement *</label>
+	                                  <textarea placeholder="Enter Description" [(ngModel)]="advertisement.description"
+	                                  name="description" minlength="200"></textarea>
+	                                  <div class="fs-12 text_red" *ngIf="formValidation == true && advertisement.description =='' ">Description cannot be blank.</div>
+	                                  <div class="fs-12 text_red" *ngIf=" advertisement.description !='' && advertisement.description.length < 200">Description cannot be less than 200 character long.</div>
+	                                </div>
+	                            </div>
+	                          </div>
+	                          <div class="row buttons-sc-form">
+	                            <div class="col-md-3" style="padding-right:5px;">
+	                              <button type="button" class="btn btn-default close-sc" data-dismiss="modal">Cancel</button>
+	                            </div>
+	                            <div class="col-md-9" style="padding-left:5=0kiu/+;,6 765xc.x;">
+	                              <button type="submit" class="btn btn-primary" (click)="addAdvertisement()">Submit</button>
+	                            </div>
+	                          </div>              
+	                        </form>
+	                      </div>
+	                    </div>
+	                  </div>
+	                </div>
+	                <!-- End modal content -->
+	              </div>
+	            </div>
+	            <!-- End modal -->
+
+	            <!-- Modal -->
+	            <div id="sc_form_success_modal" class="modal fade dark-blue-modal" role="dialog">
+	              <div class="modal-dialog">
+
+	                <!-- Modal content-->
+	                <div class="modal-content">
+	                  <div class="modal-body text-center">
+	                    <h5>Request Submitted!</h5>
+	                    <p>Your request to advertise has been submited and you will be reviewed by the SameCondition team shortly. You can expect an email response in 3-4 business days.</p>
+	                    <button type="button" class="btn btn-default close-sc" data-dismiss="modal">OK</button>
+	                    <br><br><br>
+	                    <p style="margin-bottom:0;">Question? <a data-dismiss="modal" data-toggle="modal" data-target="#sc_form_modal" 
+	                    (click)="onModalOpen()">Send a message</a> to customer support</p>
+	                  </div>
+	                </div>
+
+	                <!-- End modal content -->
+
+	              </div>
+	            </div>
+
+	            <!-- End modal -->
+
+	          </div>
+	          
+	        </div>
+
+	      </div>
+	      <!-- end col-md-12 -->
+	    </div>
+	    <!-- / Container section -->
+  </div>
+</div>

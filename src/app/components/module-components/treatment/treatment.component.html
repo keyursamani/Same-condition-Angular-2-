@@ -1,0 +1,1956 @@
+<div class="tab-pane">
+   <div class="treatmentSection">
+      <div class="row">
+         <div class="col-md-9">
+            <div>
+               <div class="treatment_tab_info">
+                  <h3 class="treatment_head">My Treatments</h3>
+                  <div class="sub-description">This section contains details of my treatments and medications: current and the past.</div>
+                  <div *ngIf="myTreatmentList.length<=0 && pastTratment==false" class="hideModal">
+                     <h5> You have not added any treatment to your profile. </h5>
+                     <h5> Click the button below to get started </h5>
+                     <button (click)="addTreatmentOpen()" class="btn btn-primary"> ADD NEW TREATMENT </button>
+                  </div>
+                  <div class="treatSelect" *ngIf="myTreatmentList.length>0">
+                     <div class="col-md-4 removePadding">
+                        <div class="treatment_drowpdown inline_block">
+                           <label>I want to see</label>
+                           <select class="form-control" [(ngModel)]="treatmentFilterString" (ngModelChange)="treatmentFilter($event)">
+                           <option value="">All of my treatments</option>
+                           <option value="{{filter.id}}" *ngFor="let filter of myTreatmentFilterList">{{filter.name}}</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-md-8" *ngIf="myTreatmentList.length > 0">
+                        <div class="treatment_add inline_block margT15">
+                           <button class="btn" (click)="addTreatmentOpen()">ADD NEW TREATMENT</button>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="symptomps_detail">
+                     <div class="tabOne "
+                     [ngClass]="{'activeClass':treatmentStatus=='current'}"
+                     (click)="filterTreatment('current');"> CURRENT TREATMENTS
+                  </div>
+                  <div class="tabOne"
+                  [ngClass]="{'activeClass':treatmentStatus=='past'}" (click)="filterTreatment('past');"> PAST TREATMENTS
+               </div>
+               <div>
+                  <div class="search-results" infinite-scroll [infiniteScrollDistance]="0.3" [infiniteScrollThrottle]="1300" (scrolled)="onScrollDown()">
+                  <div class="treatment_accordian margT10">
+                     <table style="width:100%">
+                        <tr class="accordian_header">
+                           <th width="30%" *ngIf="treatmentStatus =='past'">Treatment</th>
+                           <th width="45%" *ngIf="treatmentStatus =='current'">Treatment</th>
+
+                           <th width="45%" *ngIf="treatmentStatus =='current'">Date Started</th>
+
+                           <th width="30%" *ngIf="treatmentStatus =='past'">Date Stopped</th>
+                           <th width="30%" *ngIf="treatmentStatus =='past'">Reason for Stopping</th>
+                           <th width="10%">&nbsp;</th>
+                        </tr>
+                     </table>
+                     <div *ngIf="myTreatmentList.length>0 && pastTratment==false">
+                        <div class="treatment_collapse" *ngFor="let treatment of myTreatmentList;let i=index;">
+                           <div class="collapse_section"
+                              [ngClass]="{'activeDropdown':treatment.show==true}">
+                              <div class="row">
+                                 <div class="col-md-3" style="width: 30%;"
+                                 *ngIf="treatmentStatus =='past'">
+                                    <span class="no-cursor"> {{treatment.treatment_name.name}} <br/> Last updated: {{treatment.updated_at | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}} </span>
+                                 </div>
+
+                                 <div class="col-md-3" style="width: 45%;"
+                                 *ngIf="treatmentStatus =='current'">
+                                    <span class="no-cursor"> {{treatment.treatment_name.name}} <br/> Last updated: {{treatment.updated_at | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}} </span>
+                                 </div>
+
+                                 <div class="col-md-3" style="width: 45%;"
+                                 *ngIf="treatmentStatus =='current'">
+                                    <span class="no-cursor"> {{treatment.treatment_started_at | amLocale:'en' | amDateFormat:'MMMM Do YYYY'| customDate}}</span>
+                                 </div>
+
+                                  <div class="col-md-3" style="width: 30%;" *ngIf="treatmentStatus =='past'">
+                                    <span class="no-cursor"> {{treatment.treatment_stoped_at | amLocale:'en' | amDateFormat:'MMMM Do YYYY'| customDate}}</span>
+                                 </div>
+
+                                  <div class="col-md-3" style="width: 30%;" *ngIf="treatmentStatus =='past'">
+                                    <span class="no-cursor"> {{treatment.why_did_stop}}</span>
+                                 </div>
+
+                                 <div class="col-md-2" style="width: 10%;">
+                                    <div class="col-md-8 padd_remove">
+                                       <button class="clear_button" (click)="deleteTreatmentConfirm(treatment);">
+                                       <img title="Delete" *ngIf="treatment.show!=true" src="assets/modules/img/recycle.png">
+                                       <img title="Delete" *ngIf="treatment.show==true" src="assets/modules/img/recycleWhite.png">
+                                       </button>
+                                    </div>
+                                    <div class="col-md-4 padd_remove">
+                                       <button class="clear_button" (click)="accordianTreatment(treatment);">
+                                       <i *ngIf="treatment.show==true" class="fa fa-caret-down fs-20"></i>
+                                       <i *ngIf="treatment.show!=true" class="fa fa-caret-right activeColor fs-20"></i>
+                                       </button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <table style="width:100%" *ngIf="treatment.show==true">
+                              <tr>
+                                 <td colspan="3" class="nPad">
+                                    <div class="first_blur_block accordian_open">
+                                       <div class="purpose_schedule">
+                                          <div class="row">
+                                             <div class="col-md-6">
+                                                <p class="inline_block" style="font-family: 'Open Sans'" >Purpose <span class="block_display fweight400" style="font-weight: normal; color: #4E6484;" >Tag your purpose for doing this treatment</span></p>
+
+         <div>
+            <div class="hospitalizeLabel" *ngFor="let purpose of treatment.my_treatment_purposes">
+               {{purpose.purpose_name.name}}
+               <button class="tagremoveIcon" (click)="remove_purpose_confirm(treatment.id, purpose.purpose_name.id)">
+                  <i class="fa fa-times"></i>
+               </button>
+            </div>
+            <span class="btn-add" (click)="list_tags_purpose_popup(treatment.id)" >
+                <i class="fa fa-plus"></i>
+            </span>
+         </div>
+
+                                             </div>
+                                             <div class="col-md-6">
+                                                <p class="inline_block"  style="font-family: 'Open Sans'">Current dosage/schedule <span class="block_display fweight400" class="block_display fweight400" style="font-weight: normal; color: #4E6484;">40mg, 2 times per day</span></p>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="removable_tab"></div>
+                                       <div class="treatment_organise" style="margin-top: 30px;">
+                                          <p class="block_display" style="font-family: 'Open Sans'" >Have you stopped this treatment?</p>
+                                          <div class="treat_orge_btns">
+                                             <button class="btn" style="width: 200px;" (click)="start_stop_treatment_popup(treatment.id, 'start', treatment)" *ngIf="treatment.is_current_treatment==true">MOVE TO PAST TREATMENT</button>
+                                             <button class="btn" style="width: 200px;" (click)="move_to_current(treatment.id, 'stop')" *ngIf="treatment.is_current_treatment==false">MOVE TO CURRENT TREATMENT</button>
+
+                                             <div class="fRight">
+                                                <button class="btn" (click)="dosageBtnOpen(treatment)">ADD NEW DOSAGE<span class="spcl_color">/</span>SCHEDULE</button>
+                                                <button class="btn" (click)="evaluationModalOpen(treatment)">CREATE NEW EVALUATION</button>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="padLR30">
+                                       <ul class="nav nav-tabs">
+                                          <li class="active"><a data-toggle="tab" href="#dosages{{i}}">DOSAGES / SCHEDULES</a></li>
+                                          <li><a data-toggle="tab" href="#evaluations{{i}}">EVALUATIONS</a></li>
+                                       </ul>
+                                    </div>
+                                    <div class="tab-content">
+                                       <div id="dosages{{i}}" class="tab-pane fade in active">
+                                          <div class="tableSec">
+                                             <table class="table">
+                                                <thead>
+                                                   <tr class="tr-bold">
+                                                      <th>Updated on</th>
+                                                      <th>Dosage / Schedule</th>
+                                                      <th>Notes</th>
+                                                      <th class="text-center">Visible To</th>
+                                                      <th></th>
+                                                   </tr>
+                                                </thead>
+                                                <tbody>
+                                                   <tr *ngFor="let dosage of treatment.my_treatment_dosages_schedules">
+                                                      <td style="font-weight: normal; font-family: 'Open Sans';" *ngIf="treatmentStatus =='current'"> {{dosage.updated_at | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}} </td>
+
+
+                                                      <td style="font-weight: normal; font-family: 'Open Sans';"
+                                                       *ngIf="treatmentStatus =='past'"> {{dosage.treatment_stoped_at | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}} </td>
+
+
+
+                                                      <td style="font-weight: normal; font-family: 'Open Sans';" *ngIf="treatmentStatus=='current' && treatment.is_current_treatment==true">
+                                                      {{dosage.current_schedule_number}}  {{dosage.current_dosage}} of {{dosage.treatment_brand_name || ''}}
+                                                         <br /> {{dosage.current_dosage_amount}} times {{dosage.current_schedule_frequency}}
+                                                      </td>
+
+                                                      <td style="font-weight: normal; font-family: 'Open Sans';" *ngIf="treatmentStatus=='current' && treatment.is_current_treatment==false">
+                                                      {{dosage.most_recent_schedule_number || 0}}  {{dosage.most_recent_dosage || 'NA'}} of Ablify
+                                                         <br /> {{dosage.most_recent_dosage_amount || 0}} times {{dosage.most_recent_schedule_frequency || 'NA'}}
+                                                      </td>
+
+
+                                                      <td style="font-weight: normal; font-family: 'Open Sans';" *ngIf="treatmentStatus=='past'">
+                                                      Treatment Stopped
+                                                      </td>
+
+                                                      <td style="font-weight: normal;font-family: 'Open Sans';">{{dosage.anything_else}}</td>
+
+                                                      <td style="font-weight: normal;font-family: 'Open Sans';">
+                                                         <select class="form-control select-list"
+                                                         [(ngModel)]="dosage.visibility"
+                                                         (ngModelChange)="edit_visibility_dosage_or_schedule($event, dosage.my_treatment_id, dosage.id)">
+                                                         <option value="all_users"> All Users</option>
+                                                         <option value="only_me">Only Me</option>
+                                                         <option value="followers">followers</option>
+                                                         </select>
+                                                      </td>
+                                                      <td>
+                                                         <button (click)="deleteDosageConfirm(treatment.id,dosage);" title="Delete"> <img src="assets/modules/img/recycle.png"> </button>
+                                                         <button (click)="editEvaluationDosageOpen(dosage);" title="Edit"> <img src="assets/modules/img/edit_1.png"> </button>
+                                                      </td>
+                                                   </tr>
+                                                </tbody>
+                                             </table>
+                                          </div>
+                                       </div>
+                                       <div id="evaluations{{i}}" class="tab-pane fade in">
+                                          <div class="sub_accordian_table">
+                                             <div class="evaluation_inside">
+                                                <div class="evaluationHead">
+                                                   <div class="row">
+                                                      <div class="col-md-7 headWidth1">
+                                                         <strong style="font-family: 'Open Sans'; color: #4E6484;" > Evaluated on
+                                                         </strong>
+                                                      </div>
+                                                      <div class="col-md-5 headWidth2">
+                                                         <strong style="font-family: 'Open Sans'; color: #4E6484;"> Visible To
+                                                         </strong>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div class="evaluationBody" *ngFor="let evaluation of treatment.my_treatment_evaluations;let i=index">
+                                                   <div class="bodyRow">
+                                                      <div class="row rowActive" [ngClass]="{'activeDropdown':evaluation.show==true}">
+                                                         <div class="col-md-7 bodyWidth1">
+                                                            <strong> {{evaluation.evalution_date | amLocale:'en' | amDateFormat:'MMMM Do YYYY' | customDate}}
+                                                            </strong>
+                                                         </div>
+                                                         <div class="col-md-5 bodyWidth2 padd_remove">
+                                                            <div class="col-md-7 padd_remove">
+                                                               <select class="form-control select-list" style="margin: 0;"
+                                                               [(ngModel)]="evaluation.visibility" (ngModelChange)="edit_visibility_evaluation($event,evaluation.my_treatment_id, evaluation.id)">
+                                                               <option value="all_users">All Users
+                                                               </option>
+                                                               <option value="only_me">Only Me
+                                                               </option>
+                                                               <option value="followers">Followers
+                                                               </option>
+                                                               </select>
+                                                            </div>
+                                                            <div class="col-md-5 padd_remove">
+                                                               <div class="col-md-4 padd_remove">
+                                                                  <button class="clear_button" (click)="openEditEvaluation(evaluation);">
+                                                                    <img  *ngIf="evaluation.show==true" src="assets/modules/img/editWhite.png">
+                                                                    <img  *ngIf="evaluation.show!=true" src="assets/modules/img/edit_1.png">
+                                                                  </button>
+                                                               </div>
+                                                               <div class="col-md-4 padd_remove">
+                                                                  <button
+                                                                  title="Delete"
+                                                                  class="clear_button" (click)="deleteEvaluationConfirm(treatment.id,evaluation.id);">
+                                                                  <img *ngIf="evaluation.show!=true" src="assets/modules/img/recycle.png">
+                                                                  <img *ngIf="evaluation.show==true" src="assets/modules/img/recycleWhite.png">
+                                                                  </button>
+                                                               </div>
+                                                               <div class="col-md-4 padd_remove">
+                                                                  <button class="clear_button" (click)="accordianEvaluation(evaluation);">
+                                                                  <i *ngIf="evaluation.show==true" class="fa fa-caret-down fs-20"></i>
+                                                                  <i *ngIf="evaluation.show!=true" class="fa fa-caret-right fs-20 activeColor"></i>
+                                                                  </button>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div class="treatListSec" *ngIf="evaluation.show==true">
+                                                         <div class="sub_accordian_form">
+                                                            <p>1. How would you rate the effectiveness for its purpose?<span class="red_star">*</span></p>
+                                                            <div class="sub_accordian_form_btn_one">
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.effectiveness=='cant_tell'}"> CAN'T TELL</button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.effectiveness=='none'}"> NONE </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.effectiveness=='slight'}"> SLIGHT </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.effectiveness=='moderate'}"> MODERATE </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.effectiveness=='major'}"> MAJOR</button>
+                                                            </div>
+                                                         </div>
+                                                         <div class="sub_accordian_form">
+                                                            <p>2. How would you rate side effects caused by this treatment?<span class="red_star">*</span></p>
+                                                            <div class="sub_accordian_form_btn_two">
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.side_effects=='none'}"> NONE
+                                                               </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.side_effects=='mild'}"> MILD
+                                                               </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.side_effects=='moderate'}"> MODERATE
+                                                               </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.side_effects=='severe'}"> SEVERE
+                                                               </button>
+                                                            </div>
+                                                         </div>
+                                                         <div class="sub_accordian_form">
+                                                            <p>3. How often do you take this treatment?<span class="red_star">*</span></p>
+                                                            <div class="sub_accordian_form_btn_three">
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.adherence=='never'}"> NEVER
+                                                               </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.adherence=='sometimes'}"> SOMETIMES
+                                                               </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.adherence=='usually'}"> USUALLY
+                                                               </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.adherence=='always'}"> ALWAYS </button>
+                                                            </div>
+                                                         </div>
+                                                         <div class="sub_accordian_form">
+                                                            <p>4. How hard is it to do this treatment?<span class="red_star">*</span></p>
+                                                            <div class="sub_accordian_form_btn_four">
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.burden=='not_at_all'}"> NOT AT ALL
+                                                               </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.burden=='a_little'}"> A LITTLE </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.burden=='somewhat'}"> SOMEWHAT </button>
+                                                               <button class="btn " [ngClass]="{'activeButton' :evaluation.burden=='very'}"> VERY
+                                                               </button>
+                                                            </div>
+                                                         </div>
+                                                         <div class="sub_accordian_form">
+                                                            <p>5. Were there any unexpected positive side effects?<span class="red_star">*</span></p>
+                                                            <div><label class="square_radio">
+                                                            <input type="checkbox" name="{{i}}" class="customRadio" [checked]="evaluation.unexpected_positive_effects ==true" [disabled]="true">
+                                                            <span>YES</span>
+                                                            </label></div>
+                                                            <div><label class="square_radio">
+                                                            <input type="checkbox" name="{{i}}" checked class="customRadio" [checked]="evaluation.unexpected_positive_effects ==false" [disabled]="true">
+                                                            <span>NO</span>
+                                                            </label></div>
+                                                         </div>
+                                                         <div class="sub_accordian_form">
+                                                            <p>6. What advice or tips would you give others? (optional)</p>
+                                                            <p>{{evaluation.your_advice_tips}}</p>
+                                                         </div>
+                                                         <div class="sub_accordian_form">
+                                                            <p>7. Add the cost (optional)</p>
+                                                            <p class="block_display direct_value_msg">
+                                                               <span *ngIf="evaluation.cost_currency=='us_dollar'">$</span>
+                                                               <span
+                                                                  *ngIf="evaluation.cost_currency=='inr'">
+                                                               <i class="fa fa-inr"></i>
+                                                               </span> {{evaluation.cost}} / {{evaluation.cost_frequency}}
+                                                            </p>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </td>
+                              </tr>
+                           </table>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="col-md-3">
+   <div class="advertis_sec">
+      <div class="add_one">
+         <img src="assets/modules/img/270x270.jpg">
+      </div>
+      <div class="add_one two">
+         <img src="assets/modules/img/270x540.jpg">
+      </div>
+   </div>
+</div>
+</div>
+
+
+
+<div id="treatmentAddModal" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+                <button type="button" class="close spcl_close" (click)="addTreatmentClosedModel()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 class="label-color"> <img src="assets/modules/img/ico/condition1.png"> Add new Treatment to profile <span style="margin-top: 3px;" class="label-color"> <span class="starLeft">*</span> Indicates required fields </span>  </h3>
+            </div>
+            <section id="treatmentSearchField" style="display:block;">
+                <div class="treatmentBody">
+                    <div class="gray_table grayMargin">
+                        <h6 class="label-color"> Search for treatments to add to your profile </h6>
+                        <input type="text" class="form-control" placeholder="Search treatment" [(ngModel)]="treatmentSearchname" (ngModelChange)="searchTreatment($event)">
+                        <div class="suggestions " *ngIf="treatmentList.length > 0 && searchtTreatmentString==true">
+                            <div class="pointer" *ngFor="let item of treatmentList" (click)="selectTreatment(item)">
+                                <p>{{item.name}}</p>
+                            </div>
+                        </div>
+                        <div class="alignRight margintop10" *ngIf="treatmentList.length ==0 && searchList==true">
+                            <div class=" form-control" style="text-align: left;">
+                                <b class="label-color"> No Results</b>
+                            </div>
+                            <div class=" form-control" style="text-align: left;"
+                            (click)="goTreatmentSearchField()">
+                                <b class="label-color pointer">  <i class="fa fa-plus"></i>  Click to add an  unlisted treatment</b>
+                            </div>
+                     </div>
+                     <div class="fs-12 text_red" *ngIf="formValidation == true && selectTreatmentInfo =='' ">Please select Treatment.</div>
+                    </div>
+                    <p class="label-color"> Does this treatment require a dosage? <span class="starRight">*</span></p>
+                    <div class="checkedSection">
+                        <div class="radio">
+                            <label class="square_radio label-color">
+                                <input type="radio" name="diagnose" [(ngModel)]="requiredDosage" value="true">
+                                <span> YES </span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="square_radio label-color">
+                                <input type="radio" name="diagnose" [(ngModel)]="requiredDosage" value="false">
+                                <span> NO </span>
+                            </label>
+                        </div>
+                         <div class="fs-12 text_red" *ngIf="formValidation == true && requiredDosage =='' ">Please select treatment require a dosage.</div>
+                    </div>
+                </div>
+                <div class="footModal textAligned">
+                    <button class="btn btn-default borderNone" (click)="addTreatmentClosedModel()"> CANCEL </button>
+                    <button class="btn btn-primary" (click)="addTreatmentOurProfile()"> ADD </button>
+                </div>
+            </section>
+            <section id="treatmentTextField" style="display:none;">
+                <div class="treatmentBody">
+                    <div class="gray_table grayMargin">
+                        <h6 class="label-color"> My Treatment is not listed, add my Treatment </h6>
+                        <input [(ngModel)]="newTreatmentname" type="text" class="form-control" placeholder="Enter name of Treatment">
+                        <strong (click)="goTreatmentTextField()" class="label-color"> BACK TO SEARCH </strong>
+                    </div>
+                </div>
+                <div class="footModal textAligned">
+                    <button class="btn btn-default borderNone" (click)="addTreatmentClosedModel()"> CANCEL </button>
+                    <button class="btn btn-primary" (click)="addnewTreatment()"> ADD </button>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div id="treatmentEvaluationModal" class="modalOverlay">
+    <div class="modalBox evaluateModal">
+        <div class="modal-content">
+            <div class="proHead">
+                <button type="button" class="close" (click)="evaluationModalClosed()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3> <img src="assets/modules/img/ico/condition1.png"> Evaluate {{treatmentName}} <span> <span class="starLeft">*</span> Indicates required fields </span> </h3>
+            </div>
+            <div class="treatmentBody">
+                <div class="gray_table grayMargin">
+                    <div class="row">
+                        <div class="col-md-3 padd_remove">
+                            <strong class="alignLeft"> Evaluation date: </strong>
+                        </div>
+                        <div class="col-md-5 padd_remove" style="margin-left: -15px;">
+                            <div class="inputLabel">
+                                 <calendar
+                                    [dateValue]="addEvaluationDate"
+                                    [isDisplaySaveBtn]="true"
+                                    [myLeft]="213"
+                                 (getDate)='onDateChangeddiagnose1($event)'></calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <section class="treatmentBtns">
+                    <p> 1. How would you rate the effectiveness for its purpose?<span class="asteriskcolor">*</span> </p>
+                    <ul class="treatLiWidth">
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addEffectiveness=='cant_tell'}" (click)="selectEffective('cant_tell');"> CAN'T TELL</button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addEffectiveness=='none'}" (click)="selectEffective('none');"> NONE </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addEffectiveness=='slight'}" (click)="selectEffective('slight');"> SLIGHT </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addEffectiveness=='moderate'}" (click)="selectEffective('moderate');"> MODERATE </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addEffectiveness=='major'}" (click)="selectEffective('major');"> MAJOR</button>
+                        </li>
+                    </ul>
+                    <div class="fs-12 text_red" *ngIf="formValidation == true && addEffectiveness =='' ">Please select how would you rate the effectiveness.</div>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 2. How would you rate side effects caused by this treatment? <span class="asteriskcolor">*</span> </p>
+                    <ul>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addSideeffect=='none'}" (click)="selectEffects('none');"> NONE </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addSideeffect=='mild'}" (click)="selectEffects('mild');"> MILD </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addSideeffect=='moderate'}" (click)="selectEffects('moderate');"> MODERATE </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addSideeffect=='severe'}" (click)="selectEffects('severe');"> SEVERE </button>
+                        </li>
+                    </ul>
+                    <div class="fs-12 text_red" *ngIf="formValidation == true && addSideeffect =='' ">Please select how would you rate side effects.</div>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 3. How often do you take this treatment? <span class="asteriskcolor">*</span> </p>
+                    <ul>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addTaketreatment=='never'}" (click)="selectEvaluationTreatment('never');"> NEVER </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addTaketreatment=='sometimes'}" (click)="selectEvaluationTreatment('sometimes');"> SOMETIMES </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addTaketreatment=='usually'}" (click)="selectEvaluationTreatment('usually');"> USUALLY </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addTaketreatment=='always'}" (click)="selectEvaluationTreatment('always');"> ALWAYS </button>
+                        </li>
+                    </ul>
+                     <div class="fs-12 text_red" *ngIf="formValidation == true && addTaketreatment =='' ">Please select how often do you take this treatment.</div>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 4. How hard is to do this treatment? <span class="asteriskcolor">*</span> </p>
+                    <ul>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addHardtreatment=='not_at_all'}" (click)="selectHardTreatment('not_at_all');"> NOT AT ALL </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addHardtreatment=='a_little'}" (click)="selectHardTreatment('a_little');"> A LITTLE </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addHardtreatment=='somewhat'}" (click)="selectHardTreatment('somewhat');"> SOMEWHAT </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :addHardtreatment=='very'}" (click)="selectHardTreatment('very');"> VERY </button>
+                        </li>
+                    </ul>
+                     <div class="fs-12 text_red" *ngIf="formValidation == true && addHardtreatment =='' ">Please select how hard is to do this treatment.</div>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 5. Were there any unexpected positive side effects? <span class="asteriskcolor">*</span></p>
+                    <div class="checkedSection">
+                        <div class="radio">
+                          <label class="square_radio">
+                            <input type="radio"
+                            name="diagnose1"
+                            [value]="true"
+                            [(ngModel)]="adduPositive_effects">
+                            <span> YES </span>
+                          </label>
+                        </div>
+
+                        <div class="radio">
+                          <label class="square_radio">
+                            <input type="radio"
+                            name="diagnose1"
+                            [value]="false"
+                            [(ngModel)]="adduPositive_effects">
+                            <span> NO </span>
+                          </label>
+                        </div>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && adduPositive_effects ==undefined ">Please select any option.</div>
+                     </div>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 6. What advice or tips would you give others? (optional) </p>
+                    <textarea rows="3" placeholder="Add a message..." [(ngModel)]="addYouradvice"></textarea>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 1. Add the cost (optional) </p>
+                    <div style="margin-top: 10px;">
+                        <div class="col-md-4 padd_remove">
+                            <input [(ngModel)]="addCost" type="text" class="form-control" placeholder="Enter Amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        </div>
+                        <div class="col-md-4 padd_remove">
+                            <select class="form-control" [(ngModel)]="addCurrency">
+                                <option value=""> Select Currency </option>
+                                <option value="us_dollar"> US Dollar </option>
+                                <option value="inr"> Indian Rupees </option>
+                            </select>
+                            <div class="fs-12 text_red" *ngIf="formValidation == true && addCost != '' && addCurrency =='' ">Please select currency.</div>
+                        </div>
+                        <div class="col-md-4 padd_remove">
+                            <select class="form-control" [(ngModel)]="addCostFrequency">
+                                <option value="">Weekly</option>
+                                <option value="year">Yearly</option>
+                            </select>
+                           <!--  <div class="fs-12 text_red" *ngIf="formValidation == true && addCost != '' && addCostFrequency =='' ">Please select frequency.</div> -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="footModal textAligned">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-3 removePadding">
+                            <strong> Visible to </strong>
+                        </div>
+                        <div class="col-md-9">
+                            <select class="form-control" [(ngModel)]="addVisibility">
+                                <option value="">All Users</option>
+                                <option value="only_me">Only Me</option>
+                                <option value="followers">Followers</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 textAligned">
+                        <button class="btn btn-default borderNone" (click)="evaluationModalClosed()"> CANCEL </button>
+                        <button class="btn btn-primary" (click)="addEvaluations()"> SAVE </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="moveToCurentModal" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3> <img src="assets/modules/img/ico/condition1.png"> Report Start</h3>
+            </div>
+            <div class="treatmentBody">
+                <div class="gray_table grayMargin">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <strong class="alignLeft"> When did you restart this treatment? </strong>
+                        </div>
+                        <div class="col-md-8">
+                           <div class="row treatStart">
+                              <calendar
+                              [dateValue]="reportTreatmentStopDate"
+                              [isDisplaySaveBtn]="true"
+                              [myLeft]="328"
+                              (getDate)='onDateChangeddiagnose2($event)'>
+                              </calendar>
+                           </div>
+                           <div class="fs-12 text_red" *ngIf="formValidation == true && reportTreatmentStopDate == ''">Start date cannot be blank.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footModal textAligned">
+                <button class="btn btn-default borderNone" data-dismiss="modal"> CANCEL </button>
+                <button class="btn btn-primary" (click)="start_stop_treatment()"> ADD </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="reportStopModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="reportTreatmentStopDate='';reportWhyDidYouStop('',0);why_did_stop_other='';formValidation=false;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3> <img src="assets/modules/img/ico/condition1.png"> Report Stop <span style="margin-left: 300px;"> <span class="starLeft">*</span> Indicates required fields </span> </h3>
+            </div>
+            <div class="treatmentBody">
+                <div class="gray_table grayMargin">
+                    <div class="row" style="display: flex;">
+                        <div class="col-md-4">
+                            <strong class="alignLeft"> When did you stop this treatment? <span  class="asteriskcolor">*</span></strong>
+                        </div>
+                        <div style="padding-left: 0; width: 270px;">
+                           <div class="row">
+                              <calendar
+                              [dateValue]="reportTreatmentStopDate"
+                              [isDisplaySaveBtn]="true"
+                              [myLeft]="290"
+                              (getDate)='onDateChangeddiagnose2($event)'>
+                              </calendar>
+                           </div>
+                           <div class="fs-12 text_red" *ngIf="formValidation == true && reportTreatmentStopDate == ''">Stop date cannot be blank.</div>
+                           <div class="fs-12 text_red" *ngIf="formValidation == true && invalidDateSelection == true">Stop date cannot be ahead than start date.</div>
+                        </div>
+                    </div>
+                </div>
+                <p> Why did you stop this treatment? <strong><span class="asteriskcolor">*</span></strong></p>
+
+                <div class="checkbox padd_remove">
+                  {{why_did_stop_radio}}
+                    <div>
+                        <label class="square_radio removePadding">
+                            <input type="radio" name="addchoice" class="customRadio" value="DIDN'T SEEM TO WORK"
+                            [(ngModel)]="why_did_stop" (ngModelChange)="reportWhyDidYouStop($event,0);">
+                            <span class="take-it">DIDN'T SEEM TO WORK</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="square_radio removePadding">
+                            <input type="radio" name="addchoice" class="customRadio" value="expense"
+                            [(ngModel)]="why_did_stop" (ngModelChange)="reportWhyDidYouStop($event,0);">
+                            <span class="take-it">EXPENSE</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="square_radio removePadding">
+                            <input type="radio" name="addchoice" class="customRadio" value="personal reserch" [(ngModel)]="why_did_stop" (ngModelChange)="reportWhyDidYouStop($event,0);">
+                            <span class="take-it">PERSONAL RESEARCH</span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="square_radio removePadding">
+                            <input type="radio" name="addchoice" class="customRadio" value="side effects to severe" [(ngModel)]="why_did_stop" (ngModelChange)="reportWhyDidYouStop($event,0);">
+                            <span class="take-it"> SIDE EFFECTS TOO SEVERE </span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="square_radio removePadding">
+                            <input type="radio" name="addchoice" class="customRadio" value="course of treatment ended" [(ngModel)]="why_did_stop" (ngModelChange)="reportWhyDidYouStop($event,0);">
+                            <span class="take-it"> COURSE OF TREATMENT ENDED </span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="square_radio removePadding">
+                            <input type="radio" name="addchoice" class="customRadio" value="change in health plan coverage" [(ngModel)]="why_did_stop" (ngModelChange)="reportWhyDidYouStop($event,0);">
+                            <span class="take-it"> CHANGE IN HEALTH PLAN COVERAGE </span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="square_radio removePadding" (click)="reportWhyDidYouStop('',1)">
+                            <input type="radio" name="addchoice" class="customRadio" [(ngModel)]="why_did_stop_other">
+                            <span class="take-it"> OTHER </span>
+                        </label>
+                    </div>
+                    <label class="square_radio removePadding" id="reportreasonShowBtn" style="width: 100%;" *ngIf="reportreasonShowBtn == true;" >
+                        <textarea rows="3" placeholder="Enter reason" [(ngModel)]="why_did_stop"></textarea>
+                    </label>
+                    <div class="fs-12 text_red" *ngIf="formValidation == true && why_did_stop == ''">Reason cannot be blank.</div>
+               </div>
+            </div>
+            <div class="footModal textAligned">
+                <button class="btn btn-default borderNone" data-dismiss="modal"
+                (click)="reportTreatmentStopDate='';reportWhyDidYouStop('',0);why_did_stop_other='';formValidation=false;"> CANCEL </button>
+                <button class="btn btn-primary" (click)="start_stop_treatment()"> SAVE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dosageScheduleBox" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content" style="max-width: 575px;height: 352px !important;">
+            <div class="proHead">
+                <button type="button" (click)="dosageBtnClosed()" class="close spcl_close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3> <img src="assets/modules/img/ico/condition1.png"> <div class="dialog-title-wrapper disply_inline">Add {{selected_treatment}} dosage/schedule to your profile</div> <span style="margin-top: 3px"><span class="asteriskcolor pull-left" style="padding-right: 2px">* </span> Indicates required fields</span> </h3>
+            </div>
+            <div class="treatmentBody">
+                <div class="stepImgExp">
+                    <!-- <img src="assets/modules/img/dosageSchedule1.png"> -->
+                    <div class="dosage-title-wrapper-exp">
+                        <span class="ModelPopHead1">Adding Dosage/schedule </span>
+                        <span class="ModelPopHead2">Dosage/schedule</span>
+                    </div>
+                    <img src="assets/modules/img/DosageBar@2x.png" style="padding-bottom: 100px">
+                </div>
+                <p style="margin-left: 10px"> Are you currently still doing this treatment? <span  class="asteriskcolor">*</span> </p>
+                <div class="checkbox removePadding" style="margin-left: 10px" >
+                  <div>
+                     <label class="square_radio">
+                        <input type="radio" name="currenttreat" class="customRadio" value="true" [(ngModel)]="currentStiltreatment" (change) = "dosageScheduleOpen()">
+                        <span>YES</span>
+                    </label>
+                  </div>
+                  <div>
+                     <label class="square_radio">
+                        <input type="radio" name="currenttreat" class="customRadio" value="false" [(ngModel)]="currentStiltreatment" (change) = "dosageScheduleOpen()">
+                        <span>NO</span>
+                    </label>
+                  </div>
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && currentStiltreatment =='' ">Please Select Are you currently still doing this treatment?.</div>
+                </div>
+            </div>
+            <div class="footModal textAligned">
+                <button class="btn btn-default borderNone" (click)="dosageBtnClosed()" data-dismiss="modal"> CANCEL </button>
+                <button class="btn btn-primary btn-save-next" (click)="dosageScheduleOpen()"> SAVE, NEXT </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dosageScheduleModal" class="modalOverlay dosageModalFix">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+                <button type="button" class="close" (click)="dosageScheduleClosed()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3> <img src="assets/modules/img/ico/condition1.png"> <div class="dialog-title-wrapper">Add {{selected_treatment}} dosage/schedule to your profile</div> <span style="margin-top: 2px"> <span class="asteriskcolor pull-left" style="padding-right: 2px">* </span>  Indicates required fields</span> </h3>
+            </div>
+            <section id="dosageScheduleYes" style="display: block;">
+                <div class="treatmentBody">
+                    <div class="stepImg">
+                        <!-- <img src="assets/modules/img/dosageSchedule1.png"> -->
+                        <div class="dosage-title-wrapper">
+                            <span class="ModelPopHead1">Adding Dosage/schedule</span>
+                            <span class="ModelPopHead2">Dosage/schedule</span>
+                        </div>
+                        <img src="assets/modules/img/DosageBar@2x.png">
+                    </div>
+                    <p> Are you currently still doing this treatment? <span  class="asteriskcolor">*</span> </p>
+                    <div class="checkbox removePadding">
+                        <div><label class="square_radio">
+                            <input type="radio" name="yesradio" class="customRadio" [(ngModel)]="currentStiltreatment" value="true" (change) = "dosageScheduleOpen()">
+                            <span>YES</span>
+                        </label></div>
+                        <div><label class="square_radio">
+                            <input type="radio" name="yesradio" class="customRadio" [(ngModel)]="currentStiltreatment" value="false" (change) = "dosageScheduleOpen()">
+                            <span>NO</span>
+                        </label></div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> When did you start your current dosage/schedule?<span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                            <div class="removePadding" >
+                                <calendar [dateValue]="startdosageSchedule"
+                                [isDisplaySaveBtn]="true"
+                                [myLeft]="520"
+                                (getDate)='onDateChanged($event)'></calendar>
+                            </div>
+                        </div>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true &&
+                        (startdosageSchedule == '' || startdosageSchedule == undefined) ">Current dosage date cannot be blank.</div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> What is your current dosage? <span  class="asteriskcolor">*</span> </h6>
+                        <div class="row treatStart">
+                            <div class="col-md-3 padd_remove" style="width: 166px; padding: 0;">
+                                <input type="text" [(ngModel)]="current_dosageamount" class="form-control" placeholder="Enter dosage amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </div>
+                            <div class="col-md-3 padd_remove select-box" style="width: 85px;">
+                                <select class="form-control" style="padding: 5px 5px 5px 10px;" [(ngModel)]="current_dosage">
+                                    <option value="mg"> Mg</option>
+                                    <option value="table"> table</option>
+                                </select>
+                            </div>
+                        </div>
+                         <div class="fs-12 text_red" *ngIf="formValidation == true && current_dosageamount =='' ">Please enter current dosage amount.</div>
+
+                        <div style="margin-top: 10px;">
+                            <input type="text" class="form-control" style="width: 255px;" placeholder="Enter dosage brand name(optional)"
+                            [(ngModel)]="dosageBrandName"
+                            (ngModelChange)="search_dosage_brand()">
+                            <i (click)="closeprediction()" class="fa fa-times pointer closeIcon"></i>
+
+
+                           <div class="suggestions" style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="pointer" *ngFor="let dosage of search_dosage_list" (click)="select_my_brand(dosage)">
+                               <p>{{dosage.name}}</p>
+                             </div>
+                           </div>
+                           <div style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="form-control topRadius" (click)="select_other()">
+                               <b class="condition_txt_color pointer">OTHER</b>
+                             </div>
+                           </div>
+                           <div style="width: 260px;" *ngIf="search_dosage_list.length == 0 && add_new_brand == true;">
+                              <input type="text" class="form-control" name="" [(ngModel)]="new_brand" (ngModelChange)="reset_search()">
+                              <i (click)="add_my_new_brand(1)" class="fa fa-check pointer closeIcon" aria-hidden="true"></i>
+                           </div>
+
+                        </div>
+
+                    </div>
+                    <div class="gray_table">
+                        <h6> What is your  schedule for this dosage? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                            <div class="col-md-3 padd_remove" style="padding: 0;">
+                                <input type="text" class="form-control" placeholder="Enter number" [(ngModel)]="current_schedule_number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" (ngModelChange)="removeIKeep()">
+                            </div>
+                            <div class="col-md-1 padd_remove" style="margin-top: 5px;">
+                                <span style="font-size: 12px;color: #16325C;"> Time(s) </span>
+                            </div>
+                            <div class="col-md-2 padd_remove select-box" style="margin-left: 8px;">
+                                <select class="form-control select-frequency" [(ngModel)]="current_schedule_frequency">
+                                    <option value="Per Day"> Per Day </option>
+                                    <option value="Per Week"> Per Week </option>
+                                    <option value="Per Month"> Per Month </option>
+                                    <option value="Per Year"> Per Year </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && current_schedule_number =='' && i_take_as_needed == false ">Please enter schedule for this dosage.</div>
+
+                        <div class="checkbox removePadding">
+                           <label class="square_radio removePadding max130">
+                              <input type="checkbox" name="dosagecheck" class="customRadio" ng-true-value="true"  ng-false-value="false"  [(ngModel)]="i_take_as_needed" (ngModelChange)="clearModelValues()">
+                              <span class="take-it"> I take it as needed </span>
+                           </label>
+                        </div>
+                    </div>
+                    <div class="gray_table">
+                        <h6>Add details about your dosage/schedule (optional)  </h6>
+                        <textarea class="maxWidth360" rows="3" placeholder="Enter details" [(ngModel)]="current_schedule_detail"></textarea>
+                    </div>
+                </div>
+                <div class="footModal textAligned">
+                    <button class="btn btn-default borderNone" (click)="dosageScheduleClosed()"> CANCEL </button>
+                    <button class="btn btn-primary" (click)="dossageAddyes()"> SAVE, NEXT </button>
+                </div>
+            </section>
+            <section id="dosageScheduleNo" style="display: none;">
+                <div class="treatmentBody">
+                    <div class="stepImg">
+                        <!-- <img src="assets/modules/img/dosageSchedule1.png"> -->
+                        <div class="dosage-title-wrapper">
+                            <span class="ModelPopHead1">Adding Dosage/schedule</span>
+                            <span class="ModelPopHead2">Dosage/schedule</span>
+                        </div>
+                        <img src="assets/modules/img/DosageBar@2x.png">
+                    </div>
+                    <p> Are you currently still doing this treatment? <span  class="asteriskcolor">*</span></p>
+                    <div class="checkbox removePadding">
+                        <div><label class="square_radio">
+                            <input type="radio" class="customRadio" [(ngModel)]="currentStiltreatment" value="true" (change) = "dosageScheduleOpen()">
+                            <span>YES</span>
+                        </label></div>
+                        <div><label class="square_radio">
+                            <input type="radio" name="choice2" class="customRadio" [(ngModel)]="currentStiltreatment" value="false" (change) = "dosageScheduleOpen()">
+                            <span>NO</span>
+                        </label></div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> When did you start your most recent dosage/shedule? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                           <calendar
+                              [dateValue]="mostRecentSchedule"
+                              [isDisplaySaveBtn]="true"
+                              [myLeft]="529"
+                              (getDate)='onDateChangedDosage($event)'>
+                           </calendar>
+                           <div class="fs-12 text_red" *ngIf="formValidation == true &&
+                        (mostRecentSchedule == '' || mostRecentSchedule == undefined) ">Recent dosage/shedule date cannot be blank.</div>
+                        </div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> When did you stop your most recent dosage/shedule? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                           <calendar
+                              [dateValue]="stopRecentSchedule"
+                              [isDisplaySaveBtn]="true"
+                              [myLeft]="529"
+                              (getDate)='onDateChangedDosage1($event)'>
+                           </calendar>
+                            <div class="fs-12 text_red" *ngIf="formValidation == true &&
+                        (stopRecentSchedule == '' || stopRecentSchedule == undefined) ">Stop recent dosage/shedule date cannot be blank.</div>
+                        </div>
+                    </div>
+                    <div class="gray_table">
+                      <h6> What was your most recent dosage? <span  class="asteriskcolor">*</span></h6>
+                      <div class="row treatStart">
+                        <div class="col-md-4 padd_remove">
+                          <input type="text" class="form-control" placeholder="Enter dosage amount" [(ngModel)]="most_recent_dosage_amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        </div>
+                        <div class="col-md-3 padd_remove" style="width: 85px;">
+                          <select class="form-control select-recent-dosage" style="padding: 5px 5px 5px 10px;" [(ngModel)]="most_recent_dosage" >
+                            <option value="mg"> Mg </option>
+                            <option value="table(s)"> table(s) </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="padd_remove" style="margin-top: 10px;">
+                          <input type="text" class="form-control" style="width: 255px;" placeholder="Enter dosage brand name(optional)" 
+                           [(ngModel)]="most_recent_BrandName"
+                           (ngModelChange)="search_dosage_brand()">
+                           <i (click)="close_recent_prediction()" class="fa fa-times pointer closeIcon"></i>
+
+                           <div class="suggestions" style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="pointer" *ngFor="let dosage of search_dosage_list" (click)="select_recent_brand(dosage)">
+                               <p>{{dosage.name}}</p>
+                             </div>
+                           </div>
+
+                            <div style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="form-control topRadius" (click)="select_recent_other()">
+                               <b class="condition_txt_color pointer">OTHER</b>
+                             </div>
+                           </div>
+                           <div style="width: 260px;" *ngIf="search_dosage_list.length == 0 && add_new_brand == true;">
+                              <input type="text" class="form-control" name="" [(ngModel)]="most_recent_new_brand">
+                              <i (click)="add_recent_brand()" class="fa fa-check pointer closeIcon" aria-hidden="true"></i>
+                           </div>
+
+                      </div>
+                      <div class="fs-12 text_red" *ngIf="formValidation == true && most_recent_dosage_amount =='' ">Please select how would you rate the effectiveness.</div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> What was your most recent schedule for this treatment? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                            <div class="col-md-3 padd_remove">
+                                <input type="text" class="form-control" placeholder="Enter number" [(ngModel)]="most_recent_schedule_number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </div>
+                            <div class="col-md-1 padd_remove" style="margin-top: 5px;">
+                                <span style="font-size: 12px;color: #16325C;"> Time(s) </span>
+                            </div>
+                            <div class="col-md-2 padd_remove" style="margin-left: 8px;">
+                                <select class="form-control select-frequency" [(ngModel)]="most_recent_schedule_frequency">
+                                    <option value="Per Day"> Per Day </option>
+                                    <option value="Per Week"> Per Week </option>
+                                    <option value="Per Month"> Per Month </option>
+                                    <option value="Per Year"> Per Year </option>
+                                </select>
+                                <div class="fs-12 text_red" *ngIf="formValidation == true && most_recent_schedule_frequency =='' ">Please select your  recent schedule frequency.</div>
+                            </div>
+                        </div>
+                        <div class="checkbox removePadding">
+                            <label class="square_radio removePadding">
+                                <input type="radio" name="addchoice1" class="customRadio" value="true" [(ngModel)]="i_did_treatment_as_needed">
+                                <span class="take-it"> I TAKE AS NEEDED </span>
+                            </label>
+                        </div>
+                         <div class="fs-12 text_red" *ngIf="formValidation == true && most_recent_schedule_number =='' ">Please select how would you rate the effectiveness.</div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> Add details about your dosage/schedule (optional) </h6>
+                        <textarea rows="3" placeholder="Enter details" [(ngModel)]="current_schedule_detail"></textarea>
+                    </div>
+                    <p> Why did you stop doing this treatment? <span  class="asteriskcolor">*</span></p>
+                    <section id="reasonHide" style="display: block;">
+                        <div class="checkbox padd_remove checkFlex">
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="addchoice" class="customRadio" value="DID SEEM TO WORK" [(ngModel)]="why_did_stop" (ngModelChange)="whyDisyoustop($event,0);">
+                                <span class="take-it"> DIDN'T SEEM TO WORK </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="addchoice" class="customRadio" value="EXPENSE" [(ngModel)]="why_did_stop" (ngModelChange)="whyDisyoustop($event,0);">
+                                <span class="take-it"> EXPENSE </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="addchoice" class="customRadio" value="PERSONAL RESEARCH" [(ngModel)]="why_did_stop" (ngModelChange)="whyDisyoustop($event,0);">
+                                <span class="take-it"> PERSONAL RESEARCH </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="addchoice" class="customRadio" value="SIDE EFFECTS TO SEVERE" [(ngModel)]="why_did_stop" (ngModelChange)="whyDisyoustop($event,0);">
+                                <span class="take-it"> SIDE EFFECTS TO SEVERE </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="addchoice" class="customRadio" value="COURSE OF TREATMENT ENDED" [(ngModel)]="why_did_stop" (ngModelChange)="whyDisyoustop($event,0);">
+                                <span class="take-it"> COURSE OF TREATMENT ENDED </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="addchoice" class="customRadio" value="CHANGE IN HEALTH PLAN COVERAGE" [(ngModel)]="why_did_stop" (ngModelChange)="whyDisyoustop($event,0);">
+                                <span class="take-it"> CHANGE IN HEALTH PLAN COVERAGE </span>
+                            </label></div>
+                           <div><label class="square_radio removePadding" (click)="whyDisyoustop('',1)">
+                                <input type="radio" name="addchoice" class="customRadio">
+                                <span class="take-it"> OTHER </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding" id="reasonShowBtn" *ngIf="reasonOther">
+                                <textarea rows="3" placeholder="Enter reason" [(ngModel)]="why_did_stop"></textarea>
+                            </label></div>
+                        </div>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && why_did_stop =='' ">Please select how would you rate the effectiveness.</div>
+                    </section>
+                </div>
+                <div class="footModal textAligned">
+                    <button class="btn btn-primary myFootBtn" (click)="addDosageNo()"> SAVE, NEXT </button>
+                    <button class="btn btn-default borderNone myFootBtn" (click)="dosageScheduleClosed()"> CANCEL </button>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div id="dosageDeferentModal" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+                <button type="button" class="close" (click)="dosageDefferentClosed()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3> <img src="assets/modules/img/ico/condition1.png"><div class="dialog-title-wrapper ">Add {{selected_treatment}} dosage/schedule to your profile</div><span><span  class="asteriskcolor pull-left" style="margin-right: 2px;">* </span>  Indicates required fields </span> </h3>
+            </div>
+            <div class="treatmentBody">
+                <div class="stepImg">
+                    <!-- <img src="assets/modules/img/dosageSchedule2.png"> -->
+                    <div class="dosage-title-wrapper">
+                        <span class="ModelPopHead1">Adding Dosage/schedule</span>
+                        <span class="ModelPopHead2" style="opacity: 1" *ngIf="show_changes==false">Dosage/schedule</span>
+                        <span class="ModelPopHead2" style="opacity: 1" *ngIf="show_changes==true">Dosage/schedule changes</span>
+                    </div>
+                    <img src="assets/modules/img/icons/progressBar2Of2.png">
+                </div>
+                <p> Was your dosage or schedule different when you first started?<span  class="asteriskcolor">*</span> </p>
+                <section id="defferentYesDiv" style="display: block;">
+                    <div class="checkbox removePadding">
+                        <div><label class="square_radio">
+                            <input type="radio" (ngModelChange)="selectSchedule($event)" [(ngModel)]="selectDifferentschedule" value="true" name="dosageSchedule" class="customRadio">
+                            <span>YES</span>
+                        </label></div>
+                        <div><label class="square_radio">
+                            <input [(ngModel)]="selectDifferentschedule" (ngModelChange)="selectSchedule($event)" value="false" name="dosageSchedule" type="radio" class="customRadio">
+                            <span>NO</span>
+                        </label></div>
+                    </div>
+                </section>
+                <section id="defferentNoDiv" style="display: none;">
+                    <div class="checkbox removePadding">
+                        <div><label class="square_radio">
+                            <input type="radio" (ngModelChange)="selectSchedule($event)" [(ngModel)]="selectDifferentschedule" value="true" name="dosageSchedule1" class="customRadio">
+                            <span>YES</span>
+                        </label></div>
+                        <div><label class="square_radio">
+                            <input [(ngModel)]="selectDifferentschedule" (ngModelChange)="selectSchedule($event)" value="false" name="dosageSchedule1" type="radio" class="customRadio">
+                            <span>NO</span>
+                        </label></div>
+                    </div>
+                    <div class="gray_table">
+                        <h6>When did you start your first dosage/schedule for this  treatment? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                           <calendar
+                              [dateValue]="different_start_taking_dosage_schedule"
+                              [isDisplaySaveBtn]="true"
+                              [myLeft]="520"
+                              (getDate)='onDateChangeddiagnose($event)'>
+                           </calendar>
+                           <div class="fs-12 text_red" *ngIf="formValidation == true &&
+                        (different_start_taking_dosage_schedule == '' || different_start_taking_dosage_schedule == undefined) ">First dosage/schedule date cannot be blank.</div>
+
+                        </div>
+                        <h6> What was your  dosage amount when you first started this treatment? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                            <div class="col-md-4 padd_remove">
+                                <input type="text" class="form-control" placeholder="Enter dosage amount" [(ngModel)]="different_initial_dosage_amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </div>
+                            <div class="col-md-3 padd_remove" style="width: 85px;">
+                                <select class="form-control" style="padding: 5px 5px 5px 10px;" [(ngModel)]="different_initial_dosage">
+                                    <option value="mg"> Mg </option>
+                                    <option value="table(s)"> table</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="padd_remove" style="margin-top: 10px;">
+                            <input type="text" class="form-control" style="width: 255px;" placeholder="Enter dosage brand name(optional)" 
+                            [(ngModel)]="different_dosage_BrandName"
+                            (ngModelChange)="search_dosage_brand()">
+                            <i (click)="close_different_prediction()" class="fa fa-times pointer closeIcon"></i>
+
+                           <div class="suggestions" style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="pointer" *ngFor="let dosage of search_dosage_list" (click)="select_different_brand(dosage)">
+                               <p>{{dosage.name}}</p>
+                             </div>
+                           </div>
+
+                           <div style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="form-control topRadius" (click)="select_different_other()">
+                               <b class="condition_txt_color pointer">OTHER</b>
+                             </div>
+                           </div>
+                           <div style="width: 260px;" *ngIf="search_dosage_list.length == 0 && add_new_brand == true;">
+                              <input type="text" class="form-control" name="" [(ngModel)]="different_new_brand">
+                              <i (click)="add_my_different_brand(2)" class="fa fa-check pointer closeIcon" aria-hidden="true"></i>
+                           </div>
+
+                        </div>
+
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && different_initial_dosage_amount =='' && selectDifferentschedule=='true' ">Please enter your dosage amount.</div>
+                        <div class="checkbox removePadding">
+                            <label class="square_radio removePadding">
+                                <input type="checkbox" name="currenttreat1" class="customRadio" ng-true-value="true"  ng-false-value="false"  [(ngModel)]="my_dosage_was_same">
+                                <!-- <input type="radio" name="dosagecheck" class="customRadio" value="true" [(ngModel)]="my_dosage_was_same"> -->
+                                <span class="label_color"> MY DOSAGE WAS THE SAME </span>
+                            </label>
+                        </div>
+
+                        <h6> What was your schedule for this dosage when you first started this treatment? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                            <div class="col-md-3 padd_remove">
+                                <input type="text" class="form-control" placeholder="Enter number" [(ngModel)]="different_initial_schedule_number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </div>
+                            <div class="col-md-1 padd_remove" style="margin-top: 5px;">
+                                <span style="font-size: 12px;color: #16325C;"> Time(s) </span>
+                            </div>
+                            <div class="col-md-2 padd_remove" style="margin-left: 8px;">
+                                <select class="form-control select-frequency" [(ngModel)]="different_initial_schedule_frequency">
+                                    <option value="Per Day"> Per Day </option>
+                                    <option value="Per Week"> Per Week </option>
+                                    <option value="Per Month"> Per Month </option>
+                                    <option value="Per Year"> Per Year </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && different_initial_schedule_number =='' && selectDifferentschedule=='true' ">Please enter your schedule.</div>
+
+                        <div class="checkbox removePadding">
+                            <label class="square_radio removePadding max180">
+                                <!-- <input type="radio" name="schedulecheck" class="customRadio" value="true" [(ngModel)]="my_schedule_was_same"> -->
+                                <input type="checkbox" name="currenttreat1" class="customRadio" ng-true-value="true"  ng-false-value="false"  [(ngModel)]="my_schedule_was_same">
+                                <span class="label_color"> MY SCHEDULE WAS THE SAME </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> Add details about your treatment schedule (optional) </h6>
+                        <textarea rows="3" placeholder="Enter details" [(ngModel)]="anything_else_different"></textarea>
+                    </div>
+                </section>
+            </div>
+            <div class="footModal textAligned">
+                <button class="btn btn-default borderNone" (click)="dosageDefferentClosed()"> CANCEL </button>
+                <button class="btn btn-primary" (click)="finalSubmitTreatment()"> SAVE, NEXT </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="treatmentEvaluationEditModal" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+                <button type="button" class="close" (click)="closeEditEvaluation()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3> <img src="assets/modules/img/ico/condition1.png"> Evaluate {{treatmentName}} <span> <span class="starLeft">*</span> Indicates required fields </span> </h3>
+            </div>
+            <div class="treatmentBody">
+                <div class="gray_table grayMargin">
+                    <div class="row">
+                        <div class="col-md-3 padd_remove">
+                            <strong class="alignLeft"> Evaluation date: </strong>
+                        </div>
+                        <div class="col-md-5 padd_remove" >
+                           <calendar
+                              [dateValue]="editEvaluationDate"
+                              [isDisplaySaveBtn]="true"
+                              [myLeft]="213"
+                              (getDate)='onDateChangeddiagnose($event)'>
+                           </calendar>
+                        </div>
+                    </div>
+                </div>
+                <section class="treatmentBtns">
+                    <p> 1. How would you rate the effectiveness for its purpose? <span  class="asteriskcolor">*</span></p>
+                    <ul class="treatLiWidth">
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editEffectiveness=='cant_tell'}" (click)="selectEditEffective('cant_tell');"> CAN'T TELL</button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editEffectiveness=='none'}" (click)="selectEditEffective('none');"> NONE </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editEffectiveness=='slight'}" (click)="selectEditEffective('slight');"> SLIGHT </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editEffectiveness=='moderate'}" (click)="selectEditEffective('moderate');"> MODERATE </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editEffectiveness=='major'}" (click)="selectEditEffective('major');"> MAJOR</button>
+                        </li>
+                    </ul>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 2. How would you rate side effects caused by this treatment? <span  class="asteriskcolor">*</span></p>
+                    <ul>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editSideeffect=='none'}" (click)="selectEditEffects('none');"> NONE </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editSideeffect=='mild'}" (click)="selectEditEffects('mild');"> MILD </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editSideeffect=='moderate'}" (click)="selectEditEffects('moderate');"> MODERATE </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editSideeffect=='severe'}" (click)="selectEditEffects('severe');"> SEVERE </button>
+                        </li>
+                    </ul>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 3. How often do you take this treatment? <span  class="asteriskcolor">*</span></p>
+                    <ul>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editTaketreatment=='never'}" (click)="selectEditEvaluationTreatment('never');"> NEVER </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editTaketreatment=='sometimes'}" (click)="selectEditEvaluationTreatment('sometimes');"> SOMETIMES </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editTaketreatment=='usually'}" (click)="selectEditEvaluationTreatment('usually');"> USUALLY </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editTaketreatment=='always'}" (click)="selectEditEvaluationTreatment('always');"> ALWAYS </button>
+                        </li>
+                    </ul>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 4. How hard is to do this treatment? <span  class="asteriskcolor">*</span></p>
+                    <ul>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editHardtreatment=='not_at_all'}" (click)="selectEditHardTreatment('not_at_all');"> NOT AT ALL </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editHardtreatment=='a_little'}" (click)="selectEditHardTreatment('a_little');"> A LITTLE </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editHardtreatment=='somewhat'}" (click)="selectEditHardTreatment('somewhat');"> SOMEWHAT </button>
+                        </li>
+                        <li>
+                            <button class="btn " [ngClass]="{'activeButton' :editHardtreatment=='very'}" (click)="selectEditHardTreatment('very');"> VERY </button>
+                        </li>
+                    </ul>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 5. Were there any unexpected positive side effect?<span  class="asteriskcolor">*</span></p>
+
+                    <div class="checkedSection">
+
+                     <div class="radio">
+                       <label class="square_radio">
+                         <input type="radio" name="diagnose"
+                         [value]="true"
+                         [(ngModel)]="edituPositive_effects">
+                         <span> YES </span>
+                       </label>
+                     </div>
+
+                     <div class="radio">
+                       <label class="square_radio">
+                         <input type="radio" name="diagnose"
+                         [value]="false"
+                         [(ngModel)]="edituPositive_effects">
+                         <span> NO </span>
+                       </label>
+                     </div>
+                     <div class="fs-12 text_red" *ngIf="formValidation == true && edituPositive_effects ==undefined ">Please select any option.</div>
+                  </div>
+
+
+                </section>
+                <section class="treatmentBtns">
+                    <p> 6. What advice or tips would you give others? (optional) </p>
+                    <textarea rows="3" placeholder="Add a message..." [(ngModel)]="editYouradvice"></textarea>
+                </section>
+                <section class="treatmentBtns">
+                    <p> 1. Add the cost (optional) </p>
+                    <div class="row">
+                        <div class="col-md-4 padd_remove">
+                            <input [(ngModel)]="editCost" type="text" class="form-control" placeholder="Enter Amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        </div>
+                        <div class="col-md-4 padd_remove">
+                            <select class="form-control" [(ngModel)]="editCurrency">
+                                <option value=""> Select Currency </option>
+                                <option value="us_dollar"> US Dollar </option>
+                                <option value="inr"> Indian Rupees </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 padd_remove">
+                            <select class="form-control" [(ngModel)]="editCostFrequency">
+                                <option value="">Weekly</option>
+                                <option value="year">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="footModal textAligned">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-3 removePadding">
+                            <strong> Visible to </strong>
+                        </div>
+                        <div class="col-md-9">
+                            <select class="form-control" [(ngModel)]="editVisibility">
+                                <option value="all_users">All Users</option>
+                                <option value="only_me">Only Me</option>
+                                <option value="followers">Followers</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 textAligned">
+                        <button class="btn btn-default borderNone" (click)="closeEditEvaluation()"> CANCEL </button>
+                        <button class="btn btn-primary" (click)="updateEvaluations()"> UPDATE </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editdosageScheduleNo" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+                <button type="button" class="close" (click)="closeEditTreatmentNoField()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3> <img src="assets/modules/img/ico/condition1.png"> <div class="dialog-title-wrapper">Edit {{selected_treatment}} dosage/schedule to your profile</div> <span  class="asteriskcolor pull-left">* </span> <span> Indicates required fields </span> </h3>
+            </div>
+                <div class="treatmentBody">
+                    <div class="stepImg">
+                        <!-- <img src="assets/modules/img/dosageSchedule1.png"> -->
+                        <div class="dosage-title-wrapper">
+                            <span class="ModelPopHead1">Adding Dosage/schedule</span>
+                            <span class="ModelPopHead2">Dosage/schedule</span>
+                        </div>
+                        <img src="assets/modules/img/DosageBar@2x.png">
+                    </div>
+                    <p> Are you currently still doing this treatment?<span  class="asteriskcolor">*</span> </p>
+                    <div class="checkbox">
+                        <div><label class="square_radio">
+                            <input type="radio" class="customRadio" [(ngModel)]="Edit_currentStiltreatment" [value]="true" [disabled]="true">
+                            <span>YES</span>
+                        </label></div>
+                        <div><label class="square_radio">
+                            <input type="radio" name="currentstiltreat2" class="customRadio" [(ngModel)]="Edit_currentStiltreatment" [value]="false" [disabled]="true">
+                            <span>NO</span>
+                        </label></div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> When did you start your most recent dosage/shedule? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                           <calendar
+                              [dateValue]="Edit_mostRecentSchedule"
+                              [isDisplaySaveBtn]="true"
+                              [myLeft]="529"
+                              (getDate)='onDateChangedmostRecentSchedule($event)'>
+                           </calendar>
+
+                        </div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> When did you stop your most recent dosage/shedule? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                          <calendar
+                              [dateValue]="Edit_stopRecentSchedule"
+                              [isDisplaySaveBtn]="true"
+                              [myLeft]="529"
+                              (getDate)='onDateChangedRecentSchedule($event)'>
+                           </calendar>
+                        </div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> What was your most recent dosage? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                            <div class="col-md-4 padd_remove">
+                                <input type="text" class="form-control" placeholder="Enter dosage amount" [(ngModel)]="Edit_most_recent_dosage_amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </div>
+                            <div class="col-md-3 padd_remove" style="width: 85px;">
+                                <select class="form-control select-recent-dosage" style="padding: 5px 5px 5px 10px;" [(ngModel)]="Edit_most_recent_dosage">
+                                    <option value="mg"> Mg </option>
+                                    <option value="table(s)"> table(s) </option>
+                                </select>
+                            </div>
+                        </div>
+
+                         <div class="padd_remove" style="margin-top: 10px;">
+                          <input type="text" class="form-control" style="width: 255px;" placeholder="Enter dosage brand name(optional)" 
+                           [(ngModel)]="most_recent_BrandName"
+                           (ngModelChange)="search_dosage_brand()">
+                           <i (click)="close_recent_prediction()" class="fa fa-times pointer closeIcon"></i>
+
+                           <div class="suggestions" style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="pointer" *ngFor="let dosage of search_dosage_list" (click)="select_recent_brand(dosage)">
+                               <p>{{dosage.name}}</p>
+                             </div>
+                           </div>
+
+                            <div style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="form-control topRadius" (click)="select_recent_other()">
+                               <b class="condition_txt_color pointer">OTHER</b>
+                             </div>
+                           </div>
+                           <div style="width: 260px;" *ngIf="search_dosage_list.length == 0 && add_new_brand == true;">
+                              <input type="text" class="form-control" name="" [(ngModel)]="most_recent_new_brand">
+                              <i (click)="add_recent_brand(1)" class="fa fa-check pointer closeIcon" aria-hidden="true"></i>
+                           </div>
+
+                      </div>
+
+                    </div>
+                    <div class="gray_table">
+                        <h6> What was your most recent schedule for this treatment? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                            <div class="col-md-3 padd_remove">
+                                <input type="text" class="form-control" placeholder="Enter number" [(ngModel)]="Edit_most_recent_schedule_number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </div>
+                            <div class="col-md-1 padd_remove" style="margin-top: 5px;">
+                                <span style="font-size: 12px;color: #16325C;"> Time(s) </span>
+                            </div>
+                            <div class="col-md-2 padd_remove" style="margin-left: 8px;">
+                                <select class="form-control select-frequency"[(ngModel)]="Edit_most_recent_schedule_frequency">
+                                    <option value="Per Day"> Per Day </option>
+                                    <option value="Per Week"> Per Week </option>
+                                    <option value="Per Month"> Per Month </option>
+                                    <option value="Per Year"> Per Year </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="checkbox removePadding">
+                            <label class="square_radio removePadding">
+                                <input type="radio" name="choice3" class="customRadio" [value]="true" [(ngModel)]="Edit_i_did_treatment_as_needed">
+                                <span class="take-it"> I DID THE TREATMENT AS NEEDED </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> Add details about your treatment schedule (optional) </h6>
+                        <textarea rows="3" placeholder="Enter details" [(ngModel)]="Edit_current_schedule_detail"></textarea>
+                    </div>
+                    <p> Why did you stop doing this treatment? <span  class="asteriskcolor">*</span></p>
+                    <section id="reasonHide" style="display: block;">
+                        <div class="checkbox padd_remove">
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="choice3" class="customRadio" value="DID SEEM TO WORK" [(ngModel)]="Edit_why_did_stop" (ngModelChange)="editwhyDidyoustop($event,0);">
+                                <span class="take-it"> DIDN'T SEEM TO WORK </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="choice3" class="customRadio" value="EXPENSE" [(ngModel)]="Edit_why_did_stop" (ngModelChange)="editwhyDidyoustop($event,0);">
+                                <span class="take-it"> EXPENSE </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="choice3" class="customRadio" value="PERSONAL RESEARCH" [(ngModel)]="Edit_why_did_stop" (ngModelChange)="editwhyDidyoustop($event,0);">
+                                <span class="take-it"> PERSONAL RESEARCH </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="choice3" class="customRadio" value="SIDE EFFECTS TO SEVERE" [(ngModel)]="Edit_why_did_stop" (ngModelChange)="editwhyDidyoustop($event,0);">
+                                <span class="take-it"> SIDE EFFECTS TOO SEVERE </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="choice3" class="customRadio" value="COURSE OF TREATMENT ENDED" [(ngModel)]="Edit_why_did_stop" (ngModelChange)="editwhyDidyoustop($event,0);">
+                                <span class="take-it"> COURSE OF TREATMENT ENDED </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding">
+                                <input type="radio" name="choice3" class="customRadio" value="CHANGE IN HEALTH PLAN COVERAGE" [(ngModel)]="Edit_why_did_stop" (ngModelChange)="editwhyDidyoustop($event,0);">
+                                <span class="take-it"> CHANGE IN HEALTH PLAN COVERAGE </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding" (click)="editwhyDidyoustop('',1)">
+                                <input type="radio" name="choice3" class="customRadio">
+                                <span class="take-it"> OTHER </span>
+                            </label></div>
+                            <div><label class="square_radio removePadding"  id="reasonShowBtn">
+                                <!-- <input type="text" class="form-control topSpace" placeholder="Enter reason" [(ngModel)]="Edit_why_did_stop"> -->
+                                <textarea rows="3" placeholder="Enter reason" [(ngModel)]="Edit_why_did_stop"></textarea>
+                            </label></div>
+                        </div>
+                    </section>
+                </div>
+                <div class="footModal textAligned">
+                    <button class="btn btn-default borderNone" (click)="closeEditTreatmentNoField()"> CANCEL </button>
+                    <button class="btn btn-primary" (click)="editDosageNo();"> SAVE, FINISH </button>
+                </div>
+        </div>
+    </div>
+</div>
+
+<div id="editingYesModal" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+                <button type="button" class="close" (click)="editYesTreatmentClosed()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3> <img src="assets/modules/img/ico/condition1.png"> <div class="dialog-title-wrapper">Edit {{selected_treatment}} dosage/schedule to your profile</div><span> Indicates required fields </span> </h3>
+            </div>
+            <section id="dosageScheduleYes" style="display: block;">
+                <div class="treatmentBody">
+                    <div class="stepImg">
+                        <!-- <img src="assets/modules/img/dosageSchedule1.png"> -->
+                        <div class="dosage-title-wrapper">
+                            <span class="ModelPopHead1">Adding Dosage/schedule</span>
+                            <span class="ModelPopHead2">Dosage/schedule</span>
+                        </div>
+                        <img src="assets/modules/img/DosageBar@2x.png">
+                    </div>
+                    <p> Are you currently still doing this treatment? <span  class="asteriskcolor">*</span></p>
+                    <div class="checkbox removePadding">
+                        <div><label class="square_radio">
+                            <input type="radio" name="yesradio2" class="customRadio" [(ngModel)]="Edit_currentStiltreatment" [value]="true" [disabled]="true">
+                            <span>YES</span>
+                        </label></div>
+                        <div><label class="square_radio">
+                            <input type="radio" name="yesradio2" class="customRadio" [(ngModel)]="Edit_currentStiltreatment" [value]="false" [disabled]="true">
+                            <span>NO</span>
+                        </label></div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> When did you start your  </h6>
+                        <div class="row treatStart">
+                            <div class="col-md-6 removePadding">
+                              <calendar
+                                 [dateValue]="EditstartdosageSchedule"
+                                 [isDisplaySaveBtn]="true"
+                                 [myLeft]="255"
+                                 (getDate)='onDateEditstartSchedule($event)'>
+                              </calendar>
+                            </div>
+                            <div class="fs-12 text_red" *ngIf="formValidation == true && EditstartdosageSchedule =='' ">Please select when did you start your treatment.</div>
+                        </div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> What is your current dosage? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                            <div class="col-md-3 padd_remove">
+                                <input type="text" class="form-control"  [(ngModel)]="Editcurrent_dosageamount"  placeholder="Enter dosage amount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </div>
+                            <div class="col-md-3 padd_remove" style="width: 85px;">
+                                <select class="form-control" style="padding: 5px 5px 5px 10px;" [(ngModel)]="Editcurrent_dosage">
+                                    <option value="mg"> Mg </option>
+                                    <option value="table"> table </option>
+                                </select>
+                                <div class="fs-12 text_red" *ngIf="formValidation == true && Editcurrent_dosage =='' ">Please select current dosage frequency.</div>
+                            </div>
+                        </div>
+                         <div class="fs-12 text_red" *ngIf="formValidation == true && Editcurrent_dosageamount =='' ">Please enter current dosage amount.</div>
+
+
+                         <div style="margin-top: 10px;">
+                            <input type="text" class="form-control" style="width: 255px;" placeholder="Enter dosage brand name(optional)"
+                            [(ngModel)]="dosageBrandName"
+                            (ngModelChange)="search_dosage_brand()">
+                            <i (click)="closeprediction()" class="fa fa-times pointer closeIcon"></i>
+
+
+                           <div class="suggestions" style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="pointer" *ngFor="let dosage of search_dosage_list" (click)="select_my_brand(dosage)">
+                               <p>{{dosage.name}}</p>
+                             </div>
+                           </div>
+                           <div style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="form-control topRadius" (click)="select_other()">
+                               <b class="condition_txt_color pointer">OTHER</b>
+                             </div>
+                           </div>
+                           <div style="width: 260px;" *ngIf="search_dosage_list.length == 0 && add_new_brand == true;">
+                              <input type="text" class="form-control" name="" [(ngModel)]="new_brand" (ngModelChange)="reset_search()">
+                              <i (click)="add_my_new_brand()" class="fa fa-check pointer closeIcon" aria-hidden="true"></i>
+                           </div>
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                    <div class="gray_table">
+                        <h6> What is your  schedule for this dosage? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                            <div class="col-md-3 padd_remove">
+                                <input type="text" class="form-control"  [(ngModel)]="Editcurrent_schedule_number" placeholder="Enter number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" (ngModelChange)="removeIKeep()">
+                            </div>
+                            <div class="col-md-1 padd_remove" style="margin-top: 5px;">
+                                <span style="font-size: 12px;color: #16325C;"> Time(s) </span>
+                            </div>
+                            <div class="col-md-2 padd_remove" style="margin-left: 8px;">
+                                <select class="form-control select-frequency"[(ngModel)]="Editcurrent_schedule_frequency">
+                                    <option value="Per Day"> Per Day </option>
+                                    <option value="Per Week"> Per Week </option>
+                                    <option value="Per Month"> Per Month </option>
+                                    <option value="Per Year"> Per Year </option>
+                                </select>
+                                <div class="fs-12 text_red" *ngIf="formValidation == true && Editcurrent_schedule_frequency =='' ">Please select schedule  frequency for this dosage.</div>
+                            </div>
+                        </div>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && Editcurrent_schedule_number =='' && Editi_take_as_needed == false">Please enter schedule for this dosage.</div>
+
+                        <div class="checkbox removePadding">
+                            <label class="square_radio removePadding max130">
+                                <!-- <input type="radio" [value]="true" name="takeit11" class="customRadio" [(ngModel)]="Editi_take_as_needed"> -->
+                                <input type="checkbox" name="dosagecheck" class="customRadio" ng-true-value="true"  ng-false-value="false"  [(ngModel)]="Editi_take_as_needed" (ngModelChange)="clearModelValues()">
+                                <span class="take-it"> I take it as needed </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="gray_table">
+                        <h6>Add details about dosage/schedule (optional)  </h6>
+                        <textarea rows="3" placeholder="Enter details" [(ngModel)]="Editcurrent_schedule_detail"></textarea>
+                    </div>
+                </div>
+                <div class="footModal textAligned">
+                    <button class="btn btn-default borderNone" (click)="editYesTreatmentClosed()"> CANCEL </button>
+                    <button class="btn btn-primary" (click)="editTratmentFirst()"> SAVE, FINISH </button>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div id="editingTreatModal2Open" class="modalOverlay">
+    <div class="modalBox">
+        <div class="modal-content">
+            <div class="proHead">
+                <button type="button" class="close" (click)="editingTreatModal2Closed()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3> <img src="assets/modules/img/ico/condition1.png"> <div class="dialog-title-wrapper" >Edit {{selected_treatment}} dosage/schedule to your profile</div>  <span> Indicates required fields </span> </h3>
+            </div>
+            <div class="treatmentBody">
+                <div class="stepImg">
+                    <!-- <img src="assets/modules/img/dosageSchedule2.png"> -->
+                    <div class="dosage-title-wrapper">
+                        <span class="ModelPopHead1">Adding Dosage/schedule</span>
+                        <span class="ModelPopHead2" style="opacity: 1">Dosage/schedule</span>
+                    </div>
+                    <img src="assets/modules/img/DosageBar@2x.png">
+                </div>
+                <p> Was your dosage or schedule different when you first started? <span  class="asteriskcolor">*</span></p>
+                  <div class="checkbox removePadding">
+                    <div><label class="square_radio">
+                         <input type="radio" [(ngModel)]="editSelectDifferentschedule" (ngModelChange)="goDefferentEdit($event)"  [value]="true" name="dosageSchedule" class="customRadio">
+                         <span>YES</span>
+                     </label></div>
+                     <div><label class="square_radio">
+                         <input [(ngModel)]="editSelectDifferentschedule" (ngModelChange)="goDefferentEdit($event)" [value]="false" name="dosageSchedule" type="radio" class="customRadio">
+                         <span>NO</span>
+                     </label></div>
+                  </div>
+                  <div class="fs-12 text_red" *ngIf="formValidation == true && editSelectDifferentschedule ==undefined ">Please select different added schdule.</div>
+
+                <section id="defferentNoDivNew" style="display: none;">
+                    <div class="gray_table">
+                        <h6>When did you start your first dosage/schedule for this  treatment? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                           <calendar
+                             [dateValue]="Editdifferent_start_taking_dosage_schedule"
+                             [isDisplaySaveBtn]="true"
+                             [myLeft]="520"
+                             (getDate)='editRecentSchedule($event)'>
+                           </calendar>
+                        </div>
+                        <h6> What was your  dosage amount when you first started this treatment? <span  class="asteriskcolor">*</span></h6>
+                        <div class="row treatStart">
+                            <div class="col-md-3 padd_remove">
+                                <input type="text" class="form-control" placeholder="Enter dosage amount" [(ngModel)]="Editdifferent_initial_dosage_amount"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </div>
+                            <div class="col-md-4 padd_remove" style="width: 85px;">
+                                <select class="form-control" style="padding: 5px 5px 5px 10px;" [(ngModel)]="Editdifferent_initial_dosage">
+                                    <option value="mg"> Mg </option>
+                                    <option value="table(s)"> table</option>
+                                </select>
+                                <div class="fs-12 text_red" *ngIf="formValidation == true && Editdifferent_initial_dosage =='' &&editSelectDifferentschedule == true ">Please select your dosage.</div>
+                            </div>
+                        </div>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && Editdifferent_initial_dosage_amount ==null && editSelectDifferentschedule==true ">Please enter your dosage amount.</div>
+
+                        <div class="padd_remove" style="margin-top: 10px;">
+                            <input type="text" class="form-control" style="width: 255px;" placeholder="Enter dosage brand name(optional)" 
+                            [(ngModel)]="different_dosage_BrandName"
+                            (ngModelChange)="search_dosage_brand()">
+                            <i (click)="close_different_prediction()" class="fa fa-times pointer closeIcon"></i>
+
+                           <div class="suggestions" style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="pointer" *ngFor="let dosage of search_dosage_list" (click)="select_different_brand(dosage)">
+                               <p>{{dosage.name}}</p>
+                             </div>
+                           </div>
+
+                           <div style="width: 260px;" *ngIf="search_dosage_list.length > 0 && add_new_brand == false;">
+                             <div class="form-control topRadius" (click)="select_different_other()">
+                               <b class="condition_txt_color pointer">OTHER</b>
+                             </div>
+                           </div>
+                           <div style="width: 260px;" *ngIf="search_dosage_list.length == 0 && add_new_brand == true;">
+                              <input type="text" class="form-control" name="" [(ngModel)]="different_new_brand">
+                              <i (click)="add_my_different_brand()" class="fa fa-check pointer closeIcon" aria-hidden="true"></i>
+                           </div>
+
+                        </div>
+
+
+                        <div class="checkbox removePadding">
+                            <label class="square_radio removePadding">
+                                    <input type="checkbox" name="dosagecheck" class="customRadio" ng-true-value="true"  ng-false-value="false"  [(ngModel)]="my_dosage_was_same">
+                                <!-- <input type="radio" name="dosagecheck" class="customRadio" [value]="true"   [(ngModel)]="Editmy_dosage_was_same"> -->
+                                <span class="label_color"> MY DOSAGE WAS THE SAME </span>
+                            </label>
+                        </div>
+                        <h6> What was your schedule for this dosage when you first started this treatment123? <span  class="asteriskcolor">*</span></h6>
+
+                        <div class="row treatStart">
+                            <div class="col-md-3 padd_remove">
+                                <input type="text" class="form-control" placeholder="Enter number" [(ngModel)]="Editdifferent_initial_schedule_number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                            </div>
+                            <div class="col-md-1 padd_remove" style="margin-top: 5px;">
+                                <span style="font-size: 12px;color: #16325C;"> Time(s) </span>
+                            </div>
+                            <div class="col-md-2 padd_remove" style="margin-left: 8px;">
+                                <select class="form-control select-frequency" [(ngModel)]="Editdifferent_initial_schedule_frequency">
+                                    <option value="Per Day"> Per Day </option>
+                                    <option value="Per Week"> Per Week </option>
+                                    <option value="Per Month"> Per Month </option>
+                                    <option value="Per Year"> Per Year </option>
+                                </select>
+                                <div class="fs-12 text_red" *ngIf="formValidation == true && Editdifferent_initial_schedule_frequency ==null && editSelectDifferentschedule==true ">Please select your schedule frequency.</div>
+                            </div>
+                        </div>
+                        <div class="fs-12 text_red" *ngIf="formValidation == true && Editdifferent_initial_schedule_number ==null && editSelectDifferentschedule==true">Please enter your schedule number.</div>
+                        <div class="checkbox removePadding">
+                            <label class="square_radio removePadding max180">
+                                <input type="radio" name="Editmy_schedule" class="customRadio" [value]="true" [(ngModel)]="Editmy_schedule_was_same">
+                                <span class="label_color"> MY SCHEDULE WAS THE SAME </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="gray_table">
+                        <h6> Add details about your treatment schedule (optional) </h6>
+                        <textarea rows="3" placeholder="Enter details" [(ngModel)]="Editanything_else_different"></textarea>
+                    </div>
+                </section>
+            </div>
+            <div class="footModal textAligned">
+                <button class="btn btn-default borderNone" (click)="editingTreatModal2Closed()"> CANCEL </button>
+                <button class="btn btn-primary" (click)="finalSubmitEditTreatment()"> SAVE, FINISH </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmationModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox delete-confirm-modal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="confirm-title"> Are you sure? </h3>
+            </div>
+            <div class="proBody confirm-description">
+                <p style="font-size: 13px; line-height: 20px;"> {{select_treatment_name}} will be deleted from your profile if you choose to continue. </p>
+            </div>
+            <div class="footModal confirm-footer">
+              <button data-dismiss="modal" class="btn btn-primary btn-cancel"> NO, CANCEL </button>
+              <button (click)="deleteTreatment()" class="btn btn-default btn-delete"> YES, DELETE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deleteEvaluationConfirmModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox delete-confirm-modal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="confirm-title"> Are you sure? </h3>
+            </div>
+            <div class="proBody confirm-description">
+                <p> Evaluation will be deleted from your profile if you choose to continue </p>
+            </div>
+            <div class="footModal confirm-footer">
+              <button data-dismiss="modal" class="btn btn-primary btn-cancel"> NO, CANCEL </button>
+              <button (click)="deleteEvaluation()" class="btn btn-default btn-delete"> YES, DELETE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deleteDosageConfirmModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox delete-confirm-modal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="confirm-title"> Are you sure? </h3>
+            </div>
+            <div class="proBody confirm-description">
+                <p> Dosage will be deleted from your profile if you choose to continue </p>
+            </div>
+            <div class="footModal confirm-footer">
+              <button data-dismiss="modal" class="btn btn-primary btn-cancel"> NO,CANECL </button>
+              <button (click)="deleteDosage()" class="btn btn-default btn-delete"> YES,DELETE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="tags-popup" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+   <div class="modalBox delete-confirm-modal">
+      <div class="modal-content">
+         <div class="modal-header" style="border: none;">
+         <button type="button" class="close" data-dismiss="modal">×</button>
+         <h3 class="modal-title confirm-title">Purpose</h3>
+      </div>
+      <section id="searchCondition" style="display:block;">
+         <div class="conditionBody">
+             <div class="tag-title">
+                 Tag your purpose for doing this treatment
+             </div>
+
+            <div class="gray_table" style="border: none;">
+                <div style="display: flex;">
+                    <input type="text" class="form-control search-tag-input"
+                        [(ngModel)]="searchConditionString"
+                        (ngModelChange)="list_tags_purpose($event)"
+                        [ngClass]="{'borderRed' :blank=='true'}">
+                    <button type="button" class="close tag-remove" (click)="remove_tag()">×</button>
+                </div>
+                <div class="error-meesage" *ngIf="empty_tag">Please select purpose</div>
+                <div class="suggestions" style="width: 290px;margin-left: 20px;"  *ngIf="suggestion_name_list.length > 0 && searchString==true">
+                    <div class="pointer" *ngFor="let item of suggestion_name_list" (click)="selectMycondition(item)">
+                        <p class="suggestion-name">{{item.name}}</p>
+                    </div>
+                </div>
+            </div>
+         </div>
+         <div class="footModal confirm-footer">
+          <button class="btn btn-primary btn-add" (click)="add_purpose()">
+            <span>ADD TO PROFILE</span>
+          </button>
+         </div>
+      </section>
+    </div>
+   </div>
+</div>
+
+<div id="removePurposeConfirmModal" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox delete-confirm-modal">
+        <div class="modal-content">
+            <div class="proHead">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="confirm-title"> Are you sure? </h3>
+            </div>
+            <div class="proBody confirm-description">
+                <p> Purpose will be deleted from your profile if you choose to continue </p>
+            </div>
+            <div class="footModal confirm-footer">
+              <button data-dismiss="modal" class="btn btn-primary btn-cancel"> NO, CANCEL </button>
+              <button (click)="remove_purpose()" class="btn btn-default btn-delete"> YES, DELETE </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmationModalAdd" class="modalOverlay" data-backdrop="static" data-keyboard="false">
+    <div class="modalBox proSmallModal">
+        <div class="modal-content">
+            <div class="proHeadAdd">
+              <button type="button" class="close" (click)="noHide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="alignRight"> Are you sure you want to close? </h3>
+            </div>
+            <div class="footModal QOLfoot">
+              <button (click)="noHide()" class="btn btn-primary"> No, Cancel </button>
+              <button (click)="yesdelete()" class="btn btn-default"> Yes, Close </button>
+            </div>
+        </div>
+    </div>
+  </div>

@@ -1,0 +1,54 @@
+<div class="test">
+  <div class="row">
+    <div class="col-md-12">
+      <input id="myCalender" type="text" class="form-control" name="datepicker" placeholder="Select your date" 
+      (focus)="focus_datepicker();" [(ngModel)]="myDate">
+      <img src="assets/modules/img/calendar.PNG" style="position: absolute; top: 8px; cursor: pointer;" [style.left.px]="myLeft" (click)="displayBox=!displayBox">
+    </div>  
+  </div>
+
+  <div id="divCalander" class="calendar hideBorder width100" [style.display]="displayBox ? 'block' : 'none'" style="position: absolute;z-index: 9; width: 300px !important;">	
+      <div class="header" [style.display]="displayBox ? 'block' : 'none'">
+        <div class="row">
+        	<div class="col-md-6">
+        		<select class="form-control select-month" [(ngModel)]="myMonth" 
+        		(ngModelChange)="refresh_calander()">
+        			<option *ngFor="let month of month_name" value="{{month.id}}">{{month.name}}</option>
+        		</select>
+        	</div>
+        	<div class="col-md-6">
+        		<select class="form-control select-year" [(ngModel)]="myYear"
+        		(ngModelChange)="refresh_calander()">
+        			 <option *ngFor="let year of yearList" value="{{year.year}}">{{year.year}}</option>
+        		</select>
+        	</div>
+        </div>
+      </div>
+      <div class="week names" [style.display]="displayBox ? 'block' : 'none'">
+        <span class="day">Sun</span>
+        <span class="day">Mon</span>
+        <span class="day">Tue</span>
+        <span class="day">Wed</span>
+        <span class="day">Thu</span>
+        <span class="day">Fri</span>
+        <span class="day">Sat</span>
+      </div>
+
+      <div class="week" *ngFor="let week of weeks" [style.display]="displayBox ? 'block' : 'none'">
+        <span class="day " *ngFor="let day of week.days" (click)="select(day)" 
+        [ngClass]="{ today: day.isToday, 'different-month': !day.isCurrentMonth, selected: day.date.isSame(selected) }">{{day.number}}</span>
+      </div>
+
+     <div class="week" style="width: 100%; height: 35px; border-top: 1px solid lightgray;text-align: right; padding: 6px;" *ngIf="isDisplayBirthdayBtn==true;">
+      <a style="font-size: 11px; color: #4E6484; padding-right: 10px;" 
+      (click)="displayBox=false">CANCEL</a>
+      <a style="font-weight: bold; font-size: 11px;color: #4E6484;" (click)="press_savedate_btn()">SAVE</a>
+    </div>
+     <div class="week" style="width: 100%; height: 35px; border-top: 1px solid lightgray;text-align: right; padding: 6px;" *ngIf="isDisplaySaveBtn==true;">
+      <a style="font-size: 11px; color: #4E6484; padding-right: 10px;" 
+      (click)="displayBox=false">CANCEL</a>
+      <a style="font-weight: bold; font-size: 11px;color: #4E6484;" (click)="press_savedate_btn()">SAVE</a>
+    </div>
+  </div>
+  
+</div>
